@@ -4,25 +4,32 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryHandoffQueue } from "../src/domain/handoff.js";
 import { InMemoryListingRepository } from "../src/domain/repository.js";
 import { createServer } from "../src/mcp/server.js";
+import { knowledgeBase, policies } from "./helpers.js";
 
 let client: Client;
 let handoffs: InMemoryHandoffQueue;
 
 beforeEach(async () => {
   handoffs = new InMemoryHandoffQueue(() => new Date("2026-09-28T09:00:00Z"));
-  const server = createServer({ listings: InMemoryListingRepository.fromFile("data/listings.json"), handoffs });
+  const server = createServer({
+    listings: InMemoryListingRepository.fromFile("data/listings.json"),
+    handoffs,
+    knowledge: await knowledgeBase(),
+    policies,
+  });
   const [clientSide, serverSide] = InMemoryTransport.createLinkedPair();
   client = new Client({ name: "test", version: "0.0.0" });
   await Promise.all([server.connect(serverSide), client.connect(clientSide)]);
 });
 
 describe("MCP surface", () => {
-  it("exposes exactly the three tools, with read-only hints on the reads", async () => {
+  it("exposes exactly the four tools, with read-only hints on the reads", async () => {
     const { tools } = await client.listTools();
-    expect(tools.map((t) => t.name).sort()).toEqual(["get_listing", "hand_off_to_human", "search_listings"]);
+    expect(tools.map((t) => t.name).sort()).toEqual(["get_listing", "hand_off_to_human", "search_knowledge", "search_listings"]);
     const byName = Object.fromEntries(tools.map((t) => [t.name, t]));
     expect(byName.search_listings?.annotations?.readOnlyHint).toBe(true);
     expect(byName.get_listing?.annotations?.readOnlyHint).toBe(true);
+    expect(byName.search_knowledge?.annotations?.readOnlyHint).toBe(true);
     expect(byName.hand_off_to_human?.annotations?.readOnlyHint).toBe(false);
   });
 
@@ -65,5 +72,34 @@ describe("MCP surface", () => {
     });
     expect(res.isError).toBe(true);
     expect(handoffs.list()).toHaveLength(0);
+  });
+
+  it("search_knowledge answers from the listing and cites a chunk id", async () => {
+    const res = await client.callTool({
+      name: "search_knowledge",
+      arguments: { query: "Is heating included?", listingId: "hh-1001" },
+    });
+    expect(res.structuredContent).toMatchObject({ found: true });
+    const ids = (res.structuredContent as { results: { chunkId: string }[] }).results.map((r) => r.chunkId);
+    expect(ids[0]).toBe("HH-1001#s5");
+  });
+
+  it("search_knowledge says so when nothing is relevant", async () => {
+    const res = await client.callTool({ name: "search_knowledge", arguments: { query: "Is there a gym nearby?" } });
+    expect(res.structuredContent).toMatchObject({ found: false, results: [] });
+  });
+
+  it("search_knowledge rejects an unknown listing id", async () => {
+    const res = await client.callTool({ name: "search_knowledge", arguments: { query: "deposit?", listingId: "XX-0000" } });
+    expect(res.isError).toBe(true);
+  });
+
+  it("exposes every policy page as a readable resource", async () => {
+    const { resources } = await client.listResources();
+    expect(resources.map((r) => r.uri)).toContain("policy://deposit");
+    expect(resources).toHaveLength(policies.length);
+    const read = await client.readResource({ uri: "policy://pets" });
+    expect(read.contents[0]).toMatchObject({ mimeType: "text/markdown" });
+    expect(JSON.stringify(read.contents)).toContain("On request");
   });
 });
