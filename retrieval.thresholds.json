@@ -1,0 +1,16 @@
+{
+  "hashing-v1-512": {
+    "minZ": 3.9,
+    "minCoverage": 0.3,
+    "note": "Recalibrated for plain passage embeddings, 2026-09-28. z barely separates for this embedder; keyword coverage does the work."
+  },
+  "Xenova/multilingual-e5-small@q8": {
+    "minZ": 3.0,
+    "minCoverage": 0.3,
+    "note": "PROVISIONAL. Neither cosine nor z-score separates relevant from irrelevant for e5 (DECISIONS.md 16, 17). Answerability fix pending."
+  },
+  "reranker:onnx-community/bge-reranker-v2-m3-ONNX@q8": {
+    "minScore": 0.008,
+    "note": "Calibrated 2026-09-28: highest no-answer question 0.003, lowest real answer 0.013; midpoint. Thin margin, see DECISIONS.md 19."
+  }
+}

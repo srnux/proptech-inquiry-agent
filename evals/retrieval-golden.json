@@ -1,0 +1,40 @@
+{
+  "note": "Retrieval golden set. 'expect' lists acceptable chunk ids; at least one must be in the top 5. 'semantic: true' cases need a real embedding model (cross-lingual or paraphrase) and are skipped for the hashing embedder.",
+  "positives": [
+    { "q": "Is heating included?", "listingId": "HH-1001", "expect": ["HH-1001#s5"] },
+    { "q": "How much is the deposit?", "listingId": "HH-1001", "expect": ["HH-1001#s4"] },
+    { "q": "Is there a lift?", "listingId": "HH-1001", "expect": ["HH-1001#s1"] },
+    { "q": "Can I rent a parking space?", "listingId": "HH-1002", "expect": ["HH-1002#s2"] },
+    { "q": "Can I bring my cat?", "listingId": "HH-1002", "expect": ["HH-1002#s4", "policy:pets#dogs-and-cats"] },
+    { "q": "What is the minimum lease term?", "listingId": "HH-1002", "expect": ["HH-1002#s5"] },
+    { "q": "How old is the heating system?", "listingId": "HH-1003", "expect": ["HH-1003#s2"] },
+    { "q": "What commission does the buyer pay?", "listingId": "HH-1003", "expect": ["HH-1003#s3"] },
+    { "q": "Do I need a WBS?", "listingId": "B-2001", "expect": ["B-2001#s5"] },
+    { "q": "How will the rent increase over time?", "listingId": "B-2002", "expect": ["B-2002#s4"] },
+    { "q": "What is the Hausgeld?", "listingId": "B-2003", "expect": ["B-2003#s2"] },
+    { "q": "Is the special levy for the facade final?", "listingId": "B-2003", "expect": ["B-2003#s3"] },
+    { "q": "Are electricity and internet included in the rent?", "listingId": "M-3001", "expect": ["M-3001#s1"] },
+    { "q": "Can I register my residence there?", "listingId": "M-3001", "expect": ["M-3001#s3"] },
+    { "q": "How far is the S-Bahn?", "listingId": "M-3002", "expect": ["M-3002#s3"] },
+    { "q": "Is the flat wheelchair accessible?", "listingId": "K-4001", "expect": ["K-4001#s1"] },
+    { "q": "Can I pay the deposit in instalments?", "expect": ["policy:deposit#payment-in-instalments"] },
+    { "q": "When do I get the utility statement?", "expect": ["policy:utilities#annual-statement"] },
+    { "q": "Do tenants pay a commission for rentals?", "expect": ["policy:commission#rentals"] },
+    { "q": "What should I bring to a viewing?", "expect": ["policy:viewings#what-to-bring"] },
+    { "q": "Ist die Heizung in den Nebenkosten enthalten?", "listingId": "HH-1001", "expect": ["HH-1001#s5"], "semantic": true },
+    { "q": "Wie hoch ist die Kaution?", "listingId": "K-4001", "expect": ["K-4001#s4", "policy:deposit#amount"] },
+    { "q": "Can I live in the unit?", "listingId": "K-4002", "expect": ["K-4002#s3"], "semantic": true },
+    { "q": "Darf ich einen Hund halten?", "listingId": "HH-1001", "expect": ["HH-1001#s6", "policy:pets#dogs-and-cats"], "semantic": true },
+    { "q": "Muss ich Provision zahlen, wenn ich miete?", "expect": ["policy:commission#rentals"], "semantic": true }
+  ],
+  "negatives": [
+    { "q": "Is there a gym nearby?" },
+    { "q": "What's the crime rate in the neighbourhood?" },
+    { "q": "Can you recommend a good school?" },
+    { "q": "Who won the football match yesterday?" },
+    { "q": "Is there a garden?", "listingId": "HH-1001" },
+    { "q": "Is the flat close to a gym?", "listingId": "HH-1001" },
+    { "q": "Is the flat in a safe area at night?", "listingId": "B-2002" },
+    { "q": "Gibt es ein Fitnessstudio in der Nähe?" }
+  ]
+}
