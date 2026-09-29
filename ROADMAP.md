@@ -136,11 +136,11 @@ utilities sentence, and the answer cites it.
 - [x] Scripted model invents a price: number guard catches it, repair turn, then hand-off
 - [x] Viewing request always produces a `viewing_request` ticket
 - [x] Turn limit ends the run with a hand-off, not an exception
-- [x] One optional live test against the real model, skipped without credentials (passed on Bedrock, eu-central-1, 2026-09-29)
+- [x] One optional live test against the real model, skipped without credentials (passed on Bedrock, `claude-opus-5-5`, eu-central-1, 2026-09-29)
 
 ### Open
 
-- [x] Run `pnpm ask` with the acceptance inquiry below on the real model and record the result (passed on Bedrock, 2026-09-29: German reply, HH-1001, pets on request, cites `HH-1001#s5`, one `viewing_request` ticket; 4 tool calls in 3 turns)
+- [x] Run `pnpm ask` with the acceptance inquiry below on the real model and record the result (passed on Bedrock, `claude-opus-5-5`, 2026-09-29: German reply, HH-1001, pets on request, cites `HH-1001#s5`, one `viewing_request` ticket; 4 tool calls in 3 turns)
 - [x] Run the live test once (Bedrock: `MODEL_PROVIDER=bedrock node --env-file=.env node_modules/vitest/vitest.mjs run test/agent-live.test.ts`)
 - [x] Confirm prompt caching on the real model: `cache_read_tokens` above zero on the second turn of a run (the
       request shape is unit-tested; a hit is not, and the prefix may be under the model's minimum size)
@@ -168,22 +168,24 @@ heating sentence and creates one `viewing_request` ticket.
 
 ---
 
-## Slice 4: React UI
+## Slice 4: React UI  ✅ done
 
 **Goal:** a demo someone understands in 30 seconds.
 
 ### Tasks
 
-- [ ] Convert to a pnpm workspace (`apps/web`, `packages/core`, `packages/server`) with no behaviour change;
-      all existing tests still pass.
-- [ ] `apps/web`: Vite, React, TypeScript.
-- [ ] Chat pane with the reply streaming in.
-- [ ] Trace pane: each tool call as a row with arguments and result, expandable.
-- [ ] Hand-off queue pane that updates live when a ticket is created.
-- [ ] Citations rendered as chips that open the source chunk (listing or policy page).
-- [ ] Example inquiries as buttons: one pure fact question, one with a viewing, one out of scope, one in German.
-- [ ] `pnpm dev` starts server and UI together.
-- [ ] One Playwright test: click the viewing example, assert the reply and a ticket in the queue.
+- [x] Convert to a pnpm workspace (`apps/web`, `packages/core`, `packages/server`) with no behaviour change;
+      all existing tests still pass (`DECISIONS.md` 26).
+- [x] `apps/web`: Vite, React, TypeScript.
+- [x] Chat pane with the run streaming in: live steps, then the reply once the guards pass it (`DECISIONS.md` 27).
+- [x] Trace pane: each tool call as a row with arguments and result, expandable.
+- [x] Hand-off queue pane that updates live when a ticket is created (`GET /handoffs`, SSE, `DECISIONS.md` 29).
+- [x] Citations rendered as chips that open the source chunk (listing or policy page).
+- [x] Example inquiries as buttons: one pure fact question, one with a viewing, one out of scope, one in German.
+- [x] `pnpm dev` starts server and UI together; without credentials it runs the demo model (`DECISIONS.md` 28).
+- [x] One Playwright test: click the viewing example, assert the reply and a ticket in the queue (plus one for citation chips).
+- [x] Follow-up questions: the client sends the last 5 exchanges with each inquiry; history is context, not
+      evidence, so cited ids and figures are looked up again (`DECISIONS.md` 31). "New conversation" clears it.
 
 ### Acceptance
 
@@ -193,8 +195,8 @@ A clean clone, `pnpm install`, `pnpm dev`, one click on an example, and all thre
 
 | Id | Question | Options | Recommendation |
 |---|---|---|---|
-| D4.1 | Styling | Plain CSS modules · Tailwind | Your call |
-| D4.2 | State | React state and context · a store library | React state; the app is small |
+| D4.1 | Styling | Plain CSS modules · Tailwind | **Decided: one plain stylesheet** (`DECISIONS.md` 29) |
+| D4.2 | State | React state and context · a store library | **Decided: React state** (`DECISIONS.md` 29) |
 
 ### Commits
 
@@ -266,6 +268,48 @@ A clean clone, `pnpm install`, `pnpm dev`, one click on an example, and all thre
 ### Acceptance
 
 Someone who has never seen the repo understands what it does from the README in two minutes and can run it in five.
+
+---
+
+## Optional, later: server-side conversation history
+
+Not scheduled. Slice 4 keeps the history in the client (`DECISIONS.md` 31), which is enough for one person trying
+the desk. This slice is for when a conversation has to outlive a browser tab: a colleague picks up a thread from a
+hand-off ticket, an inquiry arrives by email and is answered in the web app, or the evals replay whole conversations.
+
+**Goal:** a conversation has an id and lives on the server; the client sends only the new message.
+
+### Tasks
+
+- [ ] `ConversationStore` interface in `packages/core` (create, append turn, read last N, delete) with an in-memory
+      implementation and a fake clock for tests. Same shape as the other stores: no framework imports.
+- [ ] A turn stores the inquiry, the reply, the citations, the hand-off ticket ids and the outcome. Tool results are
+      not replayed to the model, so the rule from `DECISIONS.md` 31 holds: history is context, not evidence.
+- [ ] `POST /conversations` creates one; `POST /conversations/:id/inquiries` runs the agent with the stored history
+      and appends the turn only when the run finishes; `GET /conversations/:id` returns the transcript.
+- [ ] Hand-off tickets carry the conversation id, so a colleague opens the whole thread from the queue.
+- [ ] Expiry: conversations idle for longer than a configured time are deleted; a personal data request can delete
+      one on demand (ties in with the `personal_data_request` hand-off).
+- [ ] Access: a conversation id is a capability (unguessable, not enumerable); nothing lists all conversations
+      without authentication.
+- [ ] Web app keeps the id in the URL, so a reload or a shared link reopens the thread.
+- [ ] Keep `history` on `POST /inquiries` for stateless callers, or retire it with an entry in `DECISIONS.md`.
+
+### Tests
+
+- [ ] Two conversations never see each other's turns
+- [ ] A failed or aborted run appends nothing
+- [ ] Expired and deleted conversations return 404
+- [ ] A follow-up that cites a chunk from an earlier turn still fails the citation check
+- [ ] Concurrent inquiries on one conversation: the second waits or is rejected, never interleaved
+
+### Decisions
+
+| Id | Question | Options | Recommendation |
+|---|---|---|---|
+| D7.1 | Storage | In-memory · SQLite · Postgres next to pgvector | Postgres if slice 6 brings pgvector; otherwise in-memory behind the interface |
+| D7.2 | Retention | Fixed idle timeout · per-agency setting | Fixed, recorded in `DECISIONS.md`, with deletion on request |
+| D7.3 | Concurrent inquiries | Queue per conversation · reject with 409 | Reject; the UI already disables sending while a run is in progress |
 
 ---
 
