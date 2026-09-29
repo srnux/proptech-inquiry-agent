@@ -31,7 +31,12 @@ export function Trace({ run }: { run: Run | undefined }) {
             ))}
             {run.guards.map((g, i) => (
               <li key={`g${i}`} className="step is-guard">
-                <p className="step-tool">{g.repairing ? "Checks failed, asking for a corrected reply" : "Checks failed again, handing off"}</p>
+                <p className="step-tool">
+                  <span className="status" data-status={g.repairing ? "alarm" : "handoff"} aria-hidden="true">
+                    {g.repairing ? "Retry" : "Hand-off"}
+                  </span>
+                  {g.repairing ? "Checks failed, asking for a corrected reply" : "Checks failed again, handing off"}
+                </p>
                 <ul>
                   {g.violations.map((v, j) => (
                     <li key={j}>{v.message}</li>

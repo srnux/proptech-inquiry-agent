@@ -1,7 +1,7 @@
 ---
-title: "Building a Property Inquiry Agent with MCP, Local Search, and Answer Checks"
+title: "Building a Property Inquiry Desk with React, MCP, and Local Search"
 published: false
-description: "From local hybrid search to a working TypeScript agent: MCP tools, citation checks, one repair attempt, and human hand-offs."
+description: "A React inquiry desk with visible tool calls, clickable sources, and live hand-offs, backed by a TypeScript agent with local retrieval and answer checks."
 tags: ai, typescript, mcp, programming
 ---
 
@@ -15,21 +15,46 @@ Some of those jobs have answers in the records. Others need a person.
 
 That distinction is the starting point for `proptech-inquiry-agent`: a TypeScript project that gives an AI assistant tools to search property records, retrieve supporting passages, and create human hand-off tickets.
 
-The project now includes its own conversation loop, answer checks, command-line interface, and HTTP API. The web interface is still planned. All property and policy data is synthetic.
+You interact with it through a React inquiry desk. Behind the interface, an agent chooses tools, gathers evidence, checks its draft, and returns an answer or a hand-off. You can try the browser interface without a model API key. All property and policy data is synthetic.
 
-## From a toolbox to a working agent
+## A desk where you can see what happened
 
-The first two development slices built the tools and retrieval system. An application such as Claude Desktop could use them to answer questions. Slice 3 adds the code that manages an inquiry from start to finish, so a desktop assistant is now optional.
+The browser application has three panes, each answering a different question: what did the assistant say, what did it do, and what needs a person?
+
+```text
++---------------------+----------------------+---------------------+
+| Conversation        | What the agent did   | Hand-off queue      |
++---------------------+----------------------+---------------------+
+| Ask a question      | Search listings      | Viewing request     |
+|                     | Read the evidence    | HH-1001             |
+| Receive a checked   | Create a ticket      | Inquiry summary     |
+| reply with sources  |                      | Contact details     |
+|                     | Expand a step for    | New tickets appear  |
+| Click a citation    | arguments, result,   | as they are created |
+| to read its source  | and duration         |                     |
++---------------------+----------------------+---------------------+
+```
+
+The left pane has example buttons for a fact question, a viewing request, an unanswered question, and a German inquiry. The middle pane exposes the actual tool calls, including errors and failed answer checks. The right pane shows tickets for a human to handle.
+
+Clicking a citation opens a dialog with the source document and the cited passage highlighted. A citation for a whole property shows its structured fields and description. This makes it possible to inspect the evidence behind the reply without searching through logs.
+
+The application uses React state, Vite, and one plain stylesheet. The UI makes the existing workflow visible; the server still owns the tools, retrieval, and answer checks.
+
+## What happens behind the interface
+
+Submitting an inquiry starts an agent loop on the server. The loop asks a model which tools to use, executes those calls, and checks the resulting answer. The browser displays the progress and final result. The same workflow is available through a CLI or HTTP API.
 
 ```text
 Customer inquiry
        |
        v
-CLI or HTTP API
+React desk, CLI, or HTTP API
        |
        v
-Agent loop <--------------------> Remote Claude model
-       |                         Anthropic API or Bedrock
+Agent loop <--------------------> Model implementation
+       |                         Claude via API / Bedrock
+       |                         or rule-based demo
        |
        +── MCP tools ──> Property records + local retrieval
        |             └─> Temporary hand-off queue
@@ -52,7 +77,7 @@ The server exposes four tools:
 | `search_knowledge` | Retrieve passages from descriptions and policies. |
 | `hand_off_to_human` | Create a ticket with a specific reason. |
 
-External assistants can still use the server through standard input and output, or through the new Streamable HTTP endpoint at `/mcp`. General policy pages are also available as MCP resources.
+External assistants such as Claude Desktop can use the tools through standard input and output, or through the Streamable HTTP endpoint at `/mcp`. General policy pages are also available as MCP resources.
 
 ## What the agent loop actually does
 
@@ -85,7 +110,7 @@ Each run returns a structured result:
 reply       The final text
 citations   Source markers parsed from that text
 handoffs    Tickets created during this inquiry
-trace       Tool names, arguments, summaries, and durations
+trace       Tool names, arguments, results, and durations
 usage       Input, output, and cache token counts
 outcome     Answered, or forced hand-off with a cause
 ```
@@ -227,7 +252,7 @@ Today, this is an in-memory queue. It does not send an email or reserve a calend
 
 ## Check the answer before returning it
 
-Slice 3 adds checks in `src/agent/guards.ts`. The loop runs them on a draft before returning it to the caller.
+The checks in `packages/core/src/agent/guards.ts` examine a draft before the loop returns it to the caller.
 
 | Check | What the code looks for |
 | --- | --- |
@@ -290,15 +315,17 @@ These numbers measure retrieval on a small development set also used for calibra
 
 Ordinary tests run with a deterministic substitute for the embedding model, without model downloads. A separate `pnpm test:model` command checks retrieval with the real models.
 
-Slice 3 adds scripted-model tests for the loop, including invented citations, unsupported figures, repair behavior, and run limits. These make failure paths reproducible without paying for model calls.
+Scripted-model tests exercise the loop with invented citations, unsupported figures, repair behavior, and run limits. These make failure paths reproducible without paying for model calls.
 
-The roadmap also records a successful real-model acceptance run on Amazon Bedrock on September 29, 2026. The German version of the opening inquiry produced a German reply, selected `HH-1001`, kept pets “on request,” cited `HH-1001#s5` for heating, and created one `viewing_request` ticket. The recorded run used four tool calls across three model turns.
+In a documented run on Amazon Bedrock on September 29, 2026, the German version of the opening inquiry produced a German reply, selected `HH-1001`, kept pets “on request,” cited `HH-1001#s5` for heating, and created one `viewing_request` ticket. The run used four tool calls across three model turns.
 
 The optional live agent test is recorded as passing too. That test uses a real conversational model with the offline retrieval substitute; it is separate from the real-retrieval model test. The recorded acceptance run is evidence that the workflow has been exercised, not a broad measure of its reliability.
 
-## Two HTTP endpoints with different jobs
+Two Playwright tests cover the browser workflow: one clicks the viewing example and checks the reply, expandable tool arguments, and resulting ticket; the other opens a citation, checks that its passage is highlighted, and closes the dialog. They run with the demo model and hashing embedder, so the test runs need no model credentials or model downloads. They verify the browser workflow, not a remote model's answer quality.
 
-The HTTP server exposes both the agent and its underlying tools:
+## Stream the work, then show the checked answer
+
+The browser builds on the inquiry event stream, while external MCP clients can still call tools directly:
 
 ```text
 Application sends an inquiry
@@ -322,27 +349,57 @@ External MCP client
     Calls the tools directly
 ```
 
-`/inquiries` uses server-sent events (SSE): one HTTP response carries a sequence of named events. It streams progress while tools run, then sends the completed answer. It does not currently stream the answer token by token.
+`/inquiries` uses server-sent events (SSE): one HTTP response carries a sequence of named events. The UI shows completed tool calls and progress messages while it waits. The answer appears as a whole after the checks pass, or as a fixed hand-off reply if the code ends the run.
 
-The two routes share the underlying listing repository, knowledge base, and in-memory hand-off queue. The server binds to `127.0.0.1:3000` by default and currently has no authentication. The planned React interface will build on this API.
+This is a deliberate choice. If the UI streamed an invented price before the number check rejected it, the user would already have read it. Keeping the draft private lets the agent repair it before showing it.
+
+Two additional routes support the desk:
+
+| Route | What the browser receives |
+| --- | --- |
+| `GET /handoffs` | An SSE snapshot of existing tickets, followed by each new ticket. |
+| `GET /sources/:id` | The passage or property behind a citation, with its surrounding document. |
+
+The queue stream subscribes to the shared server queue. A ticket created by an external client through `/mcp` therefore appears in the browser too. It is still an in-memory queue, so live updates do not imply persistence.
+
+The server binds to `127.0.0.1:3000` by default and currently has no authentication. Vite forwards the browser's API requests to it during development.
+
+## Try the workflow without an API key
+
+`DemoModel` implements the same `ModelClient` interface using rules. It calls the actual MCP tools, quotes retrieved passages, and passes its replies through the same answer checks. It is designed for the four example inquiries and a limited set of related requests, rather than general conversation.
+
+```text
+Claude model ──────────┐
+                      ├──> Same loop ──> Same tools ──> Same checks
+Rule-based demo ───────┘
+```
+
+`pnpm dev` falls back to the demo when the credential check reports missing settings. The page labels this mode “Demo model, no API key.” Set `MODEL_PROVIDER=demo` explicitly to choose it even when credentials are available.
+
+Demo mode changes the conversational model, not the retrieval configuration. By default, the local retrieval models still download on first use. Choosing `EMBEDDER=hashing` as well removes that download and uses the weaker retrieval substitute. This is also how the browser tests run.
 
 ## Finding your way around the code
 
+The repository is a pnpm workspace with three packages: the browser interface, the core logic, and the server that connects that logic to external interfaces.
+
 ```text
-data/             Synthetic properties and policy pages
-src/domain/       Data definitions, filtering, ticket queue
-src/retrieval/    Chunking, keyword search, models, ranking
-src/mcp/          Tools, stdio, and Streamable HTTP transport
-src/agent/        Model adapter, loop, answer checks, CLI
-src/api/          HTTP server and inquiry event stream
-test/             Tool, agent, guard, API, and retrieval tests
-evals/            Retrieval questions and expected passages
-scripts/          Index building and threshold calibration
+apps/web/                  React inquiry desk and browser tests
+packages/core/
+  src/domain/              Property records and ticket queue
+  src/retrieval/           Chunking, search, models, ranking
+  src/agent/               Loop, checks, interfaces, demo model
+  scripts/                 Index building and calibration
+packages/server/
+  src/mcp/                 Tools and MCP transports
+  src/agent/               Provider adapters, MCP client, CLI
+  src/api/                 Inquiries, queue, and source routes
+data/                      Synthetic records and policy pages
+evals/                     Retrieval evaluation questions
 ```
 
-If you open `dist/mcp/server.js`, you are looking at compiled JavaScript. The source to edit is `src/mcp/server.ts`. The adjacent `.js.map` file connects the generated JavaScript back to TypeScript for debugging.
+The core package has no MCP, HTTP, or model-provider imports. The server adapts those external interfaces to the core. The web app shares types and example inquiries without pulling the core's Node.js implementation into the browser bundle.
 
-The domain code has no MCP imports. The server receives the listing repository, knowledge base, and ticket queue as dependencies. That keeps the business rules testable without starting a desktop application.
+Development uses the packages' TypeScript source directly. For the compiled MCP entry point used by Claude Desktop, build first and run Node with `--conditions=built`. The server entry point is `packages/server/dist/mcp/stdio.js`; its source lives in `packages/server/src/mcp/stdio.ts`.
 
 The vector store is currently in memory, with embeddings cached on disk. For this small corpus, a separate database would add setup without solving an immediate problem.
 
@@ -352,13 +409,22 @@ With Node.js 20 or newer and pnpm available, run these commands from the reposit
 
 ```bash
 pnpm install
-pnpm test
-pnpm index
+pnpm dev
 ```
 
-The first indexing run downloads the two retrieval models—approximately 120 MB and 570 MB—and prepares the local index. `pnpm inspect` lets you call the tools directly without involving a conversational model.
+Open `http://localhost:5173` and click an example. The API runs on `127.0.0.1:3000`. The first start downloads the two retrieval models—approximately 120 MB and 570 MB—and prepares the local index.
 
-To use the agent, copy `.env.example` to `.env` and fill in credentials for your chosen provider. For the default Anthropic adapter, set `ANTHROPIC_API_KEY`. For Bedrock, set `MODEL_PROVIDER=bedrock`, an AWS region, and the relevant credentials. The CLI and HTTP server load `.env` automatically.
+For a demo without retrieval-model downloads, set these environment variables before starting. In PowerShell:
+
+```powershell
+$env:MODEL_PROVIDER = "demo"
+$env:EMBEDDER = "hashing"
+pnpm dev
+```
+
+Use a fresh terminal or clear those overrides when switching to the real models. `pnpm inspect` remains available for calling the MCP tools directly.
+
+To use a remote conversational model, copy `.env.example` to `.env` and fill in credentials for your chosen provider. For the default Anthropic adapter, set `ANTHROPIC_API_KEY`. For Bedrock, set `MODEL_PROVIDER=bedrock`, an AWS region, and the relevant credentials. The CLI and HTTP server load `.env` automatically.
 
 Then ask a question and show the tool trace:
 
@@ -378,23 +444,24 @@ Send `POST /inquiries` a JSON body such as:
 {"inquiry": "Is heating included in HH-1001, and can I view it on Saturday?"}
 ```
 
-Agent runs call a remote model and use provider credentials. The scripted tests need neither. The optional live test runs when its credential conditions are met in the process environment; the test itself does not load `.env`.
+Unlike `pnpm dev`, `pnpm ask` and `pnpm serve` require credentials unless you explicitly select `MODEL_PROVIDER=demo`. Real-model runs use provider credentials; demo runs do not.
+
+To run the regular tests and the browser checks:
+
+```bash
+pnpm test
+pnpm --filter @proptech/web exec playwright install chromium
+pnpm test:e2e
+```
+
+Installing the browser is a one-time setup. The optional live-model test runs when its credential conditions are met in the process environment; the test itself does not load `.env`.
 
 After changing the corpus or model, `pnpm calibrate` reports scores and proposes thresholds. Those values are reviewed and copied into `retrieval.thresholds.json`; calibration does not automatically update that file.
 
-## What comes next
+## What remains to be proven
 
-```text
-Built now                         Planned next
-------------------------------    -------------------------------
-MCP tools + local retrieval        React chat interface
-Agent loop + CLI                   Visual tool trace and citations
-Citation and number checks         Visible hand-off queue
-One repair attempt, then hand-off  Broader end-to-end evaluations
-HTTP inquiry event stream         Database integration and CI
-Scripted tests + recorded live run
-```
+The working interface makes individual runs easy to inspect. A larger evaluation suite is still needed to measure whether answers remain correct across varied inquiries, qualifications survive paraphrasing, and requests needing a person consistently produce a hand-off. Prompt-injection cases also belong in that evaluation.
 
-The next stage is making the working flow visible in a browser: a chat pane, an expandable tool trace, source citations, and a hand-off queue. Broader evaluations will then measure answer correctness and missed escalations across more inquiries.
+Persistent storage and CI are planned. For now, this is a local application with synthetic data and an in-memory ticket queue, not a complete agency operations system.
 
-The useful lesson so far is that retrieval, answer generation, and answer checking need separate tests. A search result can be relevant but misquoted. A citation can exist but support a different claim. The agent now makes those stages explicit, records what happened, and gives failed answer checks a defined path to a human.
+The useful lesson so far is that retrieval, answer generation, and answer checking need separate tests. A search result can be relevant but misquoted. A citation can exist but support a different claim. The inquiry desk makes the evidence, tool calls, and resulting tickets inspectable while keeping rejected drafts out of the conversation.

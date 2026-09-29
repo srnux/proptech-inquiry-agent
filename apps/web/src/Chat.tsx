@@ -80,14 +80,22 @@ export function Chat({ runs, busy, selected, onSelect, onAsk, onCite }: Props) {
 }
 
 function AgentBubble({ run, onCite }: { run: Run; onCite(id: string): void }) {
-  if (run.error) return <p className="bubble from-agent is-error">{run.error}</p>;
+  if (run.error)
+    return (
+      <p className="bubble from-agent is-error">
+        <span className="error-label status" data-status="alarm">
+          Could not answer
+        </span>
+        <br />
+        {run.error}
+      </p>
+    );
   if (!run.result) {
     const last = run.steps.at(-1);
     const status = run.guards.length ? "Checking the draft against the sources" : last ? (TOOLS[last.tool]?.doing ?? `Running ${last.tool}`) : "Reading your inquiry";
     return (
       <p className="bubble from-agent is-pending" role="status">
-        <span className="pulse" aria-hidden="true" />
-        {status}
+        {status}…
       </p>
     );
   }
@@ -95,9 +103,9 @@ function AgentBubble({ run, onCite }: { run: Run; onCite(id: string): void }) {
   return (
     <div className="bubble from-agent" data-testid="reply">
       <p>{withChips(reply, onCite)}</p>
-      {outcome.status === "forced_handoff" && <p className="note">Handed off by the code, because {FORCED[outcome.cause] ?? outcome.cause}.</p>}
+      {outcome.status === "forced_handoff" && <p className="note" data-status="handoff">Handed off by the code, because {FORCED[outcome.cause] ?? outcome.cause}.</p>}
       {handoffs.length > 0 && outcome.status === "answered" && (
-        <p className="note">
+        <p className="note" data-status="handoff">
           {handoffs.length === 1 ? "One ticket" : `${handoffs.length} tickets`} created for a colleague.
         </p>
       )}
