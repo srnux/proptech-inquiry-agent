@@ -2,8 +2,8 @@
 import "../env.js";
 import { parseArgs } from "node:util";
 import { loadServerDeps } from "../deps.js";
-import { AnthropicModel, missingCredentials } from "./anthropic.js";
 import { connectInProcess } from "./connect.js";
+import { modelFromEnv } from "./select.js";
 import { runInquiry } from "@proptech/core";
 
 const { values, positionals } = parseArgs({
@@ -15,16 +15,16 @@ if (!inquiry) {
   console.error('Usage: pnpm ask [--trace] [--json] "your inquiry"');
   process.exit(2);
 }
-const missing = missingCredentials();
-if (missing) {
-  console.error(`${missing} Retrieval and tools run locally; only the model is remote.`);
+const choice = modelFromEnv();
+if ("error" in choice) {
+  console.error(`${choice.error} Retrieval and tools run locally; only the model is remote. MODEL_PROVIDER=demo runs without one.`);
   process.exit(2);
 }
 
 // Diagnostics go to stderr; stdout carries the answer, so `pnpm ask --json | jq` works.
 console.error("Loading knowledge index...");
 const deps = await loadServerDeps();
-const model = new AnthropicModel();
+const { model } = choice;
 const mcp = await connectInProcess(deps);
 const result = await runInquiry({ model, mcp }, inquiry);
 await mcp.close();

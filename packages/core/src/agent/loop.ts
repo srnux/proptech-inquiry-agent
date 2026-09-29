@@ -29,6 +29,8 @@ export interface TraceEntry {
   arguments: Record<string, unknown>;
   /** One line describing the result, for the trace pane and logs. */
   summary: string;
+  /** The full result: the tool's structured content, or its text when it has none (errors, for instance). */
+  result: unknown;
   isError: boolean;
   durationMs: number;
   /** True for the hand-off the code created after the run failed or hit a limit. */
@@ -136,6 +138,7 @@ export async function runInquiry(deps: AgentDeps, inquiry: string): Promise<Agen
       tool: name,
       arguments: args,
       summary: summarise(name, structured, text, isError),
+      result: structured ?? text,
       isError,
       durationMs: Math.round(performance.now() - started),
       ...(forced && { forced }),
