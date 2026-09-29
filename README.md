@@ -12,12 +12,28 @@ All listing and policy data is synthetic.
 | 1 | MCP server: structured search, listing lookup, hand-off to a human | done |
 | 2 | Hybrid retrieval over listing texts and policy pages, local embeddings | done |
 | 3 | Agent loop, citation and number guards, `POST /inquiries` (SSE), Streamable HTTP MCP, `pnpm ask` | done, acceptance inquiry and live test passed on `claude-opus-5-5` (Bedrock) |
-| 4 | React UI: chat, tool-call trace, hand-off queue | planned |
+| 4 | React UI: chat, tool-call trace, live hand-off queue, citation chips; runs without a key on a demo model | done |
 | 5 | Eval suite: correct answers, correct escalations, no invented facts | planned |
 | 6 | Architecture write-up, pgvector, CI | planned |
 
 Details, tasks and open decisions per slice are in [ROADMAP.md](ROADMAP.md); the reasons behind each
 choice are in [DECISIONS.md](DECISIONS.md).
+
+## Quick start
+
+```bash
+corepack enable   # once, provides the pnpm version pinned in package.json
+pnpm install
+pnpm dev          # API on 127.0.0.1:3000, the inquiry desk on http://localhost:5173
+```
+
+Click one of the example inquiries. The conversation fills on the left, every tool call the agent made in
+the middle (click a row for its arguments and result), and the tickets for a colleague on the right. Each
+citation in a reply is a chip that opens the passage it came from.
+
+Without `ANTHROPIC_API_KEY` (or the Bedrock settings) in `.env`, `pnpm dev` runs a rule-based demo model that
+drives the same tools and checks, and the page says so (`DECISIONS.md` 28). The first start downloads the two
+retrieval models (about 690 MB); `EMBEDDER=hashing pnpm dev` starts at once with weaker, English-only retrieval.
 
 ## The one design rule
 
@@ -84,6 +100,7 @@ The model is `claude-opus-5-5` by default; `ANTHROPIC_MODEL` and `ANTHROPIC_EFFO
 corepack enable   # once, provides the pnpm version pinned in package.json
 pnpm install
 pnpm test         # offline, no model download
+pnpm test:e2e     # Playwright against the demo model; once before: pnpm --filter @proptech/web exec playwright install chromium
 pnpm index        # first run downloads both models (about 120 MB and 570 MB) into .models/, builds .index/
 pnpm calibrate    # prints the scores of every golden question and proposes thresholds
 pnpm test:model   # golden set against the real models
@@ -127,8 +144,9 @@ packages/core/src/agent/        model interface, tool-use loop, guards, prompt
 packages/core/scripts/          index, calibrate, experiments
 packages/server/src/mcp/        tool and resource definitions, stdio and Streamable HTTP entry points
 packages/server/src/agent/      Claude API and Bedrock adapter, in-process MCP client, `pnpm ask`
-packages/server/src/api/        HTTP server: /inquiries (SSE) and /mcp
+packages/server/src/api/        HTTP server: /inquiries (SSE), /mcp, and /handoffs, /sources for the web app
 packages/*/test/                unit tests, retrieval tests, in-memory MCP client tests
+apps/web/                       the inquiry desk: Vite, React, one stylesheet; Playwright tests in e2e/
 ```
 
 ## License

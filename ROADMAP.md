@@ -168,22 +168,22 @@ heating sentence and creates one `viewing_request` ticket.
 
 ---
 
-## Slice 4: React UI
+## Slice 4: React UI  ✅ done
 
 **Goal:** a demo someone understands in 30 seconds.
 
 ### Tasks
 
-- [ ] Convert to a pnpm workspace (`apps/web`, `packages/core`, `packages/server`) with no behaviour change;
-      all existing tests still pass.
-- [ ] `apps/web`: Vite, React, TypeScript.
-- [ ] Chat pane with the reply streaming in.
-- [ ] Trace pane: each tool call as a row with arguments and result, expandable.
-- [ ] Hand-off queue pane that updates live when a ticket is created.
-- [ ] Citations rendered as chips that open the source chunk (listing or policy page).
-- [ ] Example inquiries as buttons: one pure fact question, one with a viewing, one out of scope, one in German.
-- [ ] `pnpm dev` starts server and UI together.
-- [ ] One Playwright test: click the viewing example, assert the reply and a ticket in the queue.
+- [x] Convert to a pnpm workspace (`apps/web`, `packages/core`, `packages/server`) with no behaviour change;
+      all existing tests still pass (`DECISIONS.md` 26).
+- [x] `apps/web`: Vite, React, TypeScript.
+- [x] Chat pane with the run streaming in: live steps, then the reply once the guards pass it (`DECISIONS.md` 27).
+- [x] Trace pane: each tool call as a row with arguments and result, expandable.
+- [x] Hand-off queue pane that updates live when a ticket is created (`GET /handoffs`, SSE, `DECISIONS.md` 29).
+- [x] Citations rendered as chips that open the source chunk (listing or policy page).
+- [x] Example inquiries as buttons: one pure fact question, one with a viewing, one out of scope, one in German.
+- [x] `pnpm dev` starts server and UI together; without credentials it runs the demo model (`DECISIONS.md` 28).
+- [x] One Playwright test: click the viewing example, assert the reply and a ticket in the queue (plus one for citation chips).
 
 ### Acceptance
 
@@ -193,8 +193,8 @@ A clean clone, `pnpm install`, `pnpm dev`, one click on an example, and all thre
 
 | Id | Question | Options | Recommendation |
 |---|---|---|---|
-| D4.1 | Styling | Plain CSS modules · Tailwind | Your call |
-| D4.2 | State | React state and context · a store library | React state; the app is small |
+| D4.1 | Styling | Plain CSS modules · Tailwind | **Decided: one plain stylesheet** (`DECISIONS.md` 29) |
+| D4.2 | State | React state and context · a store library | **Decided: React state** (`DECISIONS.md` 29) |
 
 ### Commits
 

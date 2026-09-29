@@ -4,3 +4,5 @@ dist/
 *.log
 .index/
 .models/
+test-results/
+playwright-report/
