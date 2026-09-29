@@ -12,7 +12,7 @@ export function modelFromEnv({ demoFallback = false } = {}): ModelChoice {
   if (process.env.MODEL_PROVIDER === "demo") return { model: new DemoModel(), label: "demo model (MODEL_PROVIDER=demo)" };
   const missing = missingCredentials();
   if (missing && demoFallback) {
-    return { model: new DemoModel(), label: `demo model, because no credentials are set (${missing})` };
+    return { model: new DemoModel(), label: `demo model, since no credentials are set. ${missing}` };
   }
   if (missing) return { error: missing };
   const model = new AnthropicModel();
