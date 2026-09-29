@@ -169,3 +169,96 @@ above 0.9. A likely cause is the int8 quantisation of the reranker; comparing it
 1.1 GB) is a cheap experiment if slice 5 shows answers being dropped.
 
 Speed: the golden set (33 questions) took 47 seconds, about 1.4 seconds per question on a laptop CPU.
+
+## 20. Two checks in code on the final answer, one repair turn, then a hand-off
+
+The prompt asks the model to cite and to quote figures. Whether it does is checked in code, on every final
+answer, before anything is returned (`src/agent/guards.ts`):
+
+- **Citation guard.** Every `[chunkId]` or `[listingId]` marker must refer to something a tool returned in
+  this run. A reply that states prices, areas or percentages but cites nothing also fails.
+- **Number guard.** Every price, area and percentage in the reply must appear in a tool result or in the
+  inquirer's own message. German and English notation both count ("1.650 €" matches 1650). Arithmetic
+  fails on purpose: "1.890 €" as the sum of rent and utilities is a figure no record contains.
+
+A failed check sends the model one repair message that names the problem (the draft was never shown to the
+inquirer). If the second answer fails too, the code creates a `not_answerable_from_listing` ticket itself and
+returns a fixed reply in German and English. The same ending applies to the turn limit, the token budget, a
+model timeout, a cut-off reply and a refusal. A run never ends in an exception because of model behaviour.
+
+Rejected: rejecting outright (one slip loses an answer that a small correction fixes) and repairing more than
+once (a second failure is a signal, not noise; three tries spend tokens on the same mistake).
+
+What the guards do not catch: a wrong claim that cites a real chunk and uses only real numbers, and a viewing
+the model forgets to hand off. The first is what slice 5's correctness judge is for. The second cannot be
+detected without classifying the inquiry, which would be a second model call deciding the boundary; slice 5
+measures the hand-off recall instead.
+
+## 21. A plain loop behind a `ModelClient` interface, with a scripted fake
+
+The loop (`src/agent/loop.ts`) is about 100 lines: call the model, run its tool calls over MCP, repeat until
+it answers. It owns the limits (8 model calls, 80,000 tokens, 60 s per model call, 30 s per tool call; all
+overridable) and builds the trace.
+
+The model sits behind `ModelClient`, with its own small message types, so the loop imports nothing from the
+Anthropic SDK. `ScriptedModel` plays back a fixed script, which is how every loop behaviour (guards, limits,
+timeouts) is tested offline, deterministically and without a key.
+
+Rejected: the SDK's tool runner (the loop's guards and limits are the point; hiding the loop hides them),
+the Claude Agent SDK (a coding-agent harness, more than this needs) and an agent framework (one more
+abstraction to explain, nothing gained for four tools).
+
+## 22. The system prompt is fixed text, and citations are inline markers
+
+The prompt has no date, id or per-request content, so it stays the start of the cached prefix. It states the
+three rules and the six hand-off reasons (the list is generated from `HandoffReason`, so it cannot drift).
+
+Citations are inline markers, `[HH-1001#s5]`, `[policy:pets#pets-on-request]`, `[HH-1001]`, taken directly
+from the ids the tools return. They can be parsed with one regular expression, checked against the run's tool
+results and rendered as chips in slice 4. Rejected: a structured final answer through a submit tool (forced
+tool choice is not available on the default model, and it would split a short reply into fields).
+
+## 23. Default model `claude-opus-5-5`, configurable
+
+`ANTHROPIC_MODEL` overrides it, `ANTHROPIC_EFFORT` sets the effort (default `medium`). Chosen because tool
+selection and refusing to guess are the hard parts of this task, and the guards make a cheaper model
+recoverable but not free: each failed guard costs a repair turn. Slice 5 should run the eval on
+`claude-sonnet-5-5` too; if it holds the thresholds, the default changes and this entry records why.
+
+Details that follow from the model: thinking is always on, so thinking blocks are kept and sent back
+unchanged, and `max_tokens` is 8,000 because thinking counts against it. Server-side refusal fallback is on
+(`fallbacks: "default"`); a refusal that survives it ends in the forced hand-off above.
+
+## 24. Two ways in: in-process for the agent, stateless Streamable HTTP for everyone else
+
+The agent talks to our server through an in-memory MCP transport (`src/agent/connect.ts`), one pair per
+inquiry. It is the same client code an external process would run; only the wire differs. `/mcp` serves
+external MCP clients over Streamable HTTP, and both doors share one listing repository, knowledge base and
+hand-off queue, so a ticket created by the agent is visible to any client.
+
+`/mcp` is stateless: every request gets a fresh server and transport, so there are no sessions to expire or
+leak. The cost is that server-initiated messages are unavailable, and this server sends none.
+
+Rejected for `/inquiries`: connecting to our own `/mcp` over loopback (a port and a failure mode for no
+behavioural difference). There is no authentication; the server binds to 127.0.0.1 by default.
+
+## 25. The same adapter on Amazon Bedrock
+
+`MODEL_PROVIDER=bedrock` swaps the client, not the adapter: `AnthropicBedrock` from `@anthropic-ai/bedrock-sdk`
+serves the same `beta.messages` API through bedrock-runtime, authenticated by `AWS_BEARER_TOKEN_BEDROCK` (a
+Bedrock API key) or the normal AWS credential chain, in `AWS_REGION`. Chosen because a Claude API key was not
+available and an AWS account was; the loop, guards, effort and caching do not change (a cache read on the
+second request was observed in eu-central-1).
+
+The model id is the region's inference profile, `eu.anthropic.claude-opus-5-5` in eu-central-1: current models
+are not invocable on demand by their bare id, and the `eu.` profile keeps requests inside the EU. Regions
+outside the EU and US get the `global.` profile.
+
+Bedrock has no server-side `fallbacks`, so the request omits it and the client's `betaRefusalFallbackMiddleware`
+retries a refusal on Opus 4.8 instead. bedrock-runtime rejects the `fallback-credit` beta the middleware sends by
+default, so it is turned off and a retry pays full price.
+
+Rejected: the Mantle client (`AnthropicBedrockMantle`), which returned 404 for Opus 5.5 and Opus 4.8 in
+eu-central-1 and eu-west-1 on 2026-09-29 and served Opus 5.5 only in us-east-1; worth re-checking, since it
+would bring the fallback credit back. The Converse API was rejected too (a different request shape, so a
+second adapter).
