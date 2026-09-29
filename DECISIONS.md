@@ -344,3 +344,24 @@ The words stay beside every hue (and failed checks keep a dashed border), so no 
 from red or yellow. Rejected: coloured left borders and tinted cards (the old look; the system forbids both) and
 colour-only states.
 
+## 31. Conversation history comes from the client, and it is context, not evidence
+
+`POST /inquiries` takes an optional `history`: up to `HISTORY_LIMIT` (5) earlier exchanges as
+`{inquiry, reply}` pairs, oldest first. The loop sends them to the model as plain user and assistant text before
+the new inquiry, so "and the deposit?" knows which flat it means. The server keeps nothing between requests, like
+`/mcp` (`DECISIONS.md` 24); the web app sends the answered exchanges on screen, and "New conversation" clears them.
+
+History is context, never evidence. Earlier replies are sent without their tool calls and results, and the guards
+still count only this run's tool results: a follow-up that cites `[HH-1001#s5]` or repeats a figure from an
+earlier reply has to look it up again, or fail the check like any unsupported claim. The prompt says so, so the
+model retrieves first instead of paying for a repair turn. Figures the inquirer stated in earlier turns do count
+as theirs ("unter 2.000 €" three messages ago is not an invented number).
+
+More than five turns is a 400, not a silent trim: the client decides what to drop. The loop keeps the last five
+too, for callers other than the API.
+
+Rejected: replaying earlier tool results (the model could cite a passage retrieved for another question, and every
+turn would grow by the full results); server-side sessions for now (a conversation id, storage, expiry and access
+control for a demo with one user, which decision 24 avoided; it is on the roadmap as an optional later slice);
+summarising earlier turns with the model (a second model call per inquiry, and a summary is one more unchecked
+text between the record and the reply).

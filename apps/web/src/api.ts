@@ -1,4 +1,5 @@
 import type { AgentResult, HandoffTicket, TraceEntry, Violation } from "@proptech/core";
+import type { Turn } from "@proptech/core/conversation";
 
 export type { AgentResult, HandoffTicket, TraceEntry, Violation };
 
@@ -41,13 +42,13 @@ export interface InquiryHandlers {
 }
 
 /** POST /inquiries and hand each server-sent event to its handler as it arrives. */
-export async function sendInquiry(inquiry: string, on: InquiryHandlers): Promise<void> {
+export async function sendInquiry(inquiry: string, history: Turn[], on: InquiryHandlers): Promise<void> {
   let res: Response;
   try {
     res = await fetch("/inquiries", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ inquiry }),
+      body: JSON.stringify({ inquiry, history }),
     });
   } catch {
     return on.onError("The server is not reachable. Start it with pnpm dev.");
