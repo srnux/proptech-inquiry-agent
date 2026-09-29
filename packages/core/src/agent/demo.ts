@@ -4,7 +4,8 @@ import { call, say, type Block, type Message, type ModelClient, type ModelReques
  * A rule-based stand-in for the model, so the web app runs from a clean clone without a key (DECISIONS.md 28).
  * It calls the real tools over MCP, like the model does, and writes its reply only from what they returned,
  * so the guards check it like any other answer. It understands the example inquiries and little else: it
- * shows the loop, the trace and the hand-offs, not the quality of an answer.
+ * shows the loop, the trace and the hand-offs, not the quality of an answer. In a follow-up without a listing id
+ * ("and the deposit?") it takes the listing the conversation was last about.
  */
 export class DemoModel implements ModelClient {
   readonly id = "demo";
@@ -96,9 +97,20 @@ function toolCalls(messages: Message[]): ToolCall[] {
   return done;
 }
 
+/** Earlier turns come first, as plain text; the current inquiry is the last user message that is a string. */
+function split(messages: Message[]): { inquiry: string; earlier: string } {
+  let at = messages.length - 1;
+  while (at >= 0 && !(messages[at]!.role === "user" && typeof messages[at]!.content === "string")) at--;
+  const text = (m: Message) =>
+    typeof m.content === "string" ? m.content : m.content.flatMap((b) => (b.type === "text" ? [b.text] : [])).join(" ");
+  const inquiry = at >= 0 ? (messages[at]!.content as string) : "";
+  return { inquiry, earlier: messages.slice(0, Math.max(at, 0)).map(text).join("\n") };
+}
+
 function nextStep(messages: Message[]): Block[] {
-  const inquiry = typeof messages[0]?.content === "string" ? messages[0].content : "";
+  const { inquiry, earlier } = split(messages);
   const intent = parseIntent(inquiry);
+  if (!intent.listingId && !intent.city) intent.listingId = earlier.match(new RegExp(LISTING_ID, "g"))?.at(-1) ?? null;
   const done = toolCalls(messages);
   const first = (name: string) => done.find((d) => d.name === name);
   const handedOff = (reason: string) => done.some((d) => d.name === "hand_off_to_human" && d.input.reason === reason);

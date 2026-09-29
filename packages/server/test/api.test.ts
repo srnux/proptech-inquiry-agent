@@ -3,7 +3,7 @@ import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/
 import type { AddressInfo } from "node:net";
 import { afterEach, describe, expect, it } from "vitest";
 import { AnthropicModel, bedrockModel } from "../src/agent/anthropic.js";
-import { call, InMemoryHandoffQueue, InMemoryListingRepository, type ModelClient, say, ScriptedModel, paths } from "@proptech/core";
+import { call, HISTORY_LIMIT, InMemoryHandoffQueue, InMemoryListingRepository, type ModelClient, say, ScriptedModel, paths } from "@proptech/core";
 import { createHttpServer } from "../src/api/app.js";
 import { knowledgeBase, policies } from "@proptech/core/testing";
 
@@ -249,5 +249,30 @@ describe("endpoints for the web app", () => {
 
     const events = sse(await (await post(`${url}/inquiries`, { inquiry: "Is HH-1001 still free?" })).text());
     expect(events[0]).toMatchObject({ event: "trace", data: { tool: "get_listing", result: { id: "HH-1001", price: 1650 } } });
+  });
+});
+
+describe("POST /inquiries with history", () => {
+  it("passes earlier turns to the model before the new inquiry", async () => {
+    const model = new ScriptedModel([[say("Gern.")]]);
+    const { url } = await start(model);
+    const history = [{ inquiry: "Is heating included for HH-1001?", reply: "Yes [HH-1001#s5]." }];
+
+    const events = sse(await (await post(`${url}/inquiries`, { inquiry: "And the deposit?", history })).text());
+
+    expect(events.at(-1)?.event).toBe("result");
+    expect(model.requests[0]?.messages.map((m) => m.role)).toEqual(["user", "assistant", "user"]);
+    expect(model.requests[0]?.messages[0]).toEqual({ role: "user", content: history[0]!.inquiry });
+  });
+
+  it("rejects malformed history and more than HISTORY_LIMIT turns", async () => {
+    const { url } = await start(new ScriptedModel([]));
+    const turn = { inquiry: "Is HH-1001 free?", reply: "Yes [HH-1001]." };
+
+    expect((await post(`${url}/inquiries`, { inquiry: "And the deposit?", history: [{ inquiry: "hi" }] })).status).toBe(400);
+    expect((await post(`${url}/inquiries`, { inquiry: "And the deposit?", history: "earlier" })).status).toBe(400);
+    const tooLong = await post(`${url}/inquiries`, { inquiry: "And the deposit?", history: Array(HISTORY_LIMIT + 1).fill(turn) });
+    expect(tooLong.status).toBe(400);
+    expect((await tooLong.json()).error).toContain("history");
   });
 });

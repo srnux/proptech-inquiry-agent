@@ -1,10 +1,18 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { z } from "zod";
 import { connectInProcess } from "../agent/connect.js";
-import { type AgentLimits, type ModelClient, runInquiry } from "@proptech/core";
+import { type AgentLimits, HISTORY_LIMIT, type ModelClient, runInquiry } from "@proptech/core";
 import type { ServerDeps } from "../mcp/server.js";
 
-const Body = z.object({ inquiry: z.string().trim().min(3).max(2000) });
+const Inquiry = z.string().trim().min(3).max(2000);
+const Body = z.object({
+  inquiry: Inquiry,
+  /** Earlier exchanges as the client shows them, oldest first (DECISIONS.md 31). */
+  history: z
+    .array(z.object({ inquiry: Inquiry, reply: z.string().trim().min(1).max(4000) }))
+    .max(HISTORY_LIMIT)
+    .default([]),
+});
 
 export interface InquiryDeps {
   model: ModelClient;
@@ -15,14 +23,20 @@ export interface InquiryDeps {
 const frame = (event: string, data: unknown) => `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
 
 /**
- * POST /inquiries {"inquiry": "..."}: runs the agent and streams `trace` events as tools run, then one
+ * POST /inquiries {"inquiry": "...", "history"?: [{"inquiry": "...", "reply": "..."}]}: runs the agent and streams `trace` events as tools run, then one
  * `result` event (reply, citations, hand-offs, trace, usage, outcome). A failure is one `error` event.
  */
 export async function handleInquiry(body: unknown, res: ServerResponse, deps: InquiryDeps): Promise<void> {
   const parsed = Body.safeParse(body);
   if (!parsed.success) {
     res.writeHead(400, { "content-type": "application/json" });
-    res.end(JSON.stringify({ error: 'Body must be {"inquiry": string} with 3 to 2000 characters.' }));
+    res.end(
+      JSON.stringify({
+        error:
+          'Body must be {"inquiry": string} with 3 to 2000 characters, and optionally "history": ' +
+          `up to ${HISTORY_LIMIT} earlier {"inquiry", "reply"} pairs.`,
+      }),
+    );
     return;
   }
 
@@ -38,6 +52,7 @@ export async function handleInquiry(body: unknown, res: ServerResponse, deps: In
           res.write(e.type === "trace" ? frame("trace", e.entry) : frame("guard", { violations: e.violations, repairing: e.repairing })),
       },
       parsed.data.inquiry,
+      parsed.data.history,
     );
     res.write(frame("result", result));
   } catch (e) {
