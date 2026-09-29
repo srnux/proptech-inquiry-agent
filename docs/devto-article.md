@@ -1,8 +1,8 @@
 ---
-title: "Building a Property Inquiry Desk with React, MCP, and Local Search"
+title: "A Property Inquiry Agent with React, MCP, and Hybrid RAG"
 published: false
-description: "A React inquiry desk with visible tool calls, clickable sources, and live hand-offs, backed by a TypeScript agent with local retrieval and answer checks."
-tags: ai, typescript, mcp, programming
+description: "A TypeScript agent for property inquiries: answers backed by records, checked before delivery, with human follow-up when needed. Built with React, MCP, and hybrid RAG."
+tags: ai, typescript, mcp, rag
 ---
 
 A property assistant gets a question:
@@ -13,9 +13,11 @@ That sounds like one request. It actually contains several jobs: filter properti
 
 Some of those jobs have answers in the records. Others need a person.
 
-That distinction is the starting point for `proptech-inquiry-agent`: a TypeScript project that gives an AI assistant tools to search property records, retrieve supporting passages, and create human hand-off tickets.
+That distinction is the starting point for [proptech-inquiry-agent](https://github.com/srnux/proptech-inquiry-agent): a TypeScript project that gives an AI assistant tools to search property records, retrieve supporting passages, and create human hand-off tickets.
 
 You interact with it through a React inquiry desk. Behind the interface, an agent chooses tools, gathers evidence, checks its draft, and returns an answer or a hand-off. You can try the browser interface without a model API key. All property and policy data is synthetic.
+
+The MCP tools, hybrid retrieval, agent loop, answer checks, and web interface are implemented. This is still a work in progress: a broader evaluation suite is next, to measure answer correctness and missed hand-offs beyond the existing tests.
 
 ## A desk where you can see what happened
 
@@ -35,7 +37,9 @@ The browser application has three panes, each answering a different question: wh
 +---------------------+----------------------+---------------------+
 ```
 
-The left pane has example buttons for a fact question, a viewing request, an unanswered question, and a German inquiry. The middle pane exposes the actual tool calls, including errors and failed answer checks. The right pane shows tickets for a human to handle.
+<!-- TODO: screenshot of the web app with the viewing example answered -->
+
+The left pane has example buttons for a fact question, a viewing request, an unanswered question, and a German inquiry. You can follow up with “and the deposit?” without repeating the property ID, or select “New conversation” to start over. The middle pane exposes the actual tool calls, including errors and failed answer checks. The right pane shows tickets for a human to handle.
 
 Clicking a citation opens a dialog with the source document and the cited passage highlighted. A citation for a whole property shows its structured fields and description. This makes it possible to inspect the evidence behind the reply without searching through logs.
 
@@ -142,6 +146,8 @@ The heating question needs a different approach. The answer appears inside the d
 > “Utilities (Nebenkosten) are an additional 240 EUR per month, heating included.”
 
 The retrieval system splits property descriptions into sentences and policy pages into sections. These small passages are called chunks. Each carries its source and an identifier for citations.
+
+Retrieving evidence for the model before it writes an answer is called retrieval-augmented generation (RAG). Here, the retrieval is hybrid: it combines keyword search with embedding-based meaning search, then uses a reranker to assess the candidates.
 
 Search then happens in two stages:
 
@@ -257,7 +263,7 @@ The checks in `packages/core/src/agent/guards.ts` examine a draft before the loo
 | Check | What the code looks for |
 | --- | --- |
 | Citation | Recognized citation markers must refer to listing or passage IDs returned by a tool during this run. |
-| Number | Detected prices, areas, and percentages must match a number in a successful tool result or the original inquiry. |
+| Number | Detected prices, areas, and percentages must match a number in a successful tool result from this run or the user's current or retained earlier inquiries. |
 | Missing evidence | A reply containing those figures must include at least one recognized citation. |
 | Empty reply | The answer must contain text. |
 
@@ -297,6 +303,27 @@ The prompt forbids arithmetic, but the number check only tests whether a value a
 
 These answer checks belong to the built-in agent loop. An external assistant calling `/mcp` directly gets the tools and their validation, but does not automatically run its final answer through these guards.
 
+## Follow-up questions: remember the context, retrieve the evidence again
+
+After asking about heating in `HH-1001`, a user can ask “and the deposit?” The model needs the earlier exchange to know which property they mean.
+
+`POST /inquiries` accepts an optional `history` containing up to five earlier `{inquiry, reply}` pairs, oldest first. The web app sends the five most recent completed exchanges on screen. “New conversation” clears that conversation context. The server does not retain conversation history between requests; its shared in-memory ticket queue is separate.
+
+```text
+Earlier questions and replies ──> Context: which property?
+                                           |
+New question ───────────────────────────────┤
+                                           v
+                                  Retrieve current evidence
+                                           |
+                                           v
+                                  Write and check the reply
+```
+
+Earlier replies reach the model as plain text, without their tool calls or results. Their citations and figures do not become evidence for the new run. Reusing a source marker requires retrieving it again; a figure must appear in this run's tool results or in a user inquiry. Figures the user supplied in retained earlier turns still count as their own—for example, their €2,000 budget.
+
+The API rejects more than five history entries with HTTP 400; the client chooses which entries to drop. This keeps the history bounded without adding server-side conversation sessions. Replaying old tool results would carry evidence across inquiries, while model-generated summaries would add another model call and another unchecked text to the workflow.
+
 ## What the evaluation tells us
 
 The repository records this retrieval result from September 28, 2026:
@@ -321,7 +348,7 @@ In a documented run on Amazon Bedrock on September 29, 2026, the German version 
 
 The optional live agent test is recorded as passing too. That test uses a real conversational model with the offline retrieval substitute; it is separate from the real-retrieval model test. The recorded acceptance run is evidence that the workflow has been exercised, not a broad measure of its reliability.
 
-Two Playwright tests cover the browser workflow: one clicks the viewing example and checks the reply, expandable tool arguments, and resulting ticket; the other opens a citation, checks that its passage is highlighted, and closes the dialog. They run with the demo model and hashing embedder, so the test runs need no model credentials or model downloads. They verify the browser workflow, not a remote model's answer quality.
+Three Playwright tests cover the browser workflow: a viewing request produces a reply, trace, and ticket; a citation opens its highlighted passage; and a follow-up retains the property context until “New conversation” clears it. They run with the demo model and hashing embedder, so the test runs need no model credentials or model downloads. They verify the browser workflow, not a remote model's answer quality.
 
 ## Stream the work, then show the checked answer
 
@@ -405,9 +432,10 @@ The vector store is currently in memory, with embeddings cached on disk. For thi
 
 ## Try the current implementation
 
-With Node.js 20 or newer and pnpm available, run these commands from the repository:
+Clone the [GitHub repository](https://github.com/srnux/proptech-inquiry-agent), then run these commands from its root with Node.js 20 or newer:
 
 ```bash
+corepack enable   # once, provides the pnpm version pinned in package.json
 pnpm install
 pnpm dev
 ```
@@ -442,6 +470,20 @@ Send `POST /inquiries` a JSON body such as:
 
 ```json
 {"inquiry": "Is heating included in HH-1001, and can I view it on Saturday?"}
+```
+
+For a follow-up, include the earlier exchange. This example shows the request shape; in an application, pass the actual reply previously returned:
+
+```json
+{
+  "inquiry": "And what is the deposit?",
+  "history": [
+    {
+      "inquiry": "Is heating included in HH-1001?",
+      "reply": "Heating is included in the additional utilities charge of 240 EUR per month. [HH-1001#s5]"
+    }
+  ]
+}
 ```
 
 Unlike `pnpm dev`, `pnpm ask` and `pnpm serve` require credentials unless you explicitly select `MODEL_PROVIDER=demo`. Real-model runs use provider credentials; demo runs do not.
