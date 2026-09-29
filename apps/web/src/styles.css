@@ -674,3 +674,8 @@ mark {
     transition: none !important;
   }
 }
+
+/* The "New conversation" button sits at the right end of the conversation heading. */
+.pane > h2 .restart {
+  margin-left: auto;
+}

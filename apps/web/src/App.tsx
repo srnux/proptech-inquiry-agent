@@ -1,3 +1,4 @@
+import { HISTORY_LIMIT } from "@proptech/core/conversation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchModel, sendInquiry, watchHandoffs, type AgentResult, type GuardEvent, type HandoffTicket, type TraceEntry } from "./api";
 import { Chat } from "./Chat";
@@ -49,17 +50,25 @@ export function App() {
 
   const update = (id: number, change: (r: Run) => Run) => setRuns((all) => all.map((r) => (r.id === id ? change(r) : r)));
 
+  // The conversation so far goes with each inquiry, so a follow-up ("and the deposit?") knows what it refers to.
+  // Only answered exchanges count; the server gets no more than it will use (DECISIONS.md 31).
   const ask = useCallback(async (inquiry: string) => {
+    const history = runs.flatMap((r) => (r.result ? [{ inquiry: r.inquiry, reply: r.result.reply }] : [])).slice(-HISTORY_LIMIT);
     const id = nextId.current++;
     setRuns((all) => [...all, { id, inquiry, steps: [], guards: [] }]);
     setSelected(id);
-    await sendInquiry(inquiry, {
+    await sendInquiry(inquiry, history, {
       onTrace: (entry) => update(id, (r) => ({ ...r, steps: [...r.steps, entry] })),
       onGuard: (event) => update(id, (r) => ({ ...r, guards: [...r.guards, event] })),
       onResult: (result) => update(id, (r) => ({ ...r, result })),
       onError: (error) => update(id, (r) => ({ ...r, error })),
     });
-  }, []);
+  }, [runs]);
+
+  const restart = () => {
+    setRuns([]);
+    setSelected(null);
+  };
 
   const busy = runs.some((r) => !r.result && !r.error);
   const shown = runs.find((r) => r.id === selected) ?? runs.at(-1);
@@ -74,7 +83,7 @@ export function App() {
         <ModelBadge model={model} />
       </header>
       <main className="panes">
-        <Chat runs={runs} busy={busy} selected={shown?.id ?? null} onSelect={setSelected} onAsk={ask} onCite={setSource} />
+        <Chat runs={runs} busy={busy} selected={shown?.id ?? null} onSelect={setSelected} onAsk={ask} onRestart={restart} onCite={setSource} />
         <Trace run={shown} />
         <Queue tickets={tickets} fresh={fresh} live={queueLive} />
       </main>

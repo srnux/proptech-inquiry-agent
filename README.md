@@ -29,7 +29,8 @@ pnpm dev          # API on 127.0.0.1:3000, the inquiry desk on http://localhost:
 
 Click one of the example inquiries. The conversation fills on the left, every tool call the agent made in
 the middle (click a row for its arguments and result), and the tickets for a colleague on the right. Each
-citation in a reply is a chip that opens the passage it came from.
+citation in a reply is a chip that opens the passage it came from. Follow-ups work ("and the deposit?"): the page
+sends the last five exchanges with each inquiry, and "New conversation" starts over (`DECISIONS.md` 31).
 
 Without `ANTHROPIC_API_KEY` (or the Bedrock settings) in `.env`, `pnpm dev` runs a rule-based demo model that
 drives the same tools and checks, and the page says so (`DECISIONS.md` 28). The first start downloads the two

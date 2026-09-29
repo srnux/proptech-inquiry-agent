@@ -9,10 +9,12 @@ interface Props {
   selected: number | null;
   onSelect(id: number): void;
   onAsk(inquiry: string): void;
+  /** Clears the thread, so the next inquiry is sent without history. */
+  onRestart(): void;
   onCite(id: string): void;
 }
 
-export function Chat({ runs, busy, selected, onSelect, onAsk, onCite }: Props) {
+export function Chat({ runs, busy, selected, onSelect, onAsk, onRestart, onCite }: Props) {
   const [draft, setDraft] = useState("");
   const end = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -28,7 +30,14 @@ export function Chat({ runs, busy, selected, onSelect, onAsk, onCite }: Props) {
 
   return (
     <section className="pane chat" aria-labelledby="chat-title">
-      <h2 id="chat-title">Conversation</h2>
+      <h2 id="chat-title">
+        Conversation
+        {runs.length > 0 && (
+          <button type="button" className="example restart" disabled={busy} onClick={onRestart} title="Start over: the next inquiry is sent without the earlier ones">
+            New conversation
+          </button>
+        )}
+      </h2>
       <div className="thread" aria-live="polite">
         {runs.length === 0 && <p className="empty">Ask about a listing, or start with one of the examples below.</p>}
         {runs.map((run) => (

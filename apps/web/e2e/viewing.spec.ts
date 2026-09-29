@@ -33,3 +33,22 @@ test("a citation chip opens the cited passage", async ({ page }) => {
   await dialog.getByRole("button", { name: "Close" }).click();
   await expect(dialog).toBeHidden();
 });
+
+test("a follow-up is sent with the conversation, and New conversation starts without it", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "A fact question" }).click();
+  await expect(page.getByTestId("reply")).toHaveCount(1);
+
+  await page.getByLabel("Your inquiry").fill("And what is the deposit?");
+  await page.getByRole("button", { name: "Send" }).click();
+  await expect(page.getByTestId("reply").nth(1)).toContainText("Deposit is three months' cold rent");
+  await page.locator(".step").first().locator("summary").click();
+  await expect(page.locator(".step pre").first()).toContainText('"listingId": "HH-1001"');
+
+  await page.getByRole("button", { name: "New conversation" }).click();
+  await expect(page.getByTestId("reply")).toHaveCount(0);
+  await page.getByLabel("Your inquiry").fill("And what is the deposit?");
+  await page.getByRole("button", { name: "Send" }).click();
+  await page.locator(".step").first().locator("summary").click();
+  await expect(page.locator(".step pre").first()).not.toContainText("listingId");
+});

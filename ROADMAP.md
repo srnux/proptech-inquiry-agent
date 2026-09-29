@@ -184,6 +184,8 @@ heating sentence and creates one `viewing_request` ticket.
 - [x] Example inquiries as buttons: one pure fact question, one with a viewing, one out of scope, one in German.
 - [x] `pnpm dev` starts server and UI together; without credentials it runs the demo model (`DECISIONS.md` 28).
 - [x] One Playwright test: click the viewing example, assert the reply and a ticket in the queue (plus one for citation chips).
+- [x] Follow-up questions: the client sends the last 5 exchanges with each inquiry; history is context, not
+      evidence, so cited ids and figures are looked up again (`DECISIONS.md` 31). "New conversation" clears it.
 
 ### Acceptance
 
@@ -266,6 +268,48 @@ A clean clone, `pnpm install`, `pnpm dev`, one click on an example, and all thre
 ### Acceptance
 
 Someone who has never seen the repo understands what it does from the README in two minutes and can run it in five.
+
+---
+
+## Optional, later: server-side conversation history
+
+Not scheduled. Slice 4 keeps the history in the client (`DECISIONS.md` 31), which is enough for one person trying
+the desk. This slice is for when a conversation has to outlive a browser tab: a colleague picks up a thread from a
+hand-off ticket, an inquiry arrives by email and is answered in the web app, or the evals replay whole conversations.
+
+**Goal:** a conversation has an id and lives on the server; the client sends only the new message.
+
+### Tasks
+
+- [ ] `ConversationStore` interface in `packages/core` (create, append turn, read last N, delete) with an in-memory
+      implementation and a fake clock for tests. Same shape as the other stores: no framework imports.
+- [ ] A turn stores the inquiry, the reply, the citations, the hand-off ticket ids and the outcome. Tool results are
+      not replayed to the model, so the rule from `DECISIONS.md` 31 holds: history is context, not evidence.
+- [ ] `POST /conversations` creates one; `POST /conversations/:id/inquiries` runs the agent with the stored history
+      and appends the turn only when the run finishes; `GET /conversations/:id` returns the transcript.
+- [ ] Hand-off tickets carry the conversation id, so a colleague opens the whole thread from the queue.
+- [ ] Expiry: conversations idle for longer than a configured time are deleted; a personal data request can delete
+      one on demand (ties in with the `personal_data_request` hand-off).
+- [ ] Access: a conversation id is a capability (unguessable, not enumerable); nothing lists all conversations
+      without authentication.
+- [ ] Web app keeps the id in the URL, so a reload or a shared link reopens the thread.
+- [ ] Keep `history` on `POST /inquiries` for stateless callers, or retire it with an entry in `DECISIONS.md`.
+
+### Tests
+
+- [ ] Two conversations never see each other's turns
+- [ ] A failed or aborted run appends nothing
+- [ ] Expired and deleted conversations return 404
+- [ ] A follow-up that cites a chunk from an earlier turn still fails the citation check
+- [ ] Concurrent inquiries on one conversation: the second waits or is rejected, never interleaved
+
+### Decisions
+
+| Id | Question | Options | Recommendation |
+|---|---|---|---|
+| D7.1 | Storage | In-memory · SQLite · Postgres next to pgvector | Postgres if slice 6 brings pgvector; otherwise in-memory behind the interface |
+| D7.2 | Retention | Fixed idle timeout · per-agency setting | Fixed, recorded in `DECISIONS.md`, with deletion on request |
+| D7.3 | Concurrent inquiries | Queue per conversation · reject with 409 | Reject; the UI already disables sending while a run is in progress |
 
 ---
 
