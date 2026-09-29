@@ -9,8 +9,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "tsc -p packages/core/tsconfig.json && tsc -p packages/server/tsconfig.json",
-    "typecheck": "tsc -p packages/core/tsconfig.check.json && tsc -p packages/server/tsconfig.check.json",
+    "dev": "pnpm --parallel --stream --filter @proptech/server --filter @proptech/web dev",
+    "build": "tsc -p packages/core/tsconfig.json && tsc -p packages/server/tsconfig.json && pnpm --filter @proptech/web build",
+    "typecheck": "tsc -p packages/core/tsconfig.check.json && tsc -p packages/server/tsconfig.check.json && tsc -p apps/web/tsconfig.json",
     "test": "vitest run",
     "mcp": "tsx packages/server/src/mcp/stdio.ts",
     "serve": "tsx packages/server/src/api/main.ts",
@@ -19,7 +20,8 @@
     "index": "tsx packages/core/scripts/index.ts",
     "calibrate": "tsx packages/core/scripts/calibrate.ts",
     "test:model": "vitest run -c vitest.model.config.ts",
-    "experiment:embed-text": "tsx packages/core/scripts/compare-embed-text.ts"
+    "experiment:embed-text": "tsx packages/core/scripts/compare-embed-text.ts",
+    "test:e2e": "pnpm --filter @proptech/web test:e2e"
   },
   "devDependencies": {
     "@types/node": "^26.6.3",
