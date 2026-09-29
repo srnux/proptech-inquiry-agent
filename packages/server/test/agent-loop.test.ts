@@ -1,7 +1,7 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { describe, expect, it } from "vitest";
-import { type AgentEvent, type AgentLimits, call, HandoffReason, InMemoryHandoffQueue, InMemoryListingRepository, type ModelClient, type ModelRequest, type ModelResponse, runInquiry, say, ScriptedModel, SYSTEM_PROMPT, paths } from "@proptech/core";
+import { type AgentEvent, type AgentLimits, call, HISTORY_LIMIT, type Turn, HandoffReason, InMemoryHandoffQueue, InMemoryListingRepository, type ModelClient, type ModelRequest, type ModelResponse, runInquiry, say, ScriptedModel, SYSTEM_PROMPT, paths } from "@proptech/core";
 import { createServer } from "../src/mcp/server.js";
 import { knowledgeBase, policies } from "@proptech/core/testing";
 
@@ -14,7 +14,7 @@ async function harness(model: ModelClient, limits?: Partial<AgentLimits>) {
   const mcp = new Client({ name: "agent", version: "0.0.0" });
   await Promise.all([server.connect(b), mcp.connect(a)]);
   const events: AgentEvent[] = [];
-  const run = (inquiry: string) => runInquiry({ model, mcp, limits, onEvent: (e) => events.push(e) }, inquiry);
+  const run = (inquiry: string, history?: Turn[]) => runInquiry({ model, mcp, limits, onEvent: (e) => events.push(e) }, inquiry, history);
   return { run, handoffs, events };
 }
 
@@ -172,5 +172,74 @@ describe("agent loop", () => {
     const { run, handoffs } = await harness(broken);
     await expect(run("Hallo?")).rejects.toThrow("401");
     expect(handoffs.list()).toHaveLength(0);
+  });
+});
+
+describe("conversation history", () => {
+  const first: Turn = {
+    inquiry: "Ist die Heizung bei HH-1001 inklusive?",
+    reply: "Ja, die Heizung ist in den Nebenkosten von 240 EUR enthalten [HH-1001#s5].",
+  };
+
+  it("sends earlier turns before the new inquiry, as plain user and assistant text", async () => {
+    const model = new ScriptedModel([[say("Gern.")]]);
+    const { run } = await harness(model);
+
+    await run("Und die Kaution?", [first]);
+
+    expect(model.requests[0]?.messages).toEqual([
+      { role: "user", content: first.inquiry },
+      { role: "assistant", content: [{ type: "text", text: first.reply }] },
+      { role: "user", content: "Und die Kaution?" },
+    ]);
+  });
+
+  it("keeps only the last HISTORY_LIMIT turns", async () => {
+    const model = new ScriptedModel([[say("Gern.")]]);
+    const { run } = await harness(model);
+    const history = Array.from({ length: HISTORY_LIMIT + 2 }, (_, i) => ({ inquiry: `Frage ${i}`, reply: `Antwort ${i}` }));
+
+    await run("Noch eine Frage?", history);
+
+    const sent = model.requests[0]!.messages;
+    expect(sent).toHaveLength(HISTORY_LIMIT * 2 + 1);
+    expect(sent[0]).toEqual({ role: "user", content: "Frage 2" });
+  });
+
+  it("does not accept a citation that only an earlier reply contains: it must be retrieved again", async () => {
+    const model = new ScriptedModel([
+      [say("Wie gesagt, die Heizung ist inklusive [HH-1001#s5].")],
+      [utilities],
+      [say("Die Heizung ist inklusive [HH-1001#s5].")],
+    ]);
+    const { run, events } = await harness(model);
+
+    const result = await run("Nochmal: ist die Heizung inklusive?", [first]);
+
+    expect(events).toContainEqual(expect.objectContaining({ type: "guard", repairing: true }));
+    expect(JSON.stringify(model.requests[1]?.messages.at(-1))).toContain("HH-1001#s5");
+    expect(result.outcome).toEqual({ status: "answered" });
+    expect(result.trace.map((t) => t.tool)).toEqual(["search_knowledge"]);
+  });
+
+  it("does not accept a figure that only an earlier reply contains", async () => {
+    // 4.950 € is three months' rent worked out by hand: in the earlier reply, in no tool result.
+    const earlier: Turn = { inquiry: "Wie hoch ist die Kaution bei HH-1001?", reply: "Die Kaution beträgt 4.950 € [HH-1001]." };
+    const repeated = say("Wie gesagt, die Kaution beträgt 4.950 € [HH-1001].");
+    const model = new ScriptedModel([[lookup], [repeated], [repeated]]);
+    const { run } = await harness(model);
+
+    const result = await run("Nochmal, wie hoch war die Kaution?", [earlier]);
+
+    expect(result.outcome).toMatchObject({ status: "forced_handoff", cause: "guard_failed" });
+  });
+
+  it("accepts a figure the inquirer stated in an earlier turn", async () => {
+    const model = new ScriptedModel([[lookup], [say("Unter 2.000 € passt HH-1001 [HH-1001].")]]);
+    const { run } = await harness(model);
+
+    const result = await run("Passt HH-1001?", [{ inquiry: "Ich suche etwas unter 2.000 €.", reply: "Gern, welche Wohnung interessiert Sie?" }]);
+
+    expect(result.outcome).toEqual({ status: "answered" });
   });
 });

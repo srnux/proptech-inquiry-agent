@@ -10,6 +10,7 @@ export * from "./retrieval/knowledge.js";
 export * from "./retrieval/open.js";
 export * from "./retrieval/reranker.js";
 export * from "./retrieval/store.js";
+export * from "./agent/conversation.js";
 export * from "./agent/demo.js";
 export * from "./agent/examples.js";
 export * from "./agent/guards.js";

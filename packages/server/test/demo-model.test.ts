@@ -1,15 +1,15 @@
-import { DemoModel, EXAMPLE_INQUIRIES, InMemoryHandoffQueue, InMemoryListingRepository, paths, runInquiry } from "@proptech/core";
+import { DemoModel, EXAMPLE_INQUIRIES, type Turn, InMemoryHandoffQueue, InMemoryListingRepository, paths, runInquiry } from "@proptech/core";
 import { knowledgeBase, policies } from "@proptech/core/testing";
 import { describe, expect, it } from "vitest";
 import { connectInProcess } from "../src/agent/connect.js";
 
 const kb = await knowledgeBase();
 
-async function ask(inquiry: string) {
+async function ask(inquiry: string, history: Turn[] = []) {
   const handoffs = new InMemoryHandoffQueue();
   const mcp = await connectInProcess({ listings: InMemoryListingRepository.fromFile(paths.listings), handoffs, knowledge: kb, policies });
   try {
-    return await runInquiry({ model: new DemoModel(), mcp }, inquiry);
+    return await runInquiry({ model: new DemoModel(), mcp }, inquiry, history);
   } finally {
     await mcp.close();
   }
@@ -56,5 +56,13 @@ describe("demo model on the example inquiries", () => {
     expect(r.trace[0]).toMatchObject({ tool: "search_knowledge", isError: true });
     expect(r.handoffs).toMatchObject([{ reason: "not_answerable_from_listing", listingId: null }]);
     expect(r.citations).toEqual([]);
+  });
+
+  it("takes the listing from the conversation for a follow-up that names none", async () => {
+    const first = await ask(example("fact"));
+    const r = await ask("And what is the deposit?", [{ inquiry: example("fact"), reply: first.reply }]);
+    expect(r.outcome).toEqual({ status: "answered" });
+    expect(r.trace[0]).toMatchObject({ tool: "search_knowledge", arguments: { listingId: "HH-1001" } });
+    expect(r.reply).toContain("Deposit is three months' cold rent");
   });
 });

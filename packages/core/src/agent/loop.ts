@@ -1,5 +1,6 @@
 import type { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import type { HandoffTicket } from "../domain/handoff.js";
+import { HISTORY_LIMIT, type Turn } from "./conversation.js";
 import { checkReply, extractCitations, type Citation, type Evidence, type Violation } from "./guards.js";
 import { emptyUsage, type Block, type Message, type ModelClient, type ToolDef, type Usage } from "./model.js";
 import { SYSTEM_PROMPT } from "./prompt.js";
@@ -101,8 +102,14 @@ function summarise(tool: string, structured: any, text: string, isError: boolean
   }
 }
 
-/** The plain tool-use loop: call the model, run its tool calls over MCP, repeat until it answers. */
-export async function runInquiry(deps: AgentDeps, inquiry: string): Promise<AgentResult> {
+/**
+ * The plain tool-use loop: call the model, run its tool calls over MCP, repeat until it answers.
+ *
+ * `history` is the conversation so far, as the client shows it (DECISIONS.md 31). The model reads it as context,
+ * but it is not evidence: a citation or figure from an earlier reply must be looked up again in this run.
+ * Figures the inquirer stated in earlier turns still count as theirs.
+ */
+export async function runInquiry(deps: AgentDeps, inquiry: string, history: readonly Turn[] = []): Promise<AgentResult> {
   const { model, mcp, onEvent } = deps;
   const limits = { ...defaultLimits, ...deps.limits };
 
@@ -112,11 +119,23 @@ export async function runInquiry(deps: AgentDeps, inquiry: string): Promise<Agen
     inputSchema: t.inputSchema as Record<string, unknown>,
   }));
 
-  const messages: Message[] = [{ role: "user", content: inquiry }];
+  const earlier = history.slice(-HISTORY_LIMIT);
+  const messages: Message[] = [
+    ...earlier.flatMap((t): Message[] => [
+      { role: "user", content: t.inquiry },
+      { role: "assistant", content: [{ type: "text", text: t.reply }] },
+    ]),
+    { role: "user", content: inquiry },
+  ];
   const trace: TraceEntry[] = [];
   const handoffs: HandoffTicket[] = [];
   const usage = emptyUsage();
-  const evidence = { chunkIds: new Set<string>(), listingIds: new Set<string>(), toolTexts: [] as string[], inquiry } satisfies Evidence;
+  const evidence = {
+    chunkIds: new Set<string>(),
+    listingIds: new Set<string>(),
+    toolTexts: [] as string[],
+    inquiry: [...earlier.map((t) => t.inquiry), inquiry].join("\n"),
+  } satisfies Evidence;
   let turns = 0;
   let repairs = 0;
 

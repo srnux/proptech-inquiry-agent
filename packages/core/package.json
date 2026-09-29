@@ -7,6 +7,7 @@
   "type": "module",
   "exports": {
     ".": { "built": "./dist/index.js", "default": "./src/index.ts" },
+    "./conversation": "./src/agent/conversation.ts",
     "./examples": "./src/agent/examples.ts",
     "./testing": "./src/testing.ts"
   },

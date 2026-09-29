@@ -10,7 +10,7 @@ export interface Evidence {
   listingIds: ReadonlySet<string>;
   /** Raw text of every tool result in this run. */
   toolTexts: readonly string[];
-  /** The inquirer's own message: figures they stated are not invented. */
+  /** The inquirer's own messages, this one and earlier turns: figures they stated are not invented. */
   inquiry: string;
 }
 
