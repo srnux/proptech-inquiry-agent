@@ -185,3 +185,69 @@ describe("AnthropicModel adapter", () => {
     expect(sent[1].messages[1].content[0]).toEqual({ type: "tool_result", tool_use_id: "t1", content: "{}", is_error: true });
   });
 });
+
+/** Reads a streaming response until `done` holds for the frames seen so far, then closes it. */
+async function readFrames(res: Response, done: (frames: ReturnType<typeof sse>) => boolean) {
+  const reader = res.body!.getReader();
+  const decoder = new TextDecoder();
+  let text = "";
+  while (true) {
+    const { value, done: ended } = await reader.read();
+    if (ended) break;
+    text += decoder.decode(value, { stream: true });
+    const complete = text.slice(0, text.lastIndexOf("\n\n") + 2);
+    const frames = sse(complete.replace(/^: ping\n\n/gm, ""));
+    if (done(frames)) {
+      await reader.cancel();
+      return frames;
+    }
+  }
+  return sse(text);
+}
+
+describe("endpoints for the web app", () => {
+  it("streams the hand-off queue: a snapshot, then each new ticket as it is created", async () => {
+    const { url, handoffs } = await start(new ScriptedModel([]));
+    handoffs.enqueue({ reason: "complaint", listingId: null, summary: "Complaint about the heating.", contactEmail: null });
+
+    const res = await fetch(`${url}/handoffs`);
+    expect(res.headers.get("content-type")).toContain("text/event-stream");
+    const frames = readFrames(res, (f) => f.some((e) => e.event === "ticket"));
+    await new Promise((r) => setTimeout(r, 50));
+    handoffs.enqueue({ reason: "viewing_request", listingId: "HH-1001", summary: "Wants to view on Saturday.", contactEmail: null });
+
+    const events = await frames;
+    expect(events[0]).toMatchObject({ event: "snapshot", data: [{ reason: "complaint" }] });
+    expect(events[1]).toMatchObject({ event: "ticket", data: { reason: "viewing_request", listingId: "HH-1001" } });
+  });
+
+  it("resolves a listing passage, a policy passage and a whole listing for citation chips", async () => {
+    const { url } = await start(new ScriptedModel([]));
+    const get = async (id: string) => (await fetch(`${url}/sources/${encodeURIComponent(id)}`)).json();
+
+    const passage = await get("HH-1001#s5");
+    expect(passage).toMatchObject({ kind: "listing", listingId: "HH-1001", passage: expect.stringContaining("heating included") });
+    expect(passage.document).toContain(passage.passage);
+
+    const policy = await get("policy:pets#dogs-and-cats");
+    expect(policy).toMatchObject({ kind: "policy", listingId: null, title: expect.any(String) });
+    expect(policy.document).toMatch(/^# /);
+
+    const listing = await get("HH-1001");
+    expect(listing).toMatchObject({ kind: "listing", passage: null, facts: { price: 1650, petsAllowed: "on-request" } });
+  });
+
+  it("answers 404 for a citation id that exists nowhere", async () => {
+    const { url } = await start(new ScriptedModel([]));
+    const res = await fetch(`${url}/sources/${encodeURIComponent("HH-1001#s99")}`);
+    expect(res.status).toBe(404);
+  });
+
+  it("reports the model id on /health, and full tool results in trace events", async () => {
+    const { url } = await start(new ScriptedModel([[call("get_listing", { id: "HH-1001" })], [say("HH-1001 is free from November [HH-1001].")]]));
+    expect(await (await fetch(`${url}/health`)).json()).toEqual({ ok: true, model: "scripted" });
+
+    const events = sse(await (await post(`${url}/inquiries`, { inquiry: "Is HH-1001 still free?" })).text());
+    expect(events[0]).toMatchObject({ event: "trace", data: { tool: "get_listing", result: { id: "HH-1001", price: 1650 } } });
+  });
+});
