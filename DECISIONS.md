@@ -282,3 +282,48 @@ Rejected: the reverse (dist by default, a `source` condition for development), w
 pnpm's strict dependency layout (the bundle would need core's dependencies declared by the server); TypeScript
 project references, more configuration for a build almost nobody runs. The `bin` entry went away with the move:
 the package is private and was never installed.
+
+## 27. The reply appears after the guards; what streams is the work
+
+The chat pane streams the run, not the text: each tool call shows up in the trace pane as it finishes, and the
+reply bubble says what the agent is doing ("Searching listing texts and policies") until the answer arrives.
+The reply itself appears whole, once the citation and number guards have passed it (`DECISIONS.md` 20).
+
+Token streaming was rejected because the guards judge the finished draft: a streamed draft that fails them has
+already been read, including the invented price the number guard exists to stop. Streaming it and then
+retracting it would show the inquirer exactly what the design keeps from them. The cost is a few seconds of
+waiting on the real model, which the live steps fill.
+
+## 28. A rule-based demo model, so the UI runs without a key
+
+`DemoModel` (`packages/core/src/agent/demo.ts`) implements `ModelClient` with rules instead of a model. It
+calls the real tools over MCP, quotes retrieved passages verbatim and cites their chunk ids, and hands off
+viewings and unanswerable questions, so its replies pass through the same loop and guards as the real model's
+(the tests assert they pass). It understands the four example inquiries and little else, and the UI labels it
+"Demo model, no API key".
+
+`MODEL_PROVIDER=demo` selects it anywhere (`pnpm serve`, `pnpm ask`). `pnpm dev` selects it on its own when no
+credentials are set, so a clean clone gets a working desk from `pnpm install && pnpm dev`; `pnpm serve` still
+refuses to start without credentials. The Playwright test runs on it with the hashing embedder: no key, no
+network, no model download.
+
+Rejected: requiring a key for the demo (the acceptance for this slice is a clean clone), replaying recorded
+real-model runs (they break whenever a tool result changes, and they would pass the guards by construction
+rather than by checking), and `ScriptedModel` with fixed scripts (it cannot adapt to what retrieval returns
+with a different embedder).
+
+## 29. The web app: plain CSS, React state, a live queue over server-sent events
+
+D4.1: one stylesheet with custom properties for the palette and both colour schemes, no Tailwind and no CSS
+modules. The app is five components; class names do not collide at that size, and a reader sees the whole visual
+system in one file. D4.2: React state in `App.tsx`, no store library, for the same reason.
+
+The hand-off queue is `GET /handoffs`, a server-sent event stream: a snapshot of every ticket, then each new one.
+It reads the shared queue (`HandoffQueue.subscribe`), so a ticket created by an external MCP client on `/mcp`
+shows up too, not only those from this page's own inquiries. Citation chips fetch `GET /sources/:id`, which
+resolves a chunk id or listing id to the passage and the document around it. Trace entries now carry the full
+tool result next to the one-line summary, for the expandable rows.
+
+In development Vite forwards the API routes to the server, so there is no CORS to configure and the server
+still binds to 127.0.0.1 only. The web app imports types from `@proptech/core` and one value module,
+`@proptech/core/examples`, which has no imports, so none of core's Node code reaches the browser bundle.
