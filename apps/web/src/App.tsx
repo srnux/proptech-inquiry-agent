@@ -66,7 +66,7 @@ export function App() {
 
   return (
     <div className="desk">
-      <header className="masthead">
+      <header className="masthead" data-theme="dark">
         <div>
           <h1>Inquiry desk</h1>
           <p className="lede">Answers questions about listings from the record, with a source for every fact. Viewings, negotiation, legal questions and anything the record does not cover go to a person.</p>
@@ -84,13 +84,17 @@ export function App() {
 }
 
 function ModelBadge({ model }: { model: string | null }) {
-  if (!model) return <p className="model model-off">Server not reachable</p>;
+  if (!model) return <p className="model label model-off" data-status="alarm">Server not reachable</p>;
   if (model === "demo") {
     return (
-      <p className="model" title="No model credentials are set, so a rule-based stand-in drives the same tools and checks. Set ANTHROPIC_API_KEY for the real model.">
+      <p className="model label" title="No model credentials are set, so a rule-based stand-in drives the same tools and checks. Set ANTHROPIC_API_KEY for the real model.">
         Demo model, no API key
       </p>
     );
   }
-  return <p className="model">{model}</p>;
+  return (
+    <p className="model label" data-status="ok">
+      {model}
+    </p>
+  );
 }

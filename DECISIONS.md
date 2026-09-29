@@ -327,3 +327,20 @@ tool result next to the one-line summary, for the expandable rows.
 In development Vite forwards the API routes to the server, so there is no CORS to configure and the server
 still binds to 127.0.0.1 only. The web app imports types from `@proptech/core` and one value module,
 `@proptech/core/examples`, which has no imports, so none of core's Node code reaches the browser bundle.
+
+## 30. The web app takes the Luka Engels Monochrome design system
+
+The desk now uses the monochrome system (black and white grounds, 1px ink borders, no radius, no accent colour)
+in place of its own ledger palette. Inter and Space Grotesk are self-hosted from `apps/web/src/fonts`, not loaded
+from Google Fonts. The ticket slide-in and the pending pulse are gone: the system animates only the hover
+inversion. A cited passage is marked by inversion.
+
+The system has no semantic colours; the desk adds three, as the system asks an addition to be declared: green
+(`--ok`) for a tool call that returned, red (`--alarm`) for an error or a failed check, yellow (`--handoff`) for
+what goes to a person. Each hue means one thing and appears only as a fill inside a 1px ink box with black text,
+so it is the same on either ground and never becomes a text colour, border colour or wash. The step number, the
+hand-off reason strip, the ticket count, small tags ("Could not answer", "Retry") and 10px markers carry it.
+The words stay beside every hue (and failed checks keep a dashed border), so no state depends on telling green
+from red or yellow. Rejected: coloured left borders and tinted cards (the old look; the system forbids both) and
+colour-only states.
+
