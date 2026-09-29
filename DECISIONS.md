@@ -262,3 +262,106 @@ Rejected: the Mantle client (`AnthropicBedrockMantle`), which returned 404 for O
 eu-central-1 and eu-west-1 on 2026-09-29 and served Opus 5.5 only in us-east-1; worth re-checking, since it
 would bring the fallback credit back. The Converse API was rejected too (a different request shape, so a
 second adapter).
+
+## 26. A pnpm workspace whose packages run from source; the build is opt-in by an export condition
+
+Slice 4 needs a second consumer of the agent's types (the web app), so the single package became three:
+`packages/core` (domain, retrieval, agent loop, with no MCP server, HTTP or provider SDK), `packages/server`
+(MCP server, `/inquiries`, the Claude API and Bedrock adapter, the CLI) and `apps/web`. The data, thresholds,
+index and model cache stay at the repository root, and core finds them from its own file location
+(`root.ts`), so every script works from any working directory.
+
+`@proptech/core` exports its TypeScript source by default, so `tsx`, Vitest, `tsc` and Vite use it with no
+build step and no per-tool configuration. The compiled output is behind a custom condition:
+`"built": "./dist/index.js"`. Only the Claude Desktop entry point needs it, and its config passes
+`node --conditions=built`. Node 24 strips types but does not rewrite the `.js` import specifiers the source uses,
+so running the source directly with plain `node` is not an option.
+
+Rejected: the reverse (dist by default, a `source` condition for development), which puts the condition into the
+`tsx` scripts, Vitest, `tsc` and Vite instead of one config file; bundling the server with esbuild, which breaks
+pnpm's strict dependency layout (the bundle would need core's dependencies declared by the server); TypeScript
+project references, more configuration for a build almost nobody runs. The `bin` entry went away with the move:
+the package is private and was never installed.
+
+## 27. The reply appears after the guards; what streams is the work
+
+The chat pane streams the run, not the text: each tool call shows up in the trace pane as it finishes, and the
+reply bubble says what the agent is doing ("Searching listing texts and policies") until the answer arrives.
+The reply itself appears whole, once the citation and number guards have passed it (`DECISIONS.md` 20).
+
+Token streaming was rejected because the guards judge the finished draft: a streamed draft that fails them has
+already been read, including the invented price the number guard exists to stop. Streaming it and then
+retracting it would show the inquirer exactly what the design keeps from them. The cost is a few seconds of
+waiting on the real model, which the live steps fill.
+
+## 28. A rule-based demo model, so the UI runs without a key
+
+`DemoModel` (`packages/core/src/agent/demo.ts`) implements `ModelClient` with rules instead of a model. It
+calls the real tools over MCP, quotes retrieved passages verbatim and cites their chunk ids, and hands off
+viewings and unanswerable questions, so its replies pass through the same loop and guards as the real model's
+(the tests assert they pass). It understands the four example inquiries and little else, and the UI labels it
+"Demo model, no API key".
+
+`MODEL_PROVIDER=demo` selects it anywhere (`pnpm serve`, `pnpm ask`). `pnpm dev` selects it on its own when no
+credentials are set, so a clean clone gets a working desk from `pnpm install && pnpm dev`; `pnpm serve` still
+refuses to start without credentials. The Playwright test runs on it with the hashing embedder: no key, no
+network, no model download.
+
+Rejected: requiring a key for the demo (the acceptance for this slice is a clean clone), replaying recorded
+real-model runs (they break whenever a tool result changes, and they would pass the guards by construction
+rather than by checking), and `ScriptedModel` with fixed scripts (it cannot adapt to what retrieval returns
+with a different embedder).
+
+## 29. The web app: plain CSS, React state, a live queue over server-sent events
+
+D4.1: one stylesheet with custom properties for the palette and both colour schemes, no Tailwind and no CSS
+modules. The app is five components; class names do not collide at that size, and a reader sees the whole visual
+system in one file. D4.2: React state in `App.tsx`, no store library, for the same reason.
+
+The hand-off queue is `GET /handoffs`, a server-sent event stream: a snapshot of every ticket, then each new one.
+It reads the shared queue (`HandoffQueue.subscribe`), so a ticket created by an external MCP client on `/mcp`
+shows up too, not only those from this page's own inquiries. Citation chips fetch `GET /sources/:id`, which
+resolves a chunk id or listing id to the passage and the document around it. Trace entries now carry the full
+tool result next to the one-line summary, for the expandable rows.
+
+In development Vite forwards the API routes to the server, so there is no CORS to configure and the server
+still binds to 127.0.0.1 only. The web app imports types from `@proptech/core` and one value module,
+`@proptech/core/examples`, which has no imports, so none of core's Node code reaches the browser bundle.
+
+## 30. The web app takes the Luka Engels Monochrome design system
+
+The desk now uses the monochrome system (black and white grounds, 1px ink borders, no radius, no accent colour)
+in place of its own ledger palette. Inter and Space Grotesk are self-hosted from `apps/web/src/fonts`, not loaded
+from Google Fonts. The ticket slide-in and the pending pulse are gone: the system animates only the hover
+inversion. A cited passage is marked by inversion.
+
+The system has no semantic colours; the desk adds three, as the system asks an addition to be declared: green
+(`--ok`) for a tool call that returned, red (`--alarm`) for an error or a failed check, yellow (`--handoff`) for
+what goes to a person. Each hue means one thing and appears only as a fill inside a 1px ink box with black text,
+so it is the same on either ground and never becomes a text colour, border colour or wash. The step number, the
+hand-off reason strip, the ticket count, small tags ("Could not answer", "Retry") and 10px markers carry it.
+The words stay beside every hue (and failed checks keep a dashed border), so no state depends on telling green
+from red or yellow. Rejected: coloured left borders and tinted cards (the old look; the system forbids both) and
+colour-only states.
+
+## 31. Conversation history comes from the client, and it is context, not evidence
+
+`POST /inquiries` takes an optional `history`: up to `HISTORY_LIMIT` (5) earlier exchanges as
+`{inquiry, reply}` pairs, oldest first. The loop sends them to the model as plain user and assistant text before
+the new inquiry, so "and the deposit?" knows which flat it means. The server keeps nothing between requests, like
+`/mcp` (`DECISIONS.md` 24); the web app sends the answered exchanges on screen, and "New conversation" clears them.
+
+History is context, never evidence. Earlier replies are sent without their tool calls and results, and the guards
+still count only this run's tool results: a follow-up that cites `[HH-1001#s5]` or repeats a figure from an
+earlier reply has to look it up again, or fail the check like any unsupported claim. The prompt says so, so the
+model retrieves first instead of paying for a repair turn. Figures the inquirer stated in earlier turns do count
+as theirs ("unter 2.000 €" three messages ago is not an invented number).
+
+More than five turns is a 400, not a silent trim: the client decides what to drop. The loop keeps the last five
+too, for callers other than the API.
+
+Rejected: replaying earlier tool results (the model could cite a passage retrieved for another question, and every
+turn would grow by the full results); server-side sessions for now (a conversation id, storage, expiry and access
+control for a demo with one user, which decision 24 avoided; it is on the roadmap as an optional later slice);
+summarising earlier turns with the model (a second model call per inquiry, and a summary is one more unchecked
+text between the record and the reply).
