@@ -28,7 +28,7 @@ const toolError = (message: string) => ({
  * use the tool, when NOT to, and what the agent may not do with the result.
  */
 export function createServer({ listings, handoffs, knowledge, policies }: ServerDeps): McpServer {
-  const server = new McpServer({ name: "proptech-inquiry", version: "0.2.0" });
+  const server = new McpServer({ name: "proptech-inquiry", version: "0.3.0" });
 
   server.registerTool(
     "search_listings",
