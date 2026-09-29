@@ -1,34 +1,25 @@
 {
   "name": "proptech-inquiry-agent",
-  "version": "0.3.0",
+  "version": "0.4.0",
+  "private": true,
   "description": "An agent that answers and triages property inquiries, built on an MCP server with retrieval over listing data.",
   "license": "MIT",
   "type": "module",
   "engines": {
     "node": ">=20"
   },
-  "bin": {
-    "inquiry-mcp": "dist/mcp/stdio.js"
-  },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.check.json",
+    "build": "tsc -p packages/core/tsconfig.json && tsc -p packages/server/tsconfig.json",
+    "typecheck": "tsc -p packages/core/tsconfig.check.json && tsc -p packages/server/tsconfig.check.json",
     "test": "vitest run",
-    "mcp": "tsx src/mcp/stdio.ts",
-    "serve": "tsx src/api/main.ts",
-    "ask": "tsx src/agent/cli.ts",
-    "inspect": "pnpm dlx @modelcontextprotocol/inspector tsx src/mcp/stdio.ts",
-    "index": "tsx scripts/index.ts",
-    "calibrate": "tsx scripts/calibrate.ts",
+    "mcp": "tsx packages/server/src/mcp/stdio.ts",
+    "serve": "tsx packages/server/src/api/main.ts",
+    "ask": "tsx packages/server/src/agent/cli.ts",
+    "inspect": "pnpm dlx @modelcontextprotocol/inspector tsx packages/server/src/mcp/stdio.ts",
+    "index": "tsx packages/core/scripts/index.ts",
+    "calibrate": "tsx packages/core/scripts/calibrate.ts",
     "test:model": "vitest run -c vitest.model.config.ts",
-    "experiment:embed-text": "tsx scripts/compare-embed-text.ts"
-  },
-  "dependencies": {
-    "@anthropic-ai/bedrock-sdk": "^0.34.0",
-    "@anthropic-ai/sdk": "^0.129.0",
-    "@huggingface/transformers": "^4.3.0",
-    "@modelcontextprotocol/sdk": "^1.30.1",
-    "zod": "^4.6.5"
+    "experiment:embed-text": "tsx packages/core/scripts/compare-embed-text.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.3",

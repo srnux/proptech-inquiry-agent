@@ -136,11 +136,11 @@ utilities sentence, and the answer cites it.
 - [x] Scripted model invents a price: number guard catches it, repair turn, then hand-off
 - [x] Viewing request always produces a `viewing_request` ticket
 - [x] Turn limit ends the run with a hand-off, not an exception
-- [x] One optional live test against the real model, skipped without credentials (passed on Bedrock, eu-central-1, 2026-09-29)
+- [x] One optional live test against the real model, skipped without credentials (passed on Bedrock, `claude-opus-5-5`, eu-central-1, 2026-09-29)
 
 ### Open
 
-- [x] Run `pnpm ask` with the acceptance inquiry below on the real model and record the result (passed on Bedrock, 2026-09-29: German reply, HH-1001, pets on request, cites `HH-1001#s5`, one `viewing_request` ticket; 4 tool calls in 3 turns)
+- [x] Run `pnpm ask` with the acceptance inquiry below on the real model and record the result (passed on Bedrock, `claude-opus-5-5`, 2026-09-29: German reply, HH-1001, pets on request, cites `HH-1001#s5`, one `viewing_request` ticket; 4 tool calls in 3 turns)
 - [x] Run the live test once (Bedrock: `MODEL_PROVIDER=bedrock node --env-file=.env node_modules/vitest/vitest.mjs run test/agent-live.test.ts`)
 - [x] Confirm prompt caching on the real model: `cache_read_tokens` above zero on the second turn of a run (the
       request shape is unit-tested; a hit is not, and the prefix may be under the model's minimum size)

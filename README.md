@@ -11,7 +11,7 @@ All listing and policy data is synthetic.
 |---|---|---|
 | 1 | MCP server: structured search, listing lookup, hand-off to a human | done |
 | 2 | Hybrid retrieval over listing texts and policy pages, local embeddings | done |
-| 3 | Agent loop, citation and number guards, `POST /inquiries` (SSE), Streamable HTTP MCP, `pnpm ask` | built, not yet run on the real model |
+| 3 | Agent loop, citation and number guards, `POST /inquiries` (SSE), Streamable HTTP MCP, `pnpm ask` | done, acceptance inquiry and live test passed on `claude-opus-5-5` (Bedrock) |
 | 4 | React UI: chat, tool-call trace, hand-off queue | planned |
 | 5 | Eval suite: correct answers, correct escalations, no invented facts | planned |
 | 6 | Architecture write-up, pgvector, CI | planned |
@@ -57,7 +57,7 @@ Why two stages, with the measurements that led there: `DECISIONS.md` 16 to 19.
 
 ## The agent
 
-`pnpm ask "..."` sends one inquiry through the loop in `src/agent/`. The agent is an MCP client of this repo's
+`pnpm ask "..."` sends one inquiry through the loop in `packages/core/src/agent/`. The agent is an MCP client of this repo's
 own server, so it can only do what the tools allow. Each run returns the reply, the citations parsed from it,
 the hand-off tickets it created, a trace of every tool call and the token usage.
 
@@ -76,7 +76,7 @@ curl -N localhost:3000/inquiries -H "content-type: application/json" -d "{\"inqu
 The model is `claude-opus-5-5` by default; `ANTHROPIC_MODEL` and `ANTHROPIC_EFFORT` change it
 (`DECISIONS.md` 23). To run on Amazon Bedrock instead, set `MODEL_PROVIDER=bedrock`, `AWS_REGION` and
 `AWS_BEARER_TOKEN_BEDROCK` (`DECISIONS.md` 25). Tests use a scripted model and need no key;
-`test/agent-live.test.ts` runs against the real model when credentials are set in the environment.
+`packages/server/test/agent-live.test.ts` runs against the real model when credentials are set in the environment.
 
 ## Run it
 
@@ -100,30 +100,35 @@ golden question and proposes thresholds for `retrieval.thresholds.json`.
 ### Claude Desktop
 
 Run `pnpm build` and `pnpm index` once, so the server does not download the models while Claude Desktop is
-waiting for it. Then add to `claude_desktop_config.json`:
+waiting for it. Then add to `claude_desktop_config.json` (`--conditions=built` makes the server load the
+compiled core package instead of its TypeScript source, `DECISIONS.md` 26):
 
 ```json
 {
   "mcpServers": {
-    "proptech-inquiry": { "command": "node", "args": ["/path/to/proptech-inquiry-agent/dist/mcp/stdio.js"] }
+    "proptech-inquiry": { "command": "node", "args": ["--conditions=built", "/path/to/proptech-inquiry-agent/packages/server/dist/mcp/stdio.js"] }
   }
 }
 ```
 
 ## Layout
 
+A pnpm workspace. `packages/core` has no MCP, HTTP or model-provider imports; `packages/server` wraps it.
+All scripts run from the repository root.
+
 ```
-data/listings.json         synthetic catalogue, validated with zod at load
-data/policies/*.md         synthetic policy pages, one topic each
-evals/retrieval-golden.json  questions with the chunks that must be found, plus questions with no answer
-retrieval.thresholds.json  relevance thresholds per embedding model
-src/domain/                listing model, repository, hand-off queue (no MCP imports)
-src/retrieval/             chunker, BM25, embedders, vector store, reranker, search
-src/mcp/                   tool and resource definitions, stdio and Streamable HTTP entry points
-src/agent/                 model interface, tool-use loop, guards, prompt, `pnpm ask`
-src/api/                   HTTP server: /inquiries (SSE) and /mcp
-scripts/                   index, calibrate, experiments
-test/                      unit tests, retrieval tests, in-memory MCP client tests
+data/listings.json              synthetic catalogue, validated with zod at load
+data/policies/*.md              synthetic policy pages, one topic each
+evals/retrieval-golden.json     questions with the chunks that must be found, plus questions with no answer
+retrieval.thresholds.json       relevance thresholds per embedding model
+packages/core/src/domain/       listing model, repository, hand-off queue
+packages/core/src/retrieval/    chunker, BM25, embedders, vector store, reranker, search
+packages/core/src/agent/        model interface, tool-use loop, guards, prompt
+packages/core/scripts/          index, calibrate, experiments
+packages/server/src/mcp/        tool and resource definitions, stdio and Streamable HTTP entry points
+packages/server/src/agent/      Claude API and Bedrock adapter, in-process MCP client, `pnpm ask`
+packages/server/src/api/        HTTP server: /inquiries (SSE) and /mcp
+packages/*/test/                unit tests, retrieval tests, in-memory MCP client tests
 ```
 
 ## License

@@ -262,3 +262,23 @@ Rejected: the Mantle client (`AnthropicBedrockMantle`), which returned 404 for O
 eu-central-1 and eu-west-1 on 2026-09-29 and served Opus 5.5 only in us-east-1; worth re-checking, since it
 would bring the fallback credit back. The Converse API was rejected too (a different request shape, so a
 second adapter).
+
+## 26. A pnpm workspace whose packages run from source; the build is opt-in by an export condition
+
+Slice 4 needs a second consumer of the agent's types (the web app), so the single package became three:
+`packages/core` (domain, retrieval, agent loop, with no MCP server, HTTP or provider SDK), `packages/server`
+(MCP server, `/inquiries`, the Claude API and Bedrock adapter, the CLI) and `apps/web`. The data, thresholds,
+index and model cache stay at the repository root, and core finds them from its own file location
+(`root.ts`), so every script works from any working directory.
+
+`@proptech/core` exports its TypeScript source by default, so `tsx`, Vitest, `tsc` and Vite use it with no
+build step and no per-tool configuration. The compiled output is behind a custom condition:
+`"built": "./dist/index.js"`. Only the Claude Desktop entry point needs it, and its config passes
+`node --conditions=built`. Node 24 strips types but does not rewrite the `.js` import specifiers the source uses,
+so running the source directly with plain `node` is not an option.
+
+Rejected: the reverse (dist by default, a `source` condition for development), which puts the condition into the
+`tsx` scripts, Vitest, `tsc` and Vite instead of one config file; bundling the server with esbuild, which breaks
+pnpm's strict dependency layout (the bundle would need core's dependencies declared by the server); TypeScript
+project references, more configuration for a build almost nobody runs. The `bin` entry went away with the move:
+the package is private and was never installed.
