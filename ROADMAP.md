@@ -106,37 +106,44 @@ utilities sentence, and the answer cites it.
 
 ---
 
-## Slice 3: Agent loop
+## Slice 3: Agent loop  ✅ done
 
 **Goal:** a free-text inquiry goes in; a reply, citations, hand-off tickets and a trace come out.
 
 ### Tasks
 
-- [ ] `src/agent/model.ts`: `ModelClient` interface over the Messages API, plus a scripted fake for tests.
-- [ ] `src/agent/loop.ts`: plain tool-use loop. The agent is an MCP client of our own server (in-memory
+- [x] `src/agent/model.ts`: `ModelClient` interface over the Messages API, plus a scripted fake for tests.
+- [x] `src/agent/loop.ts`: plain tool-use loop. The agent is an MCP client of our own server (in-memory
       transport in tests, same code in production).
-- [ ] `src/agent/prompt.ts`: system prompt with three rules: answer only from tool results, cite `listingId` and
+- [x] `src/agent/prompt.ts`: system prompt with three rules: answer only from tool results, cite `listingId` and
       `chunkId` for every fact, escalate the six hand-off categories. Reply in the inquirer's language.
-- [ ] Result type `{ reply, citations[], handoffs[], trace[], usage }`. Trace entries hold tool name, arguments,
+- [x] Result type `{ reply, citations[], handoffs[], trace[], usage }`. Trace entries hold tool name, arguments,
       result summary and duration.
-- [ ] Guards in code, run after the model's final answer:
-  - [ ] citation guard: every cited `chunkId` was returned by a tool in this run
-  - [ ] number guard: every price, area or percentage in the reply appears in some tool result
-  - [ ] a failed guard produces one repair turn, then a forced hand-off if it fails again
-- [ ] Limits: maximum turns, token budget, per-call timeout.
-- [ ] Prompt caching on the system prompt and tool definitions.
-- [ ] `src/mcp/http.ts`: Streamable HTTP transport for the MCP server.
-- [ ] `src/api/inquiries.ts`: `POST /inquiries` that streams trace events and the final result as server-sent events.
-- [ ] `pnpm ask "..."` CLI for trying the agent from a terminal.
+- [x] Guards in code, run after the model's final answer:
+  - [x] citation guard: every cited `chunkId` was returned by a tool in this run
+  - [x] number guard: every price, area or percentage in the reply appears in some tool result
+  - [x] a failed guard produces one repair turn, then a forced hand-off if it fails again
+- [x] Limits: maximum turns, token budget, per-call timeout.
+- [x] Prompt caching on the system prompt and tool definitions.
+- [x] `src/mcp/http.ts`: Streamable HTTP transport for the MCP server.
+- [x] `src/api/inquiries.ts`: `POST /inquiries` that streams trace events and the final result as server-sent events.
+- [x] `pnpm ask "..."` CLI for trying the agent from a terminal.
 
 ### Tests
 
-- [ ] Scripted model: happy path with one search, one lookup and a cited answer
-- [ ] Scripted model cites a chunk it never retrieved: citation guard catches it
-- [ ] Scripted model invents a price: number guard catches it, repair turn, then hand-off
-- [ ] Viewing request always produces a `viewing_request` ticket
-- [ ] Turn limit ends the run with a hand-off, not an exception
-- [ ] One optional live test against the real API, skipped without `ANTHROPIC_API_KEY`
+- [x] Scripted model: happy path with one search, one lookup and a cited answer
+- [x] Scripted model cites a chunk it never retrieved: citation guard catches it
+- [x] Scripted model invents a price: number guard catches it, repair turn, then hand-off
+- [x] Viewing request always produces a `viewing_request` ticket
+- [x] Turn limit ends the run with a hand-off, not an exception
+- [x] One optional live test against the real model, skipped without credentials (passed on Bedrock, eu-central-1, 2026-09-29)
+
+### Open
+
+- [x] Run `pnpm ask` with the acceptance inquiry below on the real model and record the result (passed on Bedrock, 2026-09-29: German reply, HH-1001, pets on request, cites `HH-1001#s5`, one `viewing_request` ticket; 4 tool calls in 3 turns)
+- [x] Run the live test once (Bedrock: `MODEL_PROVIDER=bedrock node --env-file=.env node_modules/vitest/vitest.mjs run test/agent-live.test.ts`)
+- [x] Confirm prompt caching on the real model: `cache_read_tokens` above zero on the second turn of a run (the
+      request shape is unit-tested; a hit is not, and the prefix may be under the model's minimum size)
 
 ### Acceptance
 
@@ -148,9 +155,9 @@ heating sentence and creates one `viewing_request` ticket.
 
 | Id | Question | Options | Recommendation |
 |---|---|---|---|
-| D3.1 | Loop | Plain Messages API loop · Claude Agent SDK · a framework | Plain loop, every line explainable |
-| D3.2 | Model | Configurable via `ANTHROPIC_MODEL` | Pick one default and record why |
-| D3.3 | Guard failure | Reject · repair turn then hand off | Repair once, then hand off |
+| D3.1 | Loop | Plain Messages API loop · Claude Agent SDK · a framework | **Decided: plain loop** (`DECISIONS.md` 21) |
+| D3.2 | Model | Configurable via `ANTHROPIC_MODEL` | **Decided: `claude-opus-5-5`** (`DECISIONS.md` 23) |
+| D3.3 | Guard failure | Reject · repair turn then hand off | **Decided: repair once, then hand off** (`DECISIONS.md` 20) |
 
 ### Commits
 

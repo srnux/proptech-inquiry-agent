@@ -1,6 +1,6 @@
 {
   "name": "proptech-inquiry-agent",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "An agent that answers and triages property inquiries, built on an MCP server with retrieval over listing data.",
   "license": "MIT",
   "type": "module",
@@ -15,6 +15,8 @@
     "typecheck": "tsc -p tsconfig.check.json",
     "test": "vitest run",
     "mcp": "tsx src/mcp/stdio.ts",
+    "serve": "tsx src/api/main.ts",
+    "ask": "tsx src/agent/cli.ts",
     "inspect": "pnpm dlx @modelcontextprotocol/inspector tsx src/mcp/stdio.ts",
     "index": "tsx scripts/index.ts",
     "calibrate": "tsx scripts/calibrate.ts",
@@ -22,6 +24,8 @@
     "experiment:embed-text": "tsx scripts/compare-embed-text.ts"
   },
   "dependencies": {
+    "@anthropic-ai/bedrock-sdk": "^0.34.0",
+    "@anthropic-ai/sdk": "^0.129.0",
     "@huggingface/transformers": "^4.3.0",
     "@modelcontextprotocol/sdk": "^1.30.1",
     "zod": "^4.6.5"
