@@ -11,7 +11,7 @@ All listing and policy data is synthetic.
 |---|---|---|
 | 1 | MCP server: structured search, listing lookup, hand-off to a human | done |
 | 2 | Hybrid retrieval over listing texts and policy pages, local embeddings | done |
-| 3 | Agent loop that answers inquiries using the tools | next |
+| 3 | Agent loop, citation and number guards, `POST /inquiries` (SSE), Streamable HTTP MCP, `pnpm ask` | built, not yet run on the real model |
 | 4 | React UI: chat, tool-call trace, hand-off queue | planned |
 | 5 | Eval suite: correct answers, correct escalations, no invented facts | planned |
 | 6 | Architecture write-up, pgvector, CI | planned |
@@ -55,6 +55,29 @@ miss is listed in `DECISIONS.md` 19. About 1.4 seconds per question on a laptop 
 
 Why two stages, with the measurements that led there: `DECISIONS.md` 16 to 19.
 
+## The agent
+
+`pnpm ask "..."` sends one inquiry through the loop in `src/agent/`. The agent is an MCP client of this repo's
+own server, so it can only do what the tools allow. Each run returns the reply, the citations parsed from it,
+the hand-off tickets it created, a trace of every tool call and the token usage.
+
+Two checks run in code on the final answer (`DECISIONS.md` 20): every cited id must have been returned by a
+tool in this run, and every price, area and percentage must appear in a tool result. A failed check gets one
+repair turn; a second failure, the turn limit, the token budget or a timeout ends in a hand-off ticket
+created by the code, not an exception.
+
+```bash
+cp .env.example .env            # then put your ANTHROPIC_API_KEY (or the Bedrock settings) in .env (git-ignored)
+pnpm ask --trace "Ist die Heizung bei HH-1001 inklusive, und kann ich Samstag besichtigen?"
+pnpm serve                            # POST /inquiries (server-sent events) and /mcp on 127.0.0.1:3000
+curl -N localhost:3000/inquiries -H "content-type: application/json" -d "{\"inquiry\":\"Is HH-1001 still free?\"}"
+```
+
+The model is `claude-opus-5-5` by default; `ANTHROPIC_MODEL` and `ANTHROPIC_EFFORT` change it
+(`DECISIONS.md` 23). To run on Amazon Bedrock instead, set `MODEL_PROVIDER=bedrock`, `AWS_REGION` and
+`AWS_BEARER_TOKEN_BEDROCK` (`DECISIONS.md` 25). Tests use a scripted model and need no key;
+`test/agent-live.test.ts` runs against the real model when credentials are set in the environment.
+
 ## Run it
 
 ```bash
@@ -96,7 +119,9 @@ evals/retrieval-golden.json  questions with the chunks that must be found, plus 
 retrieval.thresholds.json  relevance thresholds per embedding model
 src/domain/                listing model, repository, hand-off queue (no MCP imports)
 src/retrieval/             chunker, BM25, embedders, vector store, reranker, search
-src/mcp/                   tool and resource definitions, stdio entry point
+src/mcp/                   tool and resource definitions, stdio and Streamable HTTP entry points
+src/agent/                 model interface, tool-use loop, guards, prompt, `pnpm ask`
+src/api/                   HTTP server: /inquiries (SSE) and /mcp
 scripts/                   index, calibrate, experiments
 test/                      unit tests, retrieval tests, in-memory MCP client tests
 ```
