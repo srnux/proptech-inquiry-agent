@@ -433,3 +433,16 @@ goes up in the same commit as the report; it never goes down to let a run pass.
 
 Rejected: thresholds chosen up front (they would have encoded a guess about a model nobody had measured on these
 cases), and one overall score (a drop in hand-off recall must not hide behind a rise in correctness).
+
+## 37. Policy pages carry the German term next to the English one
+
+Found by the eval case `policy-tenant-commission-de`: "Muss ich als Mieter eine Provision zahlen?" returned
+`found: false`, so the agent handed off a question the commission page answers. It was the same collection problem
+decision 19 recorded for the golden question "Muss ich Provision zahlen, wenn ich miete?": the page said only
+"commission", so neither BM25 nor the e5 embeddings collected it as a candidate, and the reranker never saw it.
+The other pages already name the German term ("Deposit (Kaution)", "Utilities (Nebenkosten)"); the commission
+page now does too ("Commission (Provision)", "Maklerprovision"). Both German questions now reach the page with a
+reranker score of about 0.8, the eval's wording is in the golden set, and recall@5 is 26 of 26.
+
+Rejected: lowering the reranker threshold (the page was not a candidate at all, so no threshold would have found
+it) and translating the queries before search (a model call per search, for a gap two words in the corpus close).
