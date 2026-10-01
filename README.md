@@ -10,7 +10,7 @@ and every hand-off goes where it should.
 
 ![The inquiry desk answers whether heating is included, citing the listing sentence and the utilities policy, turns a viewing request into a ticket for a colleague instead of confirming it, then answers a German inquiry in German: pets only on request, heating included, the viewing handed on](docs/assets/demo.gif)
 
-<sub>Recorded on `claude-opus-5-5`, three times the real speed: a fact question, a viewing request, and the same
+<sub>Recorded three times the real speed: a fact question, a viewing request, and the same
 kind of inquiry in German. Left: the conversation, with a chip per source. Middle: every tool call. Right: tickets
 for a colleague.</sub>
 
@@ -68,28 +68,28 @@ other two failing cases are borderline inferences the judge flags ("so you would
 
 ## Status
 
-| Slice | What it adds | State |
-|---|---|---|
-| 1 | MCP server: structured search, listing lookup, hand-off to a human | done |
-| 2 | Hybrid retrieval over listing texts and policy pages, local embeddings | done |
-| 3 | Agent loop, citation and number guards, `POST /inquiries` (SSE), Streamable HTTP MCP, `pnpm ask` | done, acceptance inquiry and live test passed on `claude-opus-5-5` (Bedrock) |
-| 4 | React UI: chat, tool-call trace, live hand-off queue, citation chips; runs without a key on a demo model | done |
-| 5 | Eval suite: 49 cases, model judge, thresholds; `pnpm eval` writes a report with a trace per case | done, 46 of 49 cases pass on `claude-opus-5-5` ([report](evals/reports/2026-10-01-after-fixes.md)) |
-| 6 | [ARCHITECTURE.md](ARCHITECTURE.md), demo GIF, "What broke", CI on every push, eval subset on GitHub Actions by hand | done |
-| 7 | pgvector behind the same store interface | optional, not scheduled |
+| Slice | What it adds                                                                                                        | State                                                                                              |
+| ----- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| 1     | MCP server: structured search, listing lookup, hand-off to a human                                                  | done                                                                                               |
+| 2     | Hybrid retrieval over listing texts and policy pages, local embeddings                                              | done                                                                                               |
+| 3     | Agent loop, citation and number guards, `POST /inquiries` (SSE), Streamable HTTP MCP, `pnpm ask`                    | done, acceptance inquiry and live test passed on `claude-opus-5-5` (Bedrock)                       |
+| 4     | React UI: chat, tool-call trace, live hand-off queue, citation chips; runs without a key on a demo model            | done                                                                                               |
+| 5     | Eval suite: 49 cases, model judge, thresholds; `pnpm eval` writes a report with a trace per case                    | done, 46 of 49 cases pass on `claude-opus-5-5` ([report](evals/reports/2026-10-01-after-fixes.md)) |
+| 6     | [ARCHITECTURE.md](ARCHITECTURE.md), demo GIF, "What broke", CI on every push, eval subset on GitHub Actions by hand | done                                                                                               |
+| 7     | pgvector behind the same store interface                                                                            | optional, not scheduled                                                                            |
 
 Details, tasks and open decisions per slice are in [ROADMAP.md](ROADMAP.md); the reasons behind each
 choice are in [DECISIONS.md](DECISIONS.md).
 
 ## Tools and resources
 
-| Name | Kind | Purpose |
-|---|---|---|
-| `search_listings` | tool, read | Hard-criteria search. Returns summaries without description text. |
-| `get_listing` | tool, read | One full record: structured fields and description. |
-| `search_knowledge` | tool, read | Hybrid search over listing texts and policies. Scoped to one listing when given an id. Returns citable chunk ids, or `found: false`. |
-| `hand_off_to_human` | tool, write | Creates a ticket with a fixed reason code. Rejects unknown listing ids. |
-| `policy://<slug>` | resource | The policy pages (deposit, utilities, pets, viewings, ...) as markdown. |
+| Name                | Kind        | Purpose                                                                                                                              |
+| ------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `search_listings`   | tool, read  | Hard-criteria search. Returns summaries without description text.                                                                    |
+| `get_listing`       | tool, read  | One full record: structured fields and description.                                                                                  |
+| `search_knowledge`  | tool, read  | Hybrid search over listing texts and policies. Scoped to one listing when given an id. Returns citable chunk ids, or `found: false`. |
+| `hand_off_to_human` | tool, write | Creates a ticket with a fixed reason code. Rejects unknown listing ids.                                                              |
+| `policy://<slug>`   | resource    | The policy pages (deposit, utilities, pets, viewings, ...) as markdown.                                                              |
 
 ## How retrieval works
 
@@ -141,14 +141,14 @@ Code checks the hand-offs, the listings and every figure; a different model (`cl
 against [a written rubric](evals/rubric.md). The report lands in `evals/reports/<date>.md`, and every case in it
 links to the full trace of its run (`DECISIONS.md` 32 to 38).
 
-| Metric | First run | After the fixes | Threshold |
-|---|---|---|---|
-| Cases passed | 41 / 49 | 46 / 49 | 90% |
-| Hand-off precision / recall | 93.8% / 100% | 100% / 100% | 93% / 100% |
-| Replies with every figure grounded (final / first draft) | 100% / 100% | 100% / 100% | 100% / 100% |
-| Correct, by the judge | 83.7% | 93.9% | 90% |
-| Golden-set recall@5, false positives | 96%, 0 | 100%, 0 | 100%, 0 |
-| Cost, latency per inquiry | $0.016, 9.2 s (p95 14.7 s) | $0.014, 8.6 s (p95 13.8 s) | $0.02, p95 20 s |
+| Metric                                                   | First run                  | After the fixes            | Threshold       |
+| -------------------------------------------------------- | -------------------------- | -------------------------- | --------------- |
+| Cases passed                                             | 41 / 49                    | 46 / 49                    | 90%             |
+| Hand-off precision / recall                              | 93.8% / 100%               | 100% / 100%                | 93% / 100%      |
+| Replies with every figure grounded (final / first draft) | 100% / 100%                | 100% / 100%                | 100% / 100%     |
+| Correct, by the judge                                    | 83.7%                      | 93.9%                      | 90%             |
+| Golden-set recall@5, false positives                     | 96%, 0                     | 100%, 0                    | 100%, 0         |
+| Cost, latency per inquiry                                | $0.016, 9.2 s (p95 14.7 s) | $0.014, 8.6 s (p95 13.8 s) | $0.02, p95 20 s |
 
 Both runs are [committed](evals/reports/), `claude-opus-5-5` on Bedrock. What the first run found and how each
 problem was fixed: [What broke](#what-broke).
@@ -193,7 +193,13 @@ compiled core package instead of its TypeScript source, `DECISIONS.md` 26):
 ```json
 {
   "mcpServers": {
-    "proptech-inquiry": { "command": "node", "args": ["--conditions=built", "/path/to/proptech-inquiry-agent/packages/server/dist/mcp/stdio.js"] }
+    "proptech-inquiry": {
+      "command": "node",
+      "args": [
+        "--conditions=built",
+        "/path/to/proptech-inquiry-agent/packages/server/dist/mcp/stdio.js"
+      ]
+    }
   }
 }
 ```
