@@ -66,9 +66,9 @@ Two stages, like a librarian who first pulls likely pages off the shelf and then
    collected passage and scores whether it answers it. Only passages above a threshold calibrated on
    [a golden set](evals/retrieval-golden.json) are returned. If none is, the answer is `found: false`.
 
-Measured on the golden set (25 questions with an answer, 8 without, German and English): the right passage
-is in the top 5 for **24 of 25**, and **none** of the questions without an answer returns anything. The one
-miss is listed in `DECISIONS.md` 19. About 1.4 seconds per question on a laptop CPU.
+Measured on the golden set (26 questions with an answer, 8 without, German and English): the right passage
+is in the top 5 for **all 26**, and **none** of the questions without an answer returns anything. The last
+miss, a German commission question, was fixed by an eval finding (`DECISIONS.md` 37). About 1.4 seconds per question on a laptop CPU.
 
 Why two stages, with the measurements that led there: `DECISIONS.md` 16 to 19.
 
