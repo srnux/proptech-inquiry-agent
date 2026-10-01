@@ -1,0 +1,69 @@
+# The eval subset against the real model, started by hand (Actions → Eval subset → Run workflow), DECISIONS.md 39.
+# Credentials from repository secrets: ANTHROPIC_API_KEY, or AWS_BEARER_TOKEN_BEDROCK for Amazon Bedrock
+# (region from the AWS_REGION variable, default eu-central-1). The report is uploaded as an artifact, not committed.
+name: Eval subset
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: "subset (12 cases, about $0.25) or all (49 cases, about $1)"
+        type: choice
+        options: [subset, all]
+        default: subset
+
+concurrency:
+  group: eval
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Choose credentials
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AWS_BEARER_TOKEN_BEDROCK: ${{ secrets.AWS_BEARER_TOKEN_BEDROCK }}
+          AWS_REGION: ${{ vars.AWS_REGION || 'eu-central-1' }}
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY" ]; then
+            echo "Claude API (ANTHROPIC_API_KEY)"
+          elif [ -n "$AWS_BEARER_TOKEN_BEDROCK" ]; then
+            echo "Amazon Bedrock in $AWS_REGION (AWS_BEARER_TOKEN_BEDROCK)"
+            { echo "MODEL_PROVIDER=bedrock"; echo "AWS_REGION=$AWS_REGION"; } >> "$GITHUB_ENV"
+          else
+            echo "::error::Set the repository secret ANTHROPIC_API_KEY, or AWS_BEARER_TOKEN_BEDROCK for Bedrock."
+            exit 1
+          fi
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # The two retrieval models, about 690 MB; downloaded once, then restored. The key changes with the model code.
+      - uses: actions/cache@v4
+        with:
+          path: .models
+          key: models-${{ hashFiles('packages/core/src/retrieval/embedder.ts', 'packages/core/src/retrieval/reranker.ts') }}
+      - run: pnpm index
+      - name: pnpm eval
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AWS_BEARER_TOKEN_BEDROCK: ${{ secrets.AWS_BEARER_TOKEN_BEDROCK }}
+        run: pnpm eval ${{ inputs.scope == 'subset' && '--subset' || '' }} --name "ci-${{ github.run_id }}"
+      # The report table on the run page, so the numbers are visible without downloading the artifact.
+      - if: always()
+        run: cat "evals/reports/ci-${{ github.run_id }}.md" >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report-${{ github.run_id }}
+          path: evals/reports/ci-${{ github.run_id }}*
+          if-no-files-found: ignore
+          retention-days: 30
