@@ -8,6 +8,11 @@ MCP server, so the same tools serve Claude Desktop, the MCP Inspector and the ag
 reject any figure or citation the tools did not return. 49 eval cases measure it: 46 pass on `claude-opus-5-5`,
 and every hand-off goes where it should.
 
+![The inquiry desk answers whether heating is included, citing the listing sentence and the utilities policy, then turns a viewing request into a ticket for a colleague instead of confirming it](docs/assets/demo.gif)
+
+<sub>Recorded on `claude-opus-5-5`, twice the real speed. Left: the conversation, with a chip per source. Middle: every
+tool call. Right: tickets for a colleague.</sub>
+
 All listing and policy data is synthetic.
 
 ## Quick start
