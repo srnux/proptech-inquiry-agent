@@ -41,7 +41,7 @@ Rejected for now: a hosted embedding API (better quality, but a key and a sign-u
 ## 8. In-memory vector store
 
 Sixty-odd chunks fit in memory, and a cosine loop over them takes microseconds. The `VectorStore` interface
-keeps pgvector a drop-in for slice 6, where it earns its place with Docker Compose and the same tests.
+keeps pgvector a drop-in for slice 7 (optional), where it earns its place with Docker Compose and the same tests.
 
 ## 9. Hybrid search: BM25 plus vectors, merged by reciprocal rank fusion
 
@@ -391,7 +391,7 @@ and a single overall "is this good" score from the judge (unexplainable when it 
 ## 33. A small subset on every pull request, the full set by hand (D5.2)
 
 Twelve cases carry `"subset": true`: at least one of each kind (fact, trap, hand-off, injection, follow-up) and
-both languages. `pnpm eval --subset` runs them in about a minute and a half for about $0.25 at list prices; slice 6 wires it into CI
+both languages. `pnpm eval --subset` runs them in about a minute and a half for about $0.25 at list prices; slice 6 wires it into CI, started by hand (decision 39)
 with the key as a secret. The full set (`pnpm eval`) runs by hand before a release and after any change to the
 prompt, the tools or the retrieval, and its report is committed.
 
@@ -464,3 +464,16 @@ the earlier reply really was wrong (260 EUR instead of 240 EUR), still gets its 
 
 Rejected: dropping the instruction to look facts up again (the guards would then reject every repeated figure,
 since history is not evidence), and stripping earlier replies from the history (follow-ups lose their referent).
+
+## 39. CI runs the free checks on every push; the eval subset runs by hand (revises 33)
+
+Every push and pull request runs `pnpm typecheck`, `pnpm test` and the Playwright tests (`.github/workflows/ci.yml`).
+They need no key and no model download, so they cost nothing and pass on a clean machine, which is what the badge
+in the README claims. The eval subset runs when started from the Actions tab (`.github/workflows/eval.yml`), with
+`ANTHROPIC_API_KEY` or, failing that, `AWS_BEARER_TOKEN_BEDROCK` as a repository secret. The report table goes on the
+run page and the traces into an artifact; reports are still committed only for full runs made by hand.
+
+Decision 33 planned the subset on every pull request. This repo has one author and is a showcase: most pushes touch
+the docs, and pull requests from forks get no secrets anyway. Rejected: the subset on every pull request (about
+$0.25 per push, for pushes that mostly do not change the agent), and no eval in CI at all (a visitor could not see
+the eval run anywhere but in committed reports).

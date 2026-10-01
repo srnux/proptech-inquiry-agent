@@ -260,20 +260,66 @@ A clean clone, `pnpm install`, `pnpm dev`, one click on an example, and all thre
 
 ---
 
-## Slice 6: Write-up and polish
+## Slice 6: Write-up and polish  ✅ done
+
+**Goal:** the repo is a showcase. Readers are potential employers and dev.to readers; most of them read only the
+first screen of the README, some open `ARCHITECTURE.md`, few clone it.
 
 ### Tasks
 
-- [ ] `ARCHITECTURE.md`: request flow diagram, the escalation boundary, where each guard sits, what runs offline.
-- [ ] `README.md`: GIF of the UI answering one inquiry and handing off another; quick start in five lines.
-- [ ] "What broke" section: the real failures the evals found in slice 5 and how each was fixed.
-- [ ] pgvector adapter plus `docker-compose.yml`, same tests run against both stores.
-- [ ] GitHub Actions: typecheck, unit tests, Playwright, eval subset (with the API key as a secret).
-- [ ] Repository topics, description and a social preview image on GitHub.
+- [x] `README.md` first screen: GIF of the UI answering one inquiry and handing off another, a three-sentence
+      pitch, quick start in five lines. Recorded on `claude-opus-5-5` by `apps/web/e2e/record-demo.ts`.
+- [x] `ARCHITECTURE.md`: request flow diagram, the escalation boundary, where each guard sits, what runs offline.
+- [x] "What broke" section in the README: the real failures the evals found in slice 5 and how each was fixed,
+      linking to the committed reports.
+- [x] GitHub Actions on every push: typecheck, unit tests, Playwright. Free, no secrets; a badge in the README.
+- [x] GitHub Actions eval subset, started by hand only (`workflow_dispatch`), with the API key or Bedrock settings as
+      secrets. Revises `DECISIONS.md` 33 in a new entry (`DECISIONS.md` 39).
+- [x] Social preview image committed in `docs/assets/social-preview.png`; description and topics below.
+
+### Open
+
+- [ ] First CI run on GitHub after the push: both jobs green, badge shows passing
+- [ ] Add a secret (`ANTHROPIC_API_KEY`, or `AWS_BEARER_TOKEN_BEDROCK` plus the variable `AWS_REGION`) and start
+      the eval subset once from the Actions tab
+- [ ] In the repository settings: upload `docs/assets/social-preview.png` as the social preview, set the description
+      and the topics:
+  - Description: "An AI agent that answers property-listing questions from the record and hands everything else to a
+    human. MCP server, hybrid RAG with a local reranker, citation and number guards, measured by evals."
+  - Topics: `mcp`, `model-context-protocol`, `ai-agents`, `llm`, `rag`, `claude`, `anthropic`, `evals`,
+    `typescript`, `react`, `proptech`, `real-estate`
 
 ### Acceptance
 
 Someone who has never seen the repo understands what it does from the README in two minutes and can run it in five.
+
+---
+
+## Slice 7 (optional): pgvector
+
+Not scheduled. Sixty-odd chunks fit in memory (`DECISIONS.md` 8), so this slice adds no capability. It shows that
+the `VectorStore` boundary holds: Postgres replaces the in-memory store without a change to retrieval.
+
+**Goal:** the same retrieval tests pass against the in-memory store and against pgvector.
+
+### Tasks
+
+- [ ] Make `VectorStore` asynchronous (`upsert`, `query`, `distribution` return promises); `KnowledgeBase` awaits them.
+- [ ] pgvector adapter in `packages/core`: table per embedder id, cosine distance, listing filter applied in SQL.
+- [ ] `VECTOR_STORE=memory|pgvector` and `DATABASE_URL`; the in-memory store stays the default.
+- [ ] `docker-compose.yml` with a pgvector Postgres image.
+
+### Tests
+
+- [ ] One shared store test suite, run against the in-memory store and against pgvector
+- [ ] The listing filter never returns another listing's chunk through pgvector
+- [ ] A vector with the wrong number of dimensions is rejected
+
+### Decisions
+
+| Id | Question | Options | Recommendation |
+|---|---|---|---|
+| D7.1 | Tests without Docker | PGlite (in-process Postgres with pgvector) · real Postgres only, skipped without `DATABASE_URL` | PGlite in tests, real Postgres through docker-compose |
 
 ---
 
@@ -313,9 +359,9 @@ hand-off ticket, an inquiry arrives by email and is answered in the web app, or 
 
 | Id | Question | Options | Recommendation |
 |---|---|---|---|
-| D7.1 | Storage | In-memory · SQLite · Postgres next to pgvector | Postgres if slice 6 brings pgvector; otherwise in-memory behind the interface |
-| D7.2 | Retention | Fixed idle timeout · per-agency setting | Fixed, recorded in `DECISIONS.md`, with deletion on request |
-| D7.3 | Concurrent inquiries | Queue per conversation · reject with 409 | Reject; the UI already disables sending while a run is in progress |
+| D8.1 | Storage | In-memory · SQLite · Postgres next to pgvector | Postgres if slice 7 brings pgvector; otherwise in-memory behind the interface |
+| D8.2 | Retention | Fixed idle timeout · per-agency setting | Fixed, recorded in `DECISIONS.md`, with deletion on request |
+| D8.3 | Concurrent inquiries | Queue per conversation · reject with 409 | Reject; the UI already disables sending while a run is in progress |
 
 ---
 
