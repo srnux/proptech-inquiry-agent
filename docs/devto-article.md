@@ -39,9 +39,9 @@ The browser application has three panes, each answering a different question: wh
 +---------------------+----------------------+---------------------+
 ```
 
-![The inquiry desk answers a heating question with citations, then creates a viewing-request ticket for human follow-up](https://raw.githubusercontent.com/srnux/proptech-inquiry-agent/main/docs/assets/demo.gif)
+![The inquiry desk answers a heating question with citations, then creates a viewing-request ticket for human follow-up](https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/8ab8ptcdslbuzqujrkt3.gif)
 
-This demo shows a fact question followed by a viewing request through the same interface.
+This demo shows a fact question followed by a viewing request through the same interface. Click it to open the full-size animation.
 
 The left pane has example buttons for a fact question, a viewing request, an unanswered question, and a German inquiry. You can follow up with “and the deposit?” without repeating the property ID, or select “New conversation” to start over. The middle pane exposes the actual tool calls, including errors and failed answer checks. The right pane shows tickets for a human to handle.
 
