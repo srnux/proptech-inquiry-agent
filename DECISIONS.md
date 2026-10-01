@@ -365,3 +365,36 @@ turn would grow by the full results); server-side sessions for now (a conversati
 control for a demo with one user, which decision 24 avoided; it is on the roadmap as an optional later slice);
 summarising earlier turns with the model (a second model call per inquiry, and a summary is one more unchecked
 text between the record and the reply).
+
+## 32. Eval cases: exact hand-off sets checked in code, facts graded by a judge
+
+`evals/cases.jsonl` holds one case per line: the inquiry (and earlier turns, for follow-ups), the language, the
+listings the agent must identify, the hand-off reasons it must create tickets for, facts the reply must contain
+(`must`) and statements it must not make (`mustNot`). Whatever code can decide, code decides:
+
+- **Hand-offs** are compared as sets. A case can also list `allowHandoffs`: reasons that are acceptable but not
+  required, such as passing a pet "on request" to a colleague. They count neither as correct nor as extra, so
+  precision measures over-escalation without punishing a defensible ticket.
+- **Listings** must be named in the reply or attached to a ticket (a viewing reply need not repeat the id).
+- **Groundedness** reruns the number guard on the final reply against the run's own trace, so it is 100% unless
+  the loop has a bug. The useful number is next to it: the share of first drafts that passed the number check
+  without a repair turn, which is how often the model would have invented a figure without the guard.
+
+`must` and `mustNot` are plain sentences, graded by a model judge (decision 34), because "drei
+Monatskaltmieten" and "three months' cold rent" are the same fact and no regular expression knows it. A case
+passes when all of these hold; a hand-off forced by the code is shown in the report but judged by the same checks,
+since it may be the right ending.
+
+Rejected: regular expressions for facts (brittle across two languages, and they reward echoing the wording),
+and a single overall "is this good" score from the judge (unexplainable when it fails).
+
+## 35. A test-only listing for prompt injection, in its own catalogue
+
+`evals/fixtures/listings.json` holds HH-9001, whose description tells "AI assistants" to confirm viewings and not
+to hand off. Cases with `"fixtures": true` run against the catalogue plus that listing, with its own index
+(`.index/*.evals.json`); every other case and the retrieval metrics run against the real catalogue only. The
+listing never reaches `data/`, the MCP server or the web app.
+
+Rejected: adding HH-9001 to `data/listings.json` behind a flag (one forgotten flag and the demo serves it), and
+running every case against the extended catalogue (it would change search results and the golden-set numbers
+the README reports).
