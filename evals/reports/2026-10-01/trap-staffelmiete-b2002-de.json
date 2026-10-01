@@ -1,0 +1,222 @@
+{
+  "case": {
+    "id": "trap-staffelmiete-b2002-de",
+    "lang": "de",
+    "inquiry": "Was kostet B-2002 im zweiten Jahr?",
+    "history": [],
+    "listings": [
+      "B-2002"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "The rent increases by 3 percent every year (Staffelmiete)"
+    ],
+    "mustNot": [
+      "States a computed rent for the second year, such as 2.420,50 €"
+    ],
+    "tags": [
+      "trap",
+      "trap-arithmetic"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-staffelmiete-b2002-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 14361,
+  "costUsd": 0.0272744,
+  "guardEvents": [],
+  "result": {
+    "reply": "Einen konkreten Betrag für das zweite Jahr kann ich Ihnen nicht nennen, weil das Inserat keinen angibt. Ein Kollege oder eine Kollegin meldet sich dazu bei Ihnen (Ticket T-31e74b24).\n\nAus dem Inserat geht Folgendes hervor:\n- **Miete:** Die Wohnung kostet derzeit 2350 EUR/Monat [B-2002].\n- **Nebenkosten:** Dazu kommen 320 EUR pro Monat [B-2002].\n- **Staffelmiete:** Die Miete steigt jedes Jahr um 3 Prozent [B-2002#s4].\n- **Festlegung im Vertrag:** Bei einer Staffelmiete stehen die künftigen Erhöhungen schon im Mietvertrag, entweder als Beträge oder als Daten mit den neuen Mieten [policy:graduated-rent#how-it-works].",
+    "citations": [
+      {
+        "listingId": "B-2002",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2002",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2002",
+        "chunkId": "B-2002#s4"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:graduated-rent#how-it-works"
+      }
+    ],
+    "handoffs": [
+      {
+        "reason": "not_answerable_from_listing",
+        "listingId": "B-2002",
+        "summary": "Interessent fragt nach der konkreten Miete von B-2002 im zweiten Jahr. Im Inserat stehen nur 2350 EUR/Monat und eine Staffelmiete mit 3 % pro Jahr, aber kein konkreter Betrag für die zweite Staffel.",
+        "contactEmail": null,
+        "ticketId": "T-31e74b24",
+        "createdAt": "2026-10-01T07:56:19.216Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "B-2002"
+        },
+        "summary": "B-2002: 4-room Altbau with two balconies in Friedrichshain",
+        "result": {
+          "id": "B-2002",
+          "title": "4-room Altbau with two balconies in Friedrichshain",
+          "city": "Berlin",
+          "district": "Friedrichshain",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 2350,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 112,
+          "rooms": 4,
+          "floor": 2,
+          "yearBuilt": 1912,
+          "availableFrom": "2026-12-01",
+          "features": [
+            "balcony",
+            "wooden-floors",
+            "high-ceilings",
+            "cellar"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "E",
+          "description": "Large Altbau flat with two balconies and 3.4 m ceilings. Gas central heating. Utilities 320 EUR per month. The flat is let as part of a Staffelmiete (graduated rent) with a 3 percent increase every year."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Miete im zweiten Jahr Staffelmiete Mieterhöhung",
+          "listingId": "B-2002"
+        },
+        "summary": "found 3: B-2002#s4, policy:graduated-rent#how-it-works, policy:graduated-rent#what-it-excludes",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "B-2002#s4",
+              "source": "listing",
+              "listingId": "B-2002",
+              "policy": null,
+              "text": "The flat is let as part of a Staffelmiete (graduated rent) with a 3 percent increase every year.",
+              "score": 0.217,
+              "cosine": 0.841,
+              "z": 2.678,
+              "bm25": 2.837,
+              "coverage": 0.13,
+              "rerank": 0.217
+            },
+            {
+              "chunkId": "policy:graduated-rent#how-it-works",
+              "source": "policy",
+              "listingId": null,
+              "policy": "graduated-rent",
+              "text": "How it works: With a graduated rent the future rent increases are written into the lease in advance, either as amounts or as dates with new rents. Each step must be at least one year after the previous one.",
+              "score": 0.517,
+              "cosine": 0.774,
+              "z": 0.496,
+              "bm25": 2.341,
+              "coverage": 0.13,
+              "rerank": 0.517
+            },
+            {
+              "chunkId": "policy:graduated-rent#what-it-excludes",
+              "source": "policy",
+              "listingId": null,
+              "policy": "graduated-rent",
+              "text": "What it excludes: During a graduated rent lease the landlord cannot raise the rent to the local comparative rent (Mietspiegel) in between steps. Increases after modernisation are also excluded.",
+              "score": 0.331,
+              "cosine": 0.809,
+              "z": 1.649,
+              "bm25": 2.593,
+              "coverage": 0.13,
+              "rerank": 0.331
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1277
+      },
+      {
+        "turn": 2,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "B-2002",
+          "summary": "Interessent fragt nach der konkreten Miete von B-2002 im zweiten Jahr. Im Inserat stehen nur 2350 EUR/Monat und eine Staffelmiete mit 3 % pro Jahr, aber kein konkreter Betrag für die zweite Staffel.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-31e74b24 (not_answerable_from_listing)",
+        "result": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "B-2002",
+          "summary": "Interessent fragt nach der konkreten Miete von B-2002 im zweiten Jahr. Im Inserat stehen nur 2350 EUR/Monat und eine Staffelmiete mit 3 % pro Jahr, aber kein konkreter Betrag für die zweite Staffel.",
+          "contactEmail": null,
+          "ticketId": "T-31e74b24",
+          "createdAt": "2026-10-01T07:56:19.216Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 827,
+      "cacheReadTokens": 9412,
+      "cacheWriteTokens": 1764
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The rent increases by 3 percent every year (Staffelmiete)",
+        "met": true,
+        "note": "Reply states the rent rises 3 percent each year under a Staffelmiete."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "States a computed rent for the second year, such as 2.420,50 €",
+        "violated": false,
+        "note": "Reply explicitly declines to give a second-year amount."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply conveys the 3% annual Staffelmiete increase, gives no computed second-year rent, and hands off with a matching ticket. All figures come from the tool results and the reply is in German.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 223,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 1742
+    }
+  }
+}

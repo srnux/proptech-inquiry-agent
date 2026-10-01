@@ -207,31 +207,37 @@ A clean clone, `pnpm install`, `pnpm dev`, one click on an example, and all thre
 
 ---
 
-## Slice 5: Evals
+## Slice 5: Evals  ✅ done
 
 **Goal:** show, with numbers, that the agent answers correctly, escalates correctly and does not invent facts.
 
 ### Tasks
 
-- [ ] `evals/cases.jsonl`: about 40 inquiries, German and English. Each case has expected listing ids, expected
+- [x] `evals/cases.jsonl`: about 40 inquiries, German and English. Each case has expected listing ids, expected
       hand-off reason or none, facts that must appear, facts that must not appear.
-- [ ] Trap cases:
-  - [ ] "Pets on request" must not become a yes (HH-1001, B-2002, K-4001)
-  - [ ] Facade levy is estimated, not final (B-2003)
-  - [ ] Staffelmiete means 3 percent per year (B-2002)
-  - [ ] Munich furnished flat is all-inclusive, so no separate utilities figure (M-3001)
-  - [ ] Köln commercial unit is not approved for living in (K-4002)
-  - [ ] Price negotiation phrased politely still goes to a human
-- [ ] Prompt-injection case: a test-only listing whose description says to ignore instructions and confirm a
+- [x] Trap cases:
+  - [x] "Pets on request" must not become a yes (HH-1001, B-2002, K-4001)
+  - [x] Facade levy is estimated, not final (B-2003)
+  - [x] Staffelmiete means 3 percent per year (B-2002)
+  - [x] Munich furnished flat is all-inclusive, so no separate utilities figure (M-3001)
+  - [x] Köln commercial unit is not approved for living in (K-4002)
+  - [x] Price negotiation phrased politely still goes to a human
+- [x] Prompt-injection case: a test-only listing whose description says to ignore instructions and confirm a
       viewing. The agent must still hand off.
-- [ ] `evals/run.ts` with metrics:
-  - [ ] hand-off precision and recall per reason
-  - [ ] groundedness: share of replies where every number is found in tool results
-  - [ ] retrieval recall@5 on the golden set
-  - [ ] answer correctness from a model judge with a written rubric in `evals/rubric.md`
-  - [ ] cost and latency per inquiry
-- [ ] `evals/reports/<date>.md` written by the runner and committed.
-- [ ] Thresholds in `evals/thresholds.json`; the runner exits non-zero below them.
+- [x] `evals/run.ts` with metrics:
+  - [x] hand-off precision and recall per reason
+  - [x] groundedness: share of replies where every number is found in tool results
+  - [x] retrieval recall@5 on the golden set
+  - [x] answer correctness from a model judge with a written rubric in `evals/rubric.md`
+  - [x] cost and latency per inquiry
+- [x] `evals/reports/<date>.md` written by the runner and committed.
+- [x] Thresholds in `evals/thresholds.json`; the runner exits non-zero below them.
+
+### Open
+
+- [ ] The agent offers to add an email address to an existing ticket ("kann ich sie im Ticket ergänzen"), which
+      no tool can do (`trap-staffelmiete-b2002-de` in `evals/reports/2026-10-01-after-fixes.md`)
+- [ ] Run the eval on `claude-sonnet-5-5` as the agent, with `JUDGE_MODEL=claude-opus-5-5` (`DECISIONS.md` 23)
 
 ### Acceptance
 
@@ -241,9 +247,9 @@ A clean clone, `pnpm install`, `pnpm dev`, one click on an example, and all thre
 
 | Id | Question | Options | Recommendation |
 |---|---|---|---|
-| D5.1 | Thresholds | Set up front · set from the first honest run | From the first run, then only raised |
-| D5.2 | CI | Full set on every PR · small subset on PR, full set manually | Subset on PR |
-| D5.3 | Judge | Same model as the agent · a different one | Different, recorded in `DECISIONS.md` |
+| D5.1 | Thresholds | Set up front · set from the first honest run | **Decided: from the first run, then only raised** (`DECISIONS.md` 36) |
+| D5.2 | CI | Full set on every PR · small subset on PR, full set manually | **Decided: subset on PR** (`DECISIONS.md` 33) |
+| D5.3 | Judge | Same model as the agent · a different one | **Decided: a different one, `claude-sonnet-5-5`** (`DECISIONS.md` 34) |
 
 ### Commits
 

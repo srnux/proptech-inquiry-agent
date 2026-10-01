@@ -1,0 +1,169 @@
+{
+  "case": {
+    "id": "trap-pets-b2002-de",
+    "lang": "de",
+    "inquiry": "Wir haben zwei Katzen. Sind Haustiere in B-2002 erlaubt?",
+    "history": [],
+    "listings": [
+      "B-2002"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "Pets are on request at B-2002, so it cannot be promised"
+    ],
+    "mustNot": [
+      "Yes, pets are allowed at B-2002"
+    ],
+    "tags": [
+      "trap",
+      "trap-pets"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-pets-b2002-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 9987,
+  "costUsd": 0.0169914,
+  "guardEvents": [],
+  "result": {
+    "reply": "Für B-2002 gilt bei Haustieren „auf Anfrage“ [B-2002]. Das ist **keine Zusage**. Hunde und Katzen brauchen die Zustimmung des Vermieters. „Auf Anfrage“ heißt, dass der Vermieter nach Ihrer Anfrage im Einzelfall entscheidet [policy:pets#dogs-and-cats].\n\nIch kann Ihre Anfrage zu den zwei Katzen gern an eine Kollegin oder einen Kollegen weitergeben, die das beim Vermieter klären. Schicken Sie mir dafür bitte Ihre E-Mail-Adresse.",
+    "citations": [
+      {
+        "listingId": "B-2002",
+        "chunkId": null
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:pets#dogs-and-cats"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Sind Haustiere erlaubt? Katzen",
+          "listingId": "B-2002"
+        },
+        "summary": "found 2: policy:pets#small-animals, policy:pets#dogs-and-cats",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:pets#small-animals",
+              "source": "policy",
+              "listingId": null,
+              "policy": "pets",
+              "text": "Small animals: Small animals kept in cages or tanks, such as hamsters, fish or birds, are allowed in every rental.",
+              "score": 0.04,
+              "cosine": 0.816,
+              "z": 2.534,
+              "bm25": 0,
+              "coverage": 0,
+              "rerank": 0.04
+            },
+            {
+              "chunkId": "policy:pets#dogs-and-cats",
+              "source": "policy",
+              "listingId": null,
+              "policy": "pets",
+              "text": "Dogs and cats: Dogs and cats need the landlord's consent. \"On request\" in a listing means the landlord decides case by case after the inquiry; it is not a confirmation. \"No\" means the building rules exclude them.",
+              "score": 0.035,
+              "cosine": 0.821,
+              "z": 2.687,
+              "bm25": 0,
+              "coverage": 0,
+              "rerank": 0.035
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1098
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "B-2002"
+        },
+        "summary": "B-2002: 4-room Altbau with two balconies in Friedrichshain",
+        "result": {
+          "id": "B-2002",
+          "title": "4-room Altbau with two balconies in Friedrichshain",
+          "city": "Berlin",
+          "district": "Friedrichshain",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 2350,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 112,
+          "rooms": 4,
+          "floor": 2,
+          "yearBuilt": 1912,
+          "availableFrom": "2026-12-01",
+          "features": [
+            "balcony",
+            "wooden-floors",
+            "high-ceilings",
+            "cellar"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "E",
+          "description": "Large Altbau flat with two balconies and 3.4 m ceilings. Gas central heating. Utilities 320 EUR per month. The flat is let as part of a Staffelmiete (graduated rent) with a 3 percent increase every year."
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 535,
+      "cacheReadTokens": 5537,
+      "cacheWriteTokens": 1032
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Pets are on request at B-2002, so it cannot be promised",
+        "met": true,
+        "note": "Reply says \"auf Anfrage\", not a confirmation, landlord decides case by case."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Yes, pets are allowed at B-2002",
+        "violated": false,
+        "note": "Reply explicitly says it is no confirmation."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply correctly conveys that pets are on request and that the landlord decides, without promising approval. The offer to pass the request on is an offer, with no ticket claimed as created, and it contains no unsupported claims.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 223,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 1041
+    }
+  }
+}

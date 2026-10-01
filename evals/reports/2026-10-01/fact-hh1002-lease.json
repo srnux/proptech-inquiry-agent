@@ -1,0 +1,153 @@
+{
+  "case": {
+    "id": "fact-hh1002-lease",
+    "lang": "en",
+    "inquiry": "What is the minimum lease term for HH-1002?",
+    "history": [],
+    "listings": [
+      "HH-1002"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The minimum lease term is 12 months"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1002-lease",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 7967,
+  "costUsd": 0.009774799999999998,
+  "guardEvents": [],
+  "result": {
+    "reply": "HH-1002 has a minimum lease term of 12 months [HH-1002#s5].",
+    "citations": [
+      {
+        "listingId": "HH-1002",
+        "chunkId": "HH-1002#s5"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "What is the minimum lease term?",
+          "listingId": "HH-1002"
+        },
+        "summary": "found 2: HH-1002#s5, policy:furnished#fixed-terms",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1002#s5",
+              "source": "listing",
+              "listingId": "HH-1002",
+              "policy": null,
+              "text": "Minimum lease term of 12 months.",
+              "score": 0.929,
+              "cosine": 0.861,
+              "z": 2.23,
+              "bm25": 9.396,
+              "coverage": 1,
+              "rerank": 0.929
+            },
+            {
+              "chunkId": "policy:furnished#fixed-terms",
+              "source": "policy",
+              "listingId": null,
+              "policy": "furnished",
+              "text": "Fixed terms: Furnished flats are often let for a fixed term. The end date is stated in the lease, and the lease ends on that date without notice.",
+              "score": 0.011,
+              "cosine": 0.839,
+              "z": 1.551,
+              "bm25": 6.695,
+              "coverage": 0.58,
+              "rerank": 0.011
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1881
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1002"
+        },
+        "summary": "HH-1002: Modern 2-room new-build near Hafencity",
+        "result": {
+          "id": "HH-1002",
+          "title": "Modern 2-room new-build near Hafencity",
+          "city": "Hamburg",
+          "district": "HafenCity",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1890,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 64,
+          "rooms": 2,
+          "floor": 6,
+          "yearBuilt": 2021,
+          "availableFrom": "2026-10-15",
+          "features": [
+            "lift",
+            "underfloor-heating",
+            "loggia",
+            "underground-parking"
+          ],
+          "petsAllowed": "no",
+          "energyClass": "A",
+          "description": "New-build flat with lift and loggia facing the Elbe. Underground parking space available for 150 EUR per month extra. Utilities 210 EUR per month. No pets according to the building rules. Minimum lease term of 12 months."
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 196,
+      "cacheReadTokens": 5454,
+      "cacheWriteTokens": 948
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The minimum lease term is 12 months",
+        "met": true
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states the 12-month minimum lease term, which the listing chunk and description both support. It makes no unsupported claims and is in English.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 107,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 735
+    }
+  }
+}

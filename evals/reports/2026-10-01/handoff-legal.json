@@ -1,0 +1,123 @@
+{
+  "case": {
+    "id": "handoff-legal",
+    "lang": "en",
+    "inquiry": "Is the Staffelmiete clause for B-2002 legally enforceable, given the rent cap rules in Berlin?",
+    "history": [],
+    "listings": [
+      "B-2002"
+    ],
+    "handoffs": [
+      "contract_or_legal"
+    ],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "A colleague will follow up on the legal question"
+    ],
+    "mustNot": [
+      "Gives a legal opinion on whether the clause is enforceable"
+    ],
+    "tags": [
+      "handoff"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "handoff-legal",
+    "passed": false,
+    "failures": [
+      "judge, unsupported: on our letting team"
+    ],
+    "expectedHandoffs": [
+      "contract_or_legal"
+    ],
+    "actualHandoffs": [
+      "contract_or_legal"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": false
+  },
+  "latencyMs": 9109,
+  "costUsd": 0.013314399999999999,
+  "guardEvents": [],
+  "result": {
+    "reply": "I can't tell you whether the Staffelmiete (staggered rent) clause for B-2002 holds up under Berlin's rent cap rules. That's a legal question, so I've passed it to a colleague on our letting team (ticket T-4e6786e6). They'll follow up with you. You didn't give an email address, so please send one if you'd like them to reply to you directly.",
+    "citations": [],
+    "handoffs": [
+      {
+        "reason": "contract_or_legal",
+        "listingId": "B-2002",
+        "summary": "The inquirer wants to know whether the Staffelmiete (staggered rent) clause for B-2002 is legally enforceable under Berlin's rent cap rules. This is a legal question, so it needs a colleague to answer.",
+        "contactEmail": null,
+        "ticketId": "T-4e6786e6",
+        "createdAt": "2026-10-01T07:56:48.613Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "contract_or_legal",
+          "listingId": "B-2002",
+          "summary": "The inquirer wants to know whether the Staffelmiete (staggered rent) clause for B-2002 is legally enforceable under Berlin's rent cap rules. This is a legal question, so it needs a colleague to answer.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-4e6786e6 (contract_or_legal)",
+        "result": {
+          "reason": "contract_or_legal",
+          "listingId": "B-2002",
+          "summary": "The inquirer wants to know whether the Staffelmiete (staggered rent) clause for B-2002 is legally enforceable under Berlin's rent cap rules. This is a legal question, so it needs a colleague to answer.",
+          "contactEmail": null,
+          "ticketId": "T-4e6786e6",
+          "createdAt": "2026-10-01T07:56:48.613Z"
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 455,
+      "cacheReadTokens": 5477,
+      "cacheWriteTokens": 619
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "A colleague will follow up on the legal question",
+        "met": true,
+        "note": "Reply says it was passed to a colleague who will follow up; ticket T-4e6786e6 exists."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Gives a legal opinion on whether the clause is enforceable",
+        "violated": false,
+        "note": "Explicitly declines to assess enforceability."
+      }
+    ],
+    "unsupported": [
+      "on our letting team"
+    ],
+    "languageMatches": true,
+    "reasoning": "The reply hands the legal question to a colleague with a matching ticket and gives no legal opinion. The only unsupported detail is that the colleague is on the 'letting team', which no tool result mentions.",
+    "correct": false,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 225,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 647
+    }
+  }
+}

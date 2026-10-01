@@ -1,0 +1,170 @@
+{
+  "case": {
+    "id": "fact-hh1003-commission",
+    "lang": "en",
+    "inquiry": "What commission does the buyer pay for HH-1003?",
+    "history": [],
+    "listings": [
+      "HH-1003"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The buyer's commission is 3.57 percent including VAT"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1003-commission",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 5265,
+  "costUsd": 0.011683200000000001,
+  "guardEvents": [],
+  "result": {
+    "reply": "For HH-1003, the buyer pays a commission of 3.57 percent including VAT [HH-1003#s3]. When a flat or single-family house is sold to a private buyer, the seller and buyer split the commission equally. The buyer's share is due when the notarised purchase contract is signed [policy:commission#sales].",
+    "citations": [
+      {
+        "listingId": "HH-1003",
+        "chunkId": "HH-1003#s3"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:commission#sales"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "What commission does the buyer pay?",
+          "listingId": "HH-1003"
+        },
+        "summary": "found 3: HH-1003#s3, policy:commission#sales, policy:commission#rentals",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1003#s3",
+              "source": "listing",
+              "listingId": "HH-1003",
+              "policy": null,
+              "text": "Buyer's commission 3.57 percent including VAT.",
+              "score": 0.533,
+              "cosine": 0.856,
+              "z": 2.676,
+              "bm25": 5.727,
+              "coverage": 0.646,
+              "rerank": 0.533
+            },
+            {
+              "chunkId": "policy:commission#sales",
+              "source": "policy",
+              "listingId": null,
+              "policy": "commission",
+              "text": "Sales: For flats and single-family houses sold to private buyers, the commission is shared equally between seller and buyer. The buyer's share is stated in each sale listing, including VAT. It becomes due when the notarised purchase contract is signed.",
+              "score": 0.817,
+              "cosine": 0.843,
+              "z": 2.236,
+              "bm25": 6.593,
+              "coverage": 0.646,
+              "rerank": 0.817
+            },
+            {
+              "chunkId": "policy:commission#rentals",
+              "source": "policy",
+              "listingId": null,
+              "policy": "commission",
+              "text": "Rentals: Tenants pay no commission (Maklerprovision) for rental listings. The party that engaged the agency pays it.",
+              "score": 0.094,
+              "cosine": 0.816,
+              "z": 1.356,
+              "bm25": 8.049,
+              "coverage": 0.677,
+              "rerank": 0.094
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1152
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1003"
+        },
+        "summary": "HH-1003: Family house with garden in Volksdorf",
+        "result": {
+          "id": "HH-1003",
+          "title": "Family house with garden in Volksdorf",
+          "city": "Hamburg",
+          "district": "Volksdorf",
+          "offerType": "sale",
+          "propertyType": "house",
+          "price": 895000,
+          "priceUnit": "EUR",
+          "livingAreaSqm": 165,
+          "rooms": 6,
+          "floor": null,
+          "yearBuilt": 1976,
+          "availableFrom": "2027-02-01",
+          "features": [
+            "garden",
+            "garage",
+            "fireplace",
+            "cellar"
+          ],
+          "petsAllowed": "yes",
+          "energyClass": "E",
+          "description": "Detached house on a 780 sqm plot close to the U1. Roof renewed in 2019, heating system from 2004 will need replacement in the next years. Buyer's commission 3.57 percent including VAT. Energy certificate available on request at the viewing."
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 241,
+      "cacheReadTokens": 5521,
+      "cacheWriteTokens": 1147
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The buyer's commission is 3.57 percent including VAT",
+        "met": true
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states 3.57 percent including VAT, which matches the listing. The equal split and the due date come from the sales commission policy chunk, so nothing in it is unsupported.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 127,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 980
+    }
+  }
+}

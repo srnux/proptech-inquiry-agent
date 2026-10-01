@@ -1,0 +1,17 @@
+{
+  "note": "Set from the first full run (evals/reports/2026-10-01.md), raised after the fixes (evals/reports/2026-10-01-after-fixes.md), DECISIONS.md 36. Raise them when a run beats them; never lower them to make a run pass. Judged rates keep room for about two cases of judge noise; cost and latency keep headroom for run-to-run noise.",
+  "min": {
+    "passRate": 0.9,
+    "handoffPrecision": 0.93,
+    "handoffRecall": 1,
+    "groundedness": 1,
+    "firstDraftGroundedness": 1,
+    "correctness": 0.9,
+    "retrievalRecallAt5": 1
+  },
+  "max": {
+    "retrievalFalsePositives": 0,
+    "meanCostUsd": 0.02,
+    "p95LatencyMs": 20000
+  }
+}

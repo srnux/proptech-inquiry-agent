@@ -1,0 +1,226 @@
+{
+  "case": {
+    "id": "trap-staffelmiete-b2002-de",
+    "lang": "de",
+    "inquiry": "Was kostet B-2002 im zweiten Jahr?",
+    "history": [],
+    "listings": [
+      "B-2002"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "The rent increases by 3 percent every year (Staffelmiete)"
+    ],
+    "mustNot": [
+      "States a computed rent for the second year, such as 2.420,50 €"
+    ],
+    "tags": [
+      "trap",
+      "trap-arithmetic"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-staffelmiete-b2002-de",
+    "passed": false,
+    "failures": [
+      "judge, unsupported: Wenn Sie mir Ihre E-Mail-Adresse nennen, kann ich sie im Ticket ergänzen."
+    ],
+    "expectedHandoffs": [],
+    "actualHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": false
+  },
+  "latencyMs": 13817,
+  "costUsd": 0.0287734,
+  "guardEvents": [],
+  "result": {
+    "reply": "B-2002 kostet zu Beginn 2350 EUR pro Monat [B-2002]. Dazu kommen Nebenkosten von 320 EUR pro Monat [B-2002]. Die Wohnung wird mit einer Staffelmiete vermietet, die jedes Jahr um 3 Prozent steigt [B-2002#s4]. Bei einer Staffelmiete stehen die künftigen Erhöhungen schon vorab im Mietvertrag, entweder als Beträge oder als Termine mit der jeweils neuen Miete [policy:graduated-rent#how-it-works].\n\nWie hoch die Miete im zweiten Jahr genau ist, steht nicht im Inserat. Deshalb habe ich Ihre Frage an eine Kollegin bzw. einen Kollegen weitergegeben (Ticket T-a69c3b04). Sie bzw. er meldet sich bei Ihnen. Wenn Sie mir Ihre E-Mail-Adresse nennen, kann ich sie im Ticket ergänzen.",
+    "citations": [
+      {
+        "listingId": "B-2002",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2002",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2002",
+        "chunkId": "B-2002#s4"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:graduated-rent#how-it-works"
+      }
+    ],
+    "handoffs": [
+      {
+        "reason": "not_answerable_from_listing",
+        "listingId": "B-2002",
+        "summary": "Interessent fragt nach der genauen Miete für B-2002 im zweiten Jahr. Im Inserat stehen 2350 EUR/Monat mit einer Staffelmiete von 3 Prozent pro Jahr, aber nicht der konkrete Betrag der Staffel für das zweite Jahr.",
+        "contactEmail": null,
+        "ticketId": "T-a69c3b04",
+        "createdAt": "2026-10-01T08:12:53.846Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "B-2002"
+        },
+        "summary": "B-2002: 4-room Altbau with two balconies in Friedrichshain",
+        "result": {
+          "id": "B-2002",
+          "title": "4-room Altbau with two balconies in Friedrichshain",
+          "city": "Berlin",
+          "district": "Friedrichshain",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 2350,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 112,
+          "rooms": 4,
+          "floor": 2,
+          "yearBuilt": 1912,
+          "availableFrom": "2026-12-01",
+          "features": [
+            "balcony",
+            "wooden-floors",
+            "high-ceilings",
+            "cellar"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "E",
+          "description": "Large Altbau flat with two balconies and 3.4 m ceilings. Gas central heating. Utilities 320 EUR per month. The flat is let as part of a Staffelmiete (graduated rent) with a 3 percent increase every year."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Miete im zweiten Jahr Staffelmiete Erhöhung",
+          "listingId": "B-2002"
+        },
+        "summary": "found 3: B-2002#s4, policy:graduated-rent#how-it-works, policy:graduated-rent#what-it-excludes",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "B-2002#s4",
+              "source": "listing",
+              "listingId": "B-2002",
+              "policy": null,
+              "text": "The flat is let as part of a Staffelmiete (graduated rent) with a 3 percent increase every year.",
+              "score": 0.303,
+              "cosine": 0.851,
+              "z": 2.885,
+              "bm25": 2.84,
+              "coverage": 0.13,
+              "rerank": 0.303
+            },
+            {
+              "chunkId": "policy:graduated-rent#how-it-works",
+              "source": "policy",
+              "listingId": null,
+              "policy": "graduated-rent",
+              "text": "How it works: With a graduated rent the future rent increases are written into the lease in advance, either as amounts or as dates with new rents. Each step must be at least one year after the previous one.",
+              "score": 0.539,
+              "cosine": 0.779,
+              "z": 0.552,
+              "bm25": 2.345,
+              "coverage": 0.13,
+              "rerank": 0.539
+            },
+            {
+              "chunkId": "policy:graduated-rent#what-it-excludes",
+              "source": "policy",
+              "listingId": null,
+              "policy": "graduated-rent",
+              "text": "What it excludes: During a graduated rent lease the landlord cannot raise the rent to the local comparative rent (Mietspiegel) in between steps. Increases after modernisation are also excluded.",
+              "score": 0.254,
+              "cosine": 0.803,
+              "z": 1.349,
+              "bm25": 2.596,
+              "coverage": 0.13,
+              "rerank": 0.254
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1107
+      },
+      {
+        "turn": 2,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "B-2002",
+          "summary": "Interessent fragt nach der genauen Miete für B-2002 im zweiten Jahr. Im Inserat stehen 2350 EUR/Monat mit einer Staffelmiete von 3 Prozent pro Jahr, aber nicht der konkrete Betrag der Staffel für das zweite Jahr.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-a69c3b04 (not_answerable_from_listing)",
+        "result": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "B-2002",
+          "summary": "Interessent fragt nach der genauen Miete für B-2002 im zweiten Jahr. Im Inserat stehen 2350 EUR/Monat mit einer Staffelmiete von 3 Prozent pro Jahr, aber nicht der konkrete Betrag der Staffel für das zweite Jahr.",
+          "contactEmail": null,
+          "ticketId": "T-a69c3b04",
+          "createdAt": "2026-10-01T08:12:53.846Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 891,
+      "cacheReadTokens": 9507,
+      "cacheWriteTokens": 1804
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The rent increases by 3 percent every year (Staffelmiete)",
+        "met": true,
+        "note": "Reply states the Staffelmiete with a 3 percent increase each year."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "States a computed rent for the second year, such as 2.420,50 €",
+        "violated": false,
+        "note": "No second-year figure is given; the reply says the exact amount is not in the listing."
+      }
+    ],
+    "unsupported": [
+      "Wenn Sie mir Ihre E-Mail-Adresse nennen, kann ich sie im Ticket ergänzen."
+    ],
+    "languageMatches": true,
+    "reasoning": "The reply conveys the 3% annual Staffelmiete, computes no second-year rent, and hands off with a ticket. The offer to add an email address to the ticket is a capability claim not supported by the tools, since there is no ticket-update tool.",
+    "correct": false,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 288,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 1794
+    }
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "case": {
+    "id": "fact-k4001-deposit-de",
+    "lang": "de",
+    "inquiry": "Wie hoch ist die Kaution bei K-4001?",
+    "history": [],
+    "listings": [
+      "K-4001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The deposit is two months' cold rent"
+    ],
+    "mustNot": [
+      "The deposit is three months' cold rent"
+    ],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-k4001-deposit-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 11609,
+  "costUsd": 0.0128948,
+  "guardEvents": [],
+  "result": {
+    "reply": "Bei K-4001 beträgt die Kaution zwei Monatskaltmieten [K-4001]. Die Miete ist mit 1380 EUR/Monat angegeben [K-4001]. Laut den allgemeinen Richtlinien der Agentur werden die Nebenkosten bei der Kaution nicht mitgerechnet [policy:deposit#amount]. Die Nebenkosten für diese Wohnung liegen bei 250 EUR pro Monat [K-4001].",
+    "citations": [
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:deposit#amount"
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Wie hoch ist die Kaution?",
+          "listingId": "K-4001"
+        },
+        "summary": "found 1: policy:deposit#amount",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:deposit#amount",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Amount: For residential rentals the deposit is at most three months' net cold rent (Nettokaltmiete). Utilities are not included in that calculation. Each listing states the deposit that applies to it.",
+              "score": 0.024,
+              "cosine": 0.746,
+              "z": 1.12,
+              "bm25": 2.593,
+              "coverage": 1,
+              "rerank": 0.024
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1895
+      },
+      {
+        "turn": 2,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "K-4001"
+        },
+        "summary": "K-4001: 3-room flat near the Rhine in Deutz",
+        "result": {
+          "id": "K-4001",
+          "title": "3-room flat near the Rhine in Deutz",
+          "city": "Köln",
+          "district": "Deutz",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1380,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 81,
+          "rooms": 3,
+          "floor": 5,
+          "yearBuilt": 2001,
+          "availableFrom": "2026-11-01",
+          "features": [
+            "lift",
+            "balcony",
+            "fitted-kitchen",
+            "accessible"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "C",
+          "description": "Step-free flat with lift, wide doors and a walk-in shower, suitable for wheelchair users. Balcony with a view of the cathedral. Utilities 250 EUR per month. Deposit two months' cold rent."
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 359,
+      "cacheReadTokens": 8539,
+      "cacheWriteTokens": 795
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The deposit is two months' cold rent",
+        "met": true,
+        "note": "Reply states zwei Monatskaltmieten, supported by the listing description."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "The deposit is three months' cold rent",
+        "violated": false,
+        "note": "Reply does not claim three months."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply correctly states the deposit as two months' cold rent per the listing, and the extra details (rent 1380 EUR, utilities 250 EUR, utilities excluded per policy) are all supported by tool results. It is written in German, matching the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 216,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 791
+    }
+  }
+}

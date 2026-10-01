@@ -1,0 +1,122 @@
+{
+  "case": {
+    "id": "policy-tenant-commission-de",
+    "lang": "de",
+    "inquiry": "Muss ich als Mieter eine Provision zahlen?",
+    "history": [],
+    "listings": [],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "Tenants pay no commission for rental listings"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact",
+      "policy"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "policy-tenant-commission-de",
+    "passed": false,
+    "failures": [
+      "hand-offs: expected none, got not_answerable_from_listing",
+      "judge, missing: Tenants pay no commission for rental listings (The reply says it cannot answer the commission question and hands it to a colleague. The tool results contain no commission information, so the reply does not state the fact.)"
+    ],
+    "expectedHandoffs": [],
+    "actualHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "handoffsOk": false,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": false
+  },
+  "latencyMs": 13163,
+  "costUsd": 0.014282399999999999,
+  "guardEvents": [],
+  "result": {
+    "reply": "Ob Mieter eine Provision zahlen, kann ich Ihnen leider nicht sagen. Dazu steht nichts in unseren Richtlinien oder Exposés. Ich habe Ihre Frage an einen Kollegen weitergegeben (Ticket T-9a5aa643), der sich bei Ihnen meldet. Dafür bräuchten wir aber noch Ihre E-Mail-Adresse. Wenn es um eine bestimmte Wohnung geht, schicken Sie mir bitte auch die Objektnummer.",
+    "citations": [],
+    "handoffs": [
+      {
+        "reason": "not_answerable_from_listing",
+        "listingId": null,
+        "summary": "Interessent fragt allgemein, ob Mieter eine Provision zahlen müssen. In den Richtlinien und Exposés ist dazu nichts zu finden. Kein bestimmtes Objekt genannt.",
+        "contactEmail": null,
+        "ticketId": "T-9a5aa643",
+        "createdAt": "2026-10-01T07:55:30.831Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Muss ich als Mieter eine Provision zahlen?"
+        },
+        "summary": "found: false",
+        "result": {
+          "found": false,
+          "results": [],
+          "reason": "No passage in the listing or the policies is relevant to this question."
+        },
+        "isError": false,
+        "durationMs": 1717
+      },
+      {
+        "turn": 2,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "not_answerable_from_listing",
+          "listingId": null,
+          "summary": "Interessent fragt allgemein, ob Mieter eine Provision zahlen müssen. In den Richtlinien und Exposés ist dazu nichts zu finden. Kein bestimmtes Objekt genannt.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-9a5aa643 (not_answerable_from_listing)",
+        "result": {
+          "reason": "not_answerable_from_listing",
+          "listingId": null,
+          "summary": "Interessent fragt allgemein, ob Mieter eine Provision zahlen müssen. In den Richtlinien und Exposés ist dazu nichts zu finden. Kein bestimmtes Objekt genannt.",
+          "contactEmail": null,
+          "ticketId": "T-9a5aa643",
+          "createdAt": "2026-10-01T07:55:30.831Z"
+        },
+        "isError": false,
+        "durationMs": 2
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 482,
+      "cacheReadTokens": 8352,
+      "cacheWriteTokens": 588
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Tenants pay no commission for rental listings",
+        "met": false,
+        "note": "The reply says it cannot answer the commission question and hands it to a colleague. The tool results contain no commission information, so the reply does not state the fact."
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply does not state that tenants pay no commission; it correctly says the information is unavailable and passes the question on, with a ticket created. It is in German, matching the inquiry, and makes no unsupported claims.",
+    "correct": false,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 183,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 752
+    }
+  }
+}

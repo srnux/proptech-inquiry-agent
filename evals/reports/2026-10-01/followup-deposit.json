@@ -1,0 +1,252 @@
+{
+  "case": {
+    "id": "followup-deposit",
+    "lang": "en",
+    "inquiry": "And how much is the deposit?",
+    "history": [
+      {
+        "inquiry": "Is heating included in the rent for HH-1001?",
+        "reply": "Yes. Heating is included in the utilities, which are an additional 240 EUR per month [HH-1001#s5]."
+      }
+    ],
+    "listings": [
+      "HH-1001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The deposit for HH-1001 is three months' cold rent"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact",
+      "history"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "followup-deposit",
+    "passed": false,
+    "failures": [
+      "judge, unsupported: I also need to correct my last answer: heating isn't included in the rent itself."
+    ],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": false
+  },
+  "latencyMs": 10683,
+  "costUsd": 0.0232226,
+  "guardEvents": [],
+  "result": {
+    "reply": "For HH-1001, the deposit is three months' cold rent [HH-1001#s4]. Utilities don't count toward the deposit [policy:deposit#amount]. You can pay the deposit in three equal monthly instalments, with the first one due when the lease starts [policy:deposit#payment-in-instalments].\n\nI also need to correct my last answer: heating isn't included in the rent itself. It's covered by the utilities, which cost an extra 240 EUR per month on top of the rent [HH-1001#s5][policy:utilities#what-the-monthly-figure-means].",
+    "citations": [
+      {
+        "listingId": "HH-1001",
+        "chunkId": "HH-1001#s4"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:deposit#amount"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:deposit#payment-in-instalments"
+      },
+      {
+        "listingId": "HH-1001",
+        "chunkId": "HH-1001#s5"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:utilities#what-the-monthly-figure-means"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "How much is the deposit?",
+          "listingId": "HH-1001"
+        },
+        "summary": "found 4: HH-1001#s4, policy:deposit#amount, policy:deposit#payment-in-instalments, policy:deposit#return-of-the-deposit",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1001#s4",
+              "source": "listing",
+              "listingId": "HH-1001",
+              "policy": null,
+              "text": "Deposit is three months' cold rent.",
+              "score": 0.014,
+              "cosine": 0.824,
+              "z": 1.086,
+              "bm25": 2.644,
+              "coverage": 1,
+              "rerank": 0.014
+            },
+            {
+              "chunkId": "policy:deposit#amount",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Amount: For residential rentals the deposit is at most three months' net cold rent (Nettokaltmiete). Utilities are not included in that calculation. Each listing states the deposit that applies to it.",
+              "score": 0.35,
+              "cosine": 0.862,
+              "z": 2.836,
+              "bm25": 3.627,
+              "coverage": 1,
+              "rerank": 0.35
+            },
+            {
+              "chunkId": "policy:deposit#payment-in-instalments",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Payment in instalments: Tenants may pay the deposit in three equal monthly instalments. The first instalment is due at the start of the lease.",
+              "score": 0.012,
+              "cosine": 0.845,
+              "z": 2.055,
+              "bm25": 3.374,
+              "coverage": 1,
+              "rerank": 0.012
+            },
+            {
+              "chunkId": "policy:deposit#return-of-the-deposit",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Return of the deposit: The deposit is returned after the tenant moves out, once the handover protocol is signed and any open utility statement is settled. Part of it can be held back until the final utility statement is issued.",
+              "score": 0.008,
+              "cosine": 0.829,
+              "z": 1.313,
+              "bm25": 3.463,
+              "coverage": 1,
+              "rerank": 0.008
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1099
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Is heating included in the rent?",
+          "listingId": "HH-1001"
+        },
+        "summary": "found 5: HH-1001#s5, policy:furnished#all-inclusive-rent, policy:utilities#what-the-monthly-figure-means, policy:utilities#electricity-and-internet, policy:deposit#amount",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1001#s5",
+              "source": "listing",
+              "listingId": "HH-1001",
+              "policy": null,
+              "text": "Utilities (Nebenkosten) are an additional 240 EUR per month, heating included.",
+              "score": 0.637,
+              "cosine": 0.849,
+              "z": 1.161,
+              "bm25": 4.987,
+              "coverage": 0.749,
+              "rerank": 0.637
+            },
+            {
+              "chunkId": "policy:furnished#all-inclusive-rent",
+              "source": "policy",
+              "listingId": null,
+              "policy": "furnished",
+              "text": "All-inclusive rent: For furnished flats let at an all-inclusive rent (Warmmiete inklusive), the stated rent covers utilities, heating, electricity and internet. There is no separate utility statement.",
+              "score": 0.972,
+              "cosine": 0.887,
+              "z": 2.278,
+              "bm25": 4.438,
+              "coverage": 0.611,
+              "rerank": 0.972
+            },
+            {
+              "chunkId": "policy:utilities#what-the-monthly-figure-means",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "What the monthly figure means: The utilities figure in a listing is a monthly advance payment on top of the cold rent. It usually covers water, waste collection, building insurance, cleaning of shared areas and property tax. Whether heating is included is stated in each listing.",
+              "score": 0.913,
+              "cosine": 0.853,
+              "z": 1.277,
+              "bm25": 5.013,
+              "coverage": 1,
+              "rerank": 0.913
+            },
+            {
+              "chunkId": "policy:utilities#electricity-and-internet",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "Electricity and internet: Household electricity and internet are contracted by the tenant directly and are not part of the utilities, unless a listing says the rent is all-inclusive.",
+              "score": 0.122,
+              "cosine": 0.849,
+              "z": 1.162,
+              "bm25": 1.637,
+              "coverage": 0.251,
+              "rerank": 0.122
+            },
+            {
+              "chunkId": "policy:deposit#amount",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Amount: For residential rentals the deposit is at most three months' net cold rent (Nettokaltmiete). Utilities are not included in that calculation. Each listing states the deposit that applies to it.",
+              "score": 0.089,
+              "cosine": 0.856,
+              "z": 1.362,
+              "bm25": 3.9,
+              "coverage": 0.64,
+              "rerank": 0.089
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1229
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 576,
+      "cacheReadTokens": 5593,
+      "cacheWriteTokens": 2112
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The deposit for HH-1001 is three months' cold rent",
+        "met": true
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [
+      "I also need to correct my last answer: heating isn't included in the rent itself."
+    ],
+    "languageMatches": true,
+    "reasoning": "The deposit fact is stated correctly and matches the listing. However, the reply 'corrects' an earlier answer that was accurate (heating is included in the utilities, which are additional to rent), which creates a misleading, unsupported claim; the installment claim is supported by policy.",
+    "correct": false,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 182,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 1842
+    }
+  }
+}

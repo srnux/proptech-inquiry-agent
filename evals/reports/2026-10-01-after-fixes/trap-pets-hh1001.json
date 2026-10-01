@@ -1,0 +1,232 @@
+{
+  "case": {
+    "id": "trap-pets-hh1001",
+    "lang": "en",
+    "inquiry": "I have a cat. Can I bring it to HH-1001?",
+    "history": [],
+    "listings": [
+      "HH-1001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "Pets are on request at HH-1001, so it cannot be promised"
+    ],
+    "mustNot": [
+      "Yes, the cat is allowed",
+      "Pets are allowed at HH-1001"
+    ],
+    "tags": [
+      "trap",
+      "trap-pets"
+    ],
+    "subset": true,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-pets-hh1001",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 19456,
+  "costUsd": 0.0234206,
+  "guardEvents": [],
+  "result": {
+    "reply": "I can't confirm that yet. Pets at HH-1001 are allowed on request [HH-1001], and cats need the landlord's consent [policy:pets#dogs-and-cats]. \"On request\" means the landlord decides each case after you ask, so it isn't a yes [policy:pets#dogs-and-cats].\n\nI've passed your question to our letting team. They'll ask the landlord and get back to you with a decision [policy:pets#how-to-ask]. It will help if you tell them your cat's size and whether you have more than one animal [policy:pets#how-to-ask]. You didn't give an email address, so please send one if you'd like them to reply that way.",
+    "citations": [
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:pets#dogs-and-cats"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:pets#dogs-and-cats"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:pets#how-to-ask"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:pets#how-to-ask"
+      }
+    ],
+    "handoffs": [
+      {
+        "reason": "not_answerable_from_listing",
+        "listingId": "HH-1001",
+        "summary": "Inquirer has a cat and asks whether they can bring it to HH-1001 (pets \"on request\"). Please ask the landlord for a decision. No contact email given.",
+        "contactEmail": null,
+        "ticketId": "T-5bd6436d",
+        "createdAt": "2026-10-01T08:12:39.824Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Can I bring my cat? pets allowed",
+          "listingId": "HH-1001"
+        },
+        "summary": "found 3: policy:pets#dogs-and-cats, policy:pets#small-animals, policy:pets#how-to-ask",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:pets#dogs-and-cats",
+              "source": "policy",
+              "listingId": null,
+              "policy": "pets",
+              "text": "Dogs and cats: Dogs and cats need the landlord's consent. \"On request\" in a listing means the landlord decides case by case after the inquiry; it is not a confirmation. \"No\" means the building rules exclude them.",
+              "score": 0.42,
+              "cosine": 0.852,
+              "z": 2.619,
+              "bm25": 6.621,
+              "coverage": 0.453,
+              "rerank": 0.42
+            },
+            {
+              "chunkId": "policy:pets#small-animals",
+              "source": "policy",
+              "listingId": null,
+              "policy": "pets",
+              "text": "Small animals: Small animals kept in cages or tanks, such as hamsters, fish or birds, are allowed in every rental.",
+              "score": 0.2,
+              "cosine": 0.839,
+              "z": 2.183,
+              "bm25": 6.526,
+              "coverage": 0.453,
+              "rerank": 0.2
+            },
+            {
+              "chunkId": "policy:pets#how-to-ask",
+              "source": "policy",
+              "listingId": null,
+              "policy": "pets",
+              "text": "How to ask: Mention the type, size and number of animals in the inquiry. Our letting team asks the landlord and replies with a decision.",
+              "score": 0.021,
+              "cosine": 0.818,
+              "z": 1.446,
+              "bm25": 2.647,
+              "coverage": 0.179,
+              "rerank": 0.021
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1178
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1001"
+        },
+        "summary": "HH-1001: Bright 3-room flat with balcony in Eimsbüttel",
+        "result": {
+          "id": "HH-1001",
+          "title": "Bright 3-room flat with balcony in Eimsbüttel",
+          "city": "Hamburg",
+          "district": "Eimsbüttel",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1650,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 78,
+          "rooms": 3,
+          "floor": 3,
+          "yearBuilt": 1908,
+          "availableFrom": "2026-11-01",
+          "features": [
+            "balcony",
+            "fitted-kitchen",
+            "cellar",
+            "wooden-floors"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "D",
+          "description": "Renovated Altbau flat on the third floor, no lift. South-facing balcony over a quiet courtyard. Fitted kitchen included. Deposit is three months' cold rent. Utilities (Nebenkosten) are an additional 240 EUR per month, heating included. Pets on request, small dogs usually fine."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 2,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "HH-1001",
+          "summary": "Inquirer has a cat and asks whether they can bring it to HH-1001 (pets \"on request\"). Please ask the landlord for a decision. No contact email given.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-5bd6436d (not_answerable_from_listing)",
+        "result": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "HH-1001",
+          "summary": "Inquirer has a cat and asks whether they can bring it to HH-1001 (pets \"on request\"). Please ask the landlord for a decision. No contact email given.",
+          "contactEmail": null,
+          "ticketId": "T-5bd6436d",
+          "createdAt": "2026-10-01T08:12:39.824Z"
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 653,
+      "cacheReadTokens": 9468,
+      "cacheWriteTokens": 1687
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Pets are on request at HH-1001, so it cannot be promised",
+        "met": true,
+        "note": "Reply says it can't confirm, pets are on request, landlord decides case by case."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Yes, the cat is allowed",
+        "violated": false,
+        "note": "Reply explicitly says it isn't a yes."
+      },
+      {
+        "statement": "Pets are allowed at HH-1001",
+        "violated": false,
+        "note": "Says 'allowed on request', which is the listing's wording and is qualified as not a confirmation."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply accurately conveys that pets are on request and the landlord decides, and a hand-off ticket exists. No unsupported claims; the phrasing 'allowed on request' is qualified and does not promise an outcome.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 279,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 1509
+    }
+  }
+}

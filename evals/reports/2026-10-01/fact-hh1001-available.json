@@ -1,0 +1,116 @@
+{
+  "case": {
+    "id": "fact-hh1001-available",
+    "lang": "en",
+    "inquiry": "From when is HH-1001 available?",
+    "history": [],
+    "listings": [
+      "HH-1001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "HH-1001 is available from 1 November 2026"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1001-available",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 4502,
+  "costUsd": 0.0062438,
+  "guardEvents": [],
+  "result": {
+    "reply": "HH-1001 is available from 2026-11-01 [HH-1001]. It's a 3-room flat with a balcony in Eimsbüttel, Hamburg, for rent at 1650 EUR/month [HH-1001].",
+    "citations": [
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      },
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1001"
+        },
+        "summary": "HH-1001: Bright 3-room flat with balcony in Eimsbüttel",
+        "result": {
+          "id": "HH-1001",
+          "title": "Bright 3-room flat with balcony in Eimsbüttel",
+          "city": "Hamburg",
+          "district": "Eimsbüttel",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1650,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 78,
+          "rooms": 3,
+          "floor": 3,
+          "yearBuilt": 1908,
+          "availableFrom": "2026-11-01",
+          "features": [
+            "balcony",
+            "fitted-kitchen",
+            "cellar",
+            "wooden-floors"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "D",
+          "description": "Renovated Altbau flat on the third floor, no lift. South-facing balcony over a quiet courtyard. Fitted kitchen included. Deposit is three months' cold rent. Utilities (Nebenkosten) are an additional 240 EUR per month, heating included. Pets on request, small dogs usually fine."
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 129,
+      "cacheReadTokens": 5449,
+      "cacheWriteTokens": 510
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "HH-1001 is available from 1 November 2026",
+        "met": true,
+        "note": "Reply states available from 2026-11-01."
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply gives the availability date 2026-11-01, which matches the tool result, and the extra details (3-room flat, balcony, Eimsbüttel, 1650 EUR/month) are all supported. The reply is in English, matching the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 167,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 527
+    }
+  }
+}

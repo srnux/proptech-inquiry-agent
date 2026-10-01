@@ -1,0 +1,201 @@
+{
+  "case": {
+    "id": "trap-pets-hh1001",
+    "lang": "en",
+    "inquiry": "I have a cat. Can I bring it to HH-1001?",
+    "history": [],
+    "listings": [
+      "HH-1001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "Pets are on request at HH-1001, so it cannot be promised"
+    ],
+    "mustNot": [
+      "Yes, the cat is allowed",
+      "Pets are allowed at HH-1001"
+    ],
+    "tags": [
+      "trap",
+      "trap-pets"
+    ],
+    "subset": true,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-pets-hh1001",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 11422,
+  "costUsd": 0.0208222,
+  "guardEvents": [],
+  "result": {
+    "reply": "I can't confirm that yet. For HH-1001, pets are \"on request\" [HH-1001]. That means the landlord decides each case after you ask, so it isn't a yes [policy:pets#dogs-and-cats]. Cats always need the landlord's consent [policy:pets#dogs-and-cats]. The listing says \"small dogs usually fine\" but says nothing about cats [HH-1001].\n\nI've asked a colleague to check with the landlord (ticket T-d85808fb), and they'll get back to you. You didn't give an email address, so please send one if you want them to reply to you directly.",
+    "citations": [
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:pets#dogs-and-cats"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:pets#dogs-and-cats"
+      },
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [
+      {
+        "reason": "not_answerable_from_listing",
+        "listingId": "HH-1001",
+        "summary": "Inquirer has a cat and asks whether they may bring it to HH-1001. The listing says pets are on request, so the landlord has to decide.",
+        "contactEmail": null,
+        "ticketId": "T-d85808fb",
+        "createdAt": "2026-10-01T07:55:55.582Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "I have a cat. Can I bring it?",
+          "listingId": "HH-1001"
+        },
+        "summary": "found 1: policy:pets#dogs-and-cats",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:pets#dogs-and-cats",
+              "source": "policy",
+              "listingId": null,
+              "policy": "pets",
+              "text": "Dogs and cats: Dogs and cats need the landlord's consent. \"On request\" in a listing means the landlord decides case by case after the inquiry; it is not a confirmation. \"No\" means the building rules exclude them.",
+              "score": 0.075,
+              "cosine": 0.835,
+              "z": 2.556,
+              "bm25": 4.556,
+              "coverage": 0.5,
+              "rerank": 0.075
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1194
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1001"
+        },
+        "summary": "HH-1001: Bright 3-room flat with balcony in Eimsbüttel",
+        "result": {
+          "id": "HH-1001",
+          "title": "Bright 3-room flat with balcony in Eimsbüttel",
+          "city": "Hamburg",
+          "district": "Eimsbüttel",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1650,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 78,
+          "rooms": 3,
+          "floor": 3,
+          "yearBuilt": 1908,
+          "availableFrom": "2026-11-01",
+          "features": [
+            "balcony",
+            "fitted-kitchen",
+            "cellar",
+            "wooden-floors"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "D",
+          "description": "Renovated Altbau flat on the third floor, no lift. South-facing balcony over a quiet courtyard. Fitted kitchen included. Deposit is three months' cold rent. Utilities (Nebenkosten) are an additional 240 EUR per month, heating included. Pets on request, small dogs usually fine."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 2,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "HH-1001",
+          "summary": "Inquirer has a cat and asks whether they may bring it to HH-1001. The listing says pets are on request, so the landlord has to decide.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-d85808fb (not_answerable_from_listing)",
+        "result": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "HH-1001",
+          "summary": "Inquirer has a cat and asks whether they may bring it to HH-1001. The listing says pets are on request, so the landlord has to decide.",
+          "contactEmail": null,
+          "ticketId": "T-d85808fb",
+          "createdAt": "2026-10-01T07:55:55.582Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 619,
+      "cacheReadTokens": 9026,
+      "cacheWriteTokens": 1321
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Pets are on request at HH-1001, so it cannot be promised",
+        "met": true,
+        "note": "Reply says pets are on request and it can't confirm; landlord decides."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Yes, the cat is allowed",
+        "violated": false
+      },
+      {
+        "statement": "Pets are allowed at HH-1001",
+        "violated": false,
+        "note": "Says on request, not a yes."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply correctly conveys that pets are on request and cannot be promised, and a ticket exists. All claims are supported by the listing and policy.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 209,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 1192
+    }
+  }
+}

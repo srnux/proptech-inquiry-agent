@@ -1,6 +1,6 @@
 {
   "name": "@proptech/web",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "description": "The inquiry desk: chat, tool-call trace and hand-off queue over the /inquiries API.",
   "license": "MIT",

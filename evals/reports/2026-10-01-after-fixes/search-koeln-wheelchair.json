@@ -1,0 +1,182 @@
+{
+  "case": {
+    "id": "search-koeln-wheelchair",
+    "lang": "en",
+    "inquiry": "I use a wheelchair and I'm looking for a flat to rent in Cologne. What do you have?",
+    "history": [],
+    "listings": [
+      "K-4001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "K-4001 is step-free and suitable for wheelchair users"
+    ],
+    "mustNot": [
+      "K-4002 is offered as a flat to live in"
+    ],
+    "tags": [
+      "search"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "search-koeln-wheelchair",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 10086,
+  "costUsd": 0.0171574,
+  "guardEvents": [],
+  "result": {
+    "reply": "In Cologne I found one rental flat listed as accessible: K-4001, a 3-room flat near the Rhine in Deutz [K-4001].\n\n- **Accessibility:** The listing describes it as step-free, with a lift, wide doors and a walk-in shower, and says it's suitable for wheelchair users [K-4001]. The flat is on floor 5 [K-4001].\n- **Rent and costs:** The rent is 1380 EUR/month, plus 250 EUR per month in utilities [K-4001]. The deposit is two months' cold rent [K-4001].\n- **Size and extras:** It has 81 m² of living space, a fitted kitchen and a balcony with a view of the cathedral [K-4001].\n- **Move-in:** It's available from 2026-11-01 [K-4001].\n- **Pets:** Pets are allowed on request [K-4001].\n\nIf you'd like to book a viewing or have questions this doesn't cover, tell me and I'll pass it to a colleague.",
+    "citations": [
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_listings",
+        "arguments": {
+          "city": "Köln",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "features": [
+            "accessible"
+          ]
+        },
+        "summary": "1 listings: K-4001",
+        "result": {
+          "total": 1,
+          "results": [
+            {
+              "id": "K-4001",
+              "title": "3-room flat near the Rhine in Deutz",
+              "city": "Köln",
+              "district": "Deutz",
+              "offerType": "rent",
+              "propertyType": "apartment",
+              "price": 1380,
+              "priceUnit": "EUR/month",
+              "livingAreaSqm": 81,
+              "rooms": 3,
+              "availableFrom": "2026-11-01",
+              "petsAllowed": "on-request"
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1
+      },
+      {
+        "turn": 2,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "K-4001"
+        },
+        "summary": "K-4001: 3-room flat near the Rhine in Deutz",
+        "result": {
+          "id": "K-4001",
+          "title": "3-room flat near the Rhine in Deutz",
+          "city": "Köln",
+          "district": "Deutz",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1380,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 81,
+          "rooms": 3,
+          "floor": 5,
+          "yearBuilt": 2001,
+          "availableFrom": "2026-11-01",
+          "features": [
+            "lift",
+            "balcony",
+            "fitted-kitchen",
+            "accessible"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "C",
+          "description": "Step-free flat with lift, wide doors and a walk-in shower, suitable for wheelchair users. Balcony with a view of the cathedral. Utilities 250 EUR per month. Deposit two months' cold rent."
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 562,
+      "cacheReadTokens": 8677,
+      "cacheWriteTokens": 830
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "K-4001 is step-free and suitable for wheelchair users",
+        "met": true,
+        "note": "The reply says the listing describes the flat as step-free and suitable for wheelchair users."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "K-4002 is offered as a flat to live in",
+        "violated": false,
+        "note": "K-4002 is not mentioned."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply conveys that K-4001 is step-free and suitable for wheelchair users, and every detail it gives matches the tool results. It does not mention K-4002 and makes no unsupported claims.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 212,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 952
+    }
+  }
+}

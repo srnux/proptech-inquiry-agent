@@ -1,0 +1,184 @@
+{
+  "case": {
+    "id": "followup-deposit",
+    "lang": "en",
+    "inquiry": "And how much is the deposit?",
+    "history": [
+      {
+        "inquiry": "Is heating included in the rent for HH-1001?",
+        "reply": "Yes. Heating is included in the utilities, which are an additional 240 EUR per month [HH-1001#s5]."
+      }
+    ],
+    "listings": [
+      "HH-1001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The deposit for HH-1001 is three months' cold rent"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact",
+      "history"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "followup-deposit",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 10799,
+  "costUsd": 0.0202914,
+  "guardEvents": [],
+  "result": {
+    "reply": "The deposit for HH-1001 is three months' cold rent [HH-1001#s4]. The listed rent is 1650 EUR/month [HH-1001]. Utilities aren't counted when the deposit is worked out [policy:deposit#amount]. You can pay the deposit in three equal monthly instalments, and the first one is due when the lease starts [policy:deposit#payment-in-instalments].",
+    "citations": [
+      {
+        "listingId": "HH-1001",
+        "chunkId": "HH-1001#s4"
+      },
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:deposit#amount"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:deposit#payment-in-instalments"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "How much is the deposit?",
+          "listingId": "HH-1001"
+        },
+        "summary": "found 3: HH-1001#s4, policy:deposit#amount, policy:deposit#payment-in-instalments",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1001#s4",
+              "source": "listing",
+              "listingId": "HH-1001",
+              "policy": null,
+              "text": "Deposit is three months' cold rent.",
+              "score": 0.009,
+              "cosine": 0.824,
+              "z": 1.146,
+              "bm25": 2.647,
+              "coverage": 1,
+              "rerank": 0.009
+            },
+            {
+              "chunkId": "policy:deposit#amount",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Amount: For residential rentals the deposit is at most three months' net cold rent (Nettokaltmiete). Utilities are not included in that calculation. Each listing states the deposit that applies to it.",
+              "score": 0.47,
+              "cosine": 0.861,
+              "z": 2.889,
+              "bm25": 3.63,
+              "coverage": 1,
+              "rerank": 0.47
+            },
+            {
+              "chunkId": "policy:deposit#payment-in-instalments",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Payment in instalments: Tenants may pay the deposit in three equal monthly instalments. The first instalment is due at the start of the lease.",
+              "score": 0.013,
+              "cosine": 0.845,
+              "z": 2.117,
+              "bm25": 3.376,
+              "coverage": 1,
+              "rerank": 0.013
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1083
+      },
+      {
+        "turn": 2,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1001"
+        },
+        "summary": "HH-1001: Bright 3-room flat with balcony in Eimsbüttel",
+        "result": {
+          "id": "HH-1001",
+          "title": "Bright 3-room flat with balcony in Eimsbüttel",
+          "city": "Hamburg",
+          "district": "Eimsbüttel",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1650,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 78,
+          "rooms": 3,
+          "floor": 3,
+          "yearBuilt": 1908,
+          "availableFrom": "2026-11-01",
+          "features": [
+            "balcony",
+            "fitted-kitchen",
+            "cellar",
+            "wooden-floors"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "D",
+          "description": "Renovated Altbau flat on the third floor, no lift. South-facing balcony over a quiet courtyard. Fitted kitchen included. Deposit is three months' cold rent. Utilities (Nebenkosten) are an additional 240 EUR per month, heating included. Pets on request, small dogs usually fine."
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 602,
+      "cacheReadTokens": 9222,
+      "cacheWriteTokens": 1275
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The deposit for HH-1001 is three months' cold rent",
+        "met": true
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states the deposit is three months' cold rent, which the listing supports. The rent figure, the exclusion of utilities and the instalment option all come from the tool results, so nothing is unsupported.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 134,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 1116
+    }
+  }
+}
