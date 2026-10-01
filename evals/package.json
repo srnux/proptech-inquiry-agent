@@ -1,0 +1,16 @@
+{
+  "name": "@proptech/evals",
+  "version": "0.5.0",
+  "private": true,
+  "description": "Eval cases, rubric, runner and reports for the inquiry agent.",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@proptech/core": "workspace:*",
+    "@proptech/server": "workspace:*",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "note": "Placeholder until the first honest run sets them.",
+  "min": { "passRate": 0, "handoffPrecision": 0, "handoffRecall": 0, "groundedness": 0, "correctness": 0, "retrievalRecallAt5": 0 },
+  "max": { "meanCostUsd": 1, "p95LatencyMs": 600000 }
+}

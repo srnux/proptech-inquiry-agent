@@ -5,6 +5,13 @@
   "description": "MCP server (stdio and Streamable HTTP), the /inquiries API, the model adapter and the ask CLI.",
   "license": "MIT",
   "type": "module",
+  "exports": {
+    "./env": "./src/env.ts",
+    "./mcp": "./src/mcp/server.ts",
+    "./connect": "./src/agent/connect.ts",
+    "./select": "./src/agent/select.ts",
+    "./anthropic": "./src/agent/anthropic.ts"
+  },
   "scripts": {
     "dev": "tsx src/api/main.ts --demo-fallback"
   },
