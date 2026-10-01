@@ -1,0 +1,136 @@
+{
+  "case": {
+    "id": "unknown-listing",
+    "lang": "en",
+    "inquiry": "Is heating included at HH-9999?",
+    "history": [],
+    "listings": [],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "There is no listing HH-9999"
+    ],
+    "mustNot": [
+      "Makes any claim about heating at HH-9999"
+    ],
+    "tags": [
+      "trap"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "unknown-listing",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 10093,
+  "costUsd": 0.018205,
+  "guardEvents": [],
+  "result": {
+    "reply": "I couldn't find a listing with the ID HH-9999, so I can't say whether heating is included. Could you check the reference number? If you send me the right ID, or the city and type of property you're looking for, I can look it up for you.\n\nI've also passed your question to a colleague, who will follow up (ticket T-8ab9fb9d). If you'd like a reply by email, please send your email address.",
+    "citations": [],
+    "handoffs": [
+      {
+        "reason": "not_answerable_from_listing",
+        "listingId": null,
+        "summary": "Inquirer asked whether heating is included at listing \"HH-9999\", but our system has no listing with that ID. They may have the wrong reference number.",
+        "contactEmail": null,
+        "ticketId": "T-8ab9fb9d",
+        "createdAt": "2026-10-01T07:57:14.494Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-9999"
+        },
+        "summary": "No listing with id HH-9999. Use search_listings to find valid ids.",
+        "result": "No listing with id HH-9999. Use search_listings to find valid ids.",
+        "isError": true,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Is heating included?",
+          "listingId": "HH-9999"
+        },
+        "summary": "No listing with id HH-9999. Use search_listings to find valid ids, or omit listingId.",
+        "result": "No listing with id HH-9999. Use search_listings to find valid ids, or omit listingId.",
+        "isError": true,
+        "durationMs": 0
+      },
+      {
+        "turn": 2,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "not_answerable_from_listing",
+          "listingId": null,
+          "summary": "Inquirer asked whether heating is included at listing \"HH-9999\", but our system has no listing with that ID. They may have the wrong reference number.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-8ab9fb9d (not_answerable_from_listing)",
+        "result": {
+          "reason": "not_answerable_from_listing",
+          "listingId": null,
+          "summary": "Inquirer asked whether heating is included at listing \"HH-9999\", but our system has no listing with that ID. They may have the wrong reference number.",
+          "contactEmail": null,
+          "ticketId": "T-8ab9fb9d",
+          "createdAt": "2026-10-01T07:57:14.494Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 614,
+      "cacheReadTokens": 8465,
+      "cacheWriteTokens": 840
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "There is no listing HH-9999",
+        "met": true,
+        "note": "Reply says it couldn't find a listing with ID HH-9999."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Makes any claim about heating at HH-9999",
+        "violated": false,
+        "note": "Reply explicitly says it can't say whether heating is included."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states the listing was not found, makes no heating claim, and a matching hand-off ticket exists. It is in English, matching the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 186,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 656
+    }
+  }
+}

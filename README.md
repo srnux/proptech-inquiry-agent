@@ -13,7 +13,7 @@ All listing and policy data is synthetic.
 | 2 | Hybrid retrieval over listing texts and policy pages, local embeddings | done |
 | 3 | Agent loop, citation and number guards, `POST /inquiries` (SSE), Streamable HTTP MCP, `pnpm ask` | done, acceptance inquiry and live test passed on `claude-opus-5-5` (Bedrock) |
 | 4 | React UI: chat, tool-call trace, live hand-off queue, citation chips; runs without a key on a demo model | done |
-| 5 | Eval suite: correct answers, correct escalations, no invented facts | planned |
+| 5 | Eval suite: 49 cases, model judge, thresholds; `pnpm eval` writes a report with a trace per case | done, first report [2026-10-01](evals/reports/2026-10-01.md) |
 | 6 | Architecture write-up, pgvector, CI | planned |
 
 Details, tasks and open decisions per slice are in [ROADMAP.md](ROADMAP.md); the reasons behind each
@@ -95,6 +95,32 @@ The model is `claude-opus-5-5` by default; `ANTHROPIC_MODEL` and `ANTHROPIC_EFFO
 `AWS_BEARER_TOKEN_BEDROCK` (`DECISIONS.md` 25). Tests use a scripted model and need no key;
 `packages/server/test/agent-live.test.ts` runs against the real model when credentials are set in the environment.
 
+## Evals
+
+`pnpm eval` runs the 49 cases in [evals/cases.jsonl](evals/cases.jsonl) through the real agent loop: fact and
+policy questions, searches, every hand-off reason, follow-ups, the traps (pets "on request" is not a yes, the
+facade levy is not final, Staffelmiete is 3% a year, the Munich rent is all-inclusive, the Köln unit is not for
+living in, polite haggling is still a negotiation) and a listing whose text tells the agent to confirm viewings.
+Code checks the hand-offs, the listings and every figure; a different model (`claude-sonnet-5-5`) grades the facts
+against [a written rubric](evals/rubric.md). The report lands in `evals/reports/<date>.md`, and every case in it
+links to the full trace of its run (`DECISIONS.md` 32 to 36).
+
+| Metric | First run, 2026-10-01 | Threshold |
+|---|---|---|
+| Cases passed | 41 / 49 | 83% |
+| Hand-off precision / recall | 93.8% / 100% | 93% / 100% |
+| Replies with every figure grounded (final / first draft) | 100% / 100% | 100% / 100% |
+| Correct, by the judge | 83.7% | 83% |
+| Golden-set recall@5, false positives | 96%, 0 | 96%, 0 |
+| Cost, latency per inquiry | $0.016, 9.2 s (p95 14.7 s) | $0.02, p95 20 s |
+
+```bash
+pnpm eval                 # all cases; needs credentials for the agent and the judge; exits 1 below a threshold
+pnpm eval --subset        # the 12 cases meant for every pull request
+pnpm eval --case handoff-viewing --case trap-pets-hh1001
+MODEL_PROVIDER=demo EMBEDDER=hashing pnpm eval --no-judge   # offline: demo model, no judge
+```
+
 ## Run it
 
 ```bash
@@ -138,6 +164,9 @@ All scripts run from the repository root.
 data/listings.json              synthetic catalogue, validated with zod at load
 data/policies/*.md              synthetic policy pages, one topic each
 evals/retrieval-golden.json     questions with the chunks that must be found, plus questions with no answer
+evals/cases.jsonl               agent eval cases; rubric.md for the judge, thresholds.json, run.ts (`pnpm eval`)
+evals/reports/                  one committed report per full run, with a trace file per case
+evals/fixtures/                 test-only listings (the prompt-injection case), never served by the app
 retrieval.thresholds.json       relevance thresholds per embedding model
 packages/core/src/domain/       listing model, repository, hand-off queue
 packages/core/src/retrieval/    chunker, BM25, embedders, vector store, reranker, search

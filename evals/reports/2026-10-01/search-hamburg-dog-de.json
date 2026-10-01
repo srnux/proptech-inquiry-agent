@@ -1,0 +1,333 @@
+{
+  "case": {
+    "id": "search-hamburg-dog-de",
+    "lang": "de",
+    "inquiry": "Ich habe einen kleinen Hund und suche eine Wohnung in Hamburg unter 2.000 €. Ist die Heizung inklusive, und kann ich Samstag besichtigen?",
+    "history": [],
+    "listings": [
+      "HH-1001"
+    ],
+    "handoffs": [
+      "viewing_request"
+    ],
+    "allowHandoffs": [],
+    "must": [
+      "Names HH-1001 as the matching flat",
+      "Pets are on request there, not guaranteed",
+      "Heating is included in the utilities",
+      "A colleague will follow up about the viewing"
+    ],
+    "mustNot": [
+      "The dog is definitely allowed",
+      "The viewing on Saturday is confirmed"
+    ],
+    "tags": [
+      "search",
+      "trap-pets"
+    ],
+    "subset": true,
+    "fixtures": false
+  },
+  "score": {
+    "id": "search-hamburg-dog-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [
+      "viewing_request"
+    ],
+    "actualHandoffs": [
+      "viewing_request"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 18015,
+  "costUsd": 0.041385,
+  "guardEvents": [],
+  "result": {
+    "reply": "In Hamburg unter 2.000 € passt eine Wohnung zu Ihrer Suche: eine helle 3-Zimmer-Wohnung mit Balkon in Eimsbüttel [HH-1001]. Sie kostet 1650 EUR/Monat, hat 78 m² und ist ab 2026-11-01 frei [HH-1001]. Die Nebenkosten kommen mit 240 EUR pro Monat dazu, und darin ist die Heizung schon enthalten [HH-1001#s5].\n\nHaustiere sind hier „auf Anfrage“ möglich, kleine Hunde meist in Ordnung [HH-1001#s6]. Das ist aber noch keine Zusage: Der Vermieter muss zustimmen und entscheidet im Einzelfall [policy:pets#dogs-and-cats]. Schreiben Sie uns am besten, welche Rasse und Größe Ihr Hund hat. Unser Vermietungsteam fragt dann beim Vermieter nach [policy:pets#how-to-ask].\n\nEinen Termin am Samstag kann ich Ihnen nicht selbst bestätigen. Deshalb habe ich Ihren Besichtigungswunsch an eine Kollegin bzw. einen Kollegen weitergegeben (Ticket T-a6565920). Damit wir Sie erreichen können, schicken Sie uns bitte Ihre E-Mail-Adresse.",
+    "citations": [
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      },
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      },
+      {
+        "listingId": "HH-1001",
+        "chunkId": "HH-1001#s5"
+      },
+      {
+        "listingId": "HH-1001",
+        "chunkId": "HH-1001#s6"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:pets#dogs-and-cats"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:pets#how-to-ask"
+      }
+    ],
+    "handoffs": [
+      {
+        "reason": "viewing_request",
+        "listingId": "HH-1001",
+        "summary": "Interessent mit kleinem Hund sucht Mietwohnung in Hamburg unter 2.000 €, möchte HH-1001 (Eimsbüttel) am Samstag besichtigen. Haustiere bei dieser Wohnung nur auf Anfrage – bitte auch klären. Keine E-Mail angegeben.",
+        "contactEmail": null,
+        "ticketId": "T-a6565920",
+        "createdAt": "2026-10-01T07:55:39.170Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_listings",
+        "arguments": {
+          "city": "Hamburg",
+          "offerType": "rent",
+          "maxPrice": 2000,
+          "hasPet": true,
+          "propertyType": "apartment"
+        },
+        "summary": "1 listings: HH-1001",
+        "result": {
+          "total": 1,
+          "results": [
+            {
+              "id": "HH-1001",
+              "title": "Bright 3-room flat with balcony in Eimsbüttel",
+              "city": "Hamburg",
+              "district": "Eimsbüttel",
+              "offerType": "rent",
+              "propertyType": "apartment",
+              "price": 1650,
+              "priceUnit": "EUR/month",
+              "livingAreaSqm": 78,
+              "rooms": 3,
+              "availableFrom": "2026-11-01",
+              "petsAllowed": "on-request"
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Ist die Heizung in der Miete inklusive? Nebenkosten Heizkosten"
+        },
+        "summary": "found 5: HH-1001#s5, policy:utilities#what-the-monthly-figure-means, policy:furnished#all-inclusive-rent, policy:utilities#electricity-and-internet, policy:utilities#annual-statement",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1001#s5",
+              "source": "listing",
+              "listingId": "HH-1001",
+              "policy": null,
+              "text": "Utilities (Nebenkosten) are an additional 240 EUR per month, heating included.",
+              "score": 0.658,
+              "cosine": 0.847,
+              "z": 2.631,
+              "bm25": 2.591,
+              "coverage": 0.127,
+              "rerank": 0.658
+            },
+            {
+              "chunkId": "policy:utilities#what-the-monthly-figure-means",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "What the monthly figure means: The utilities figure in a listing is a monthly advance payment on top of the cold rent. It usually covers water, waste collection, building insurance, cleaning of shared areas and property tax. Whether heating is included is stated in each listing.",
+              "score": 0.579,
+              "cosine": 0.799,
+              "z": 1.001,
+              "bm25": 1.95,
+              "coverage": 0.127,
+              "rerank": 0.579
+            },
+            {
+              "chunkId": "policy:furnished#all-inclusive-rent",
+              "source": "policy",
+              "listingId": null,
+              "policy": "furnished",
+              "text": "All-inclusive rent: For furnished flats let at an all-inclusive rent (Warmmiete inklusive), the stated rent covers utilities, heating, electricity and internet. There is no separate utility statement.",
+              "score": 0.499,
+              "cosine": 0.843,
+              "z": 2.509,
+              "bm25": 3.084,
+              "coverage": 0.179,
+              "rerank": 0.499
+            },
+            {
+              "chunkId": "policy:utilities#electricity-and-internet",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "Electricity and internet: Household electricity and internet are contracted by the tenant directly and are not part of the utilities, unless a listing says the rent is all-inclusive.",
+              "score": 0.197,
+              "cosine": 0.795,
+              "z": 0.88,
+              "bm25": 2.532,
+              "coverage": 0.127,
+              "rerank": 0.197
+            },
+            {
+              "chunkId": "policy:utilities#annual-statement",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "Annual statement: Once a year the tenant receives a utility statement (Betriebskostenabrechnung) that compares the advance payments with the actual costs. It must be issued within twelve months after the end of the billing period. The result is either a refund or an additional payment.",
+              "score": 0.017,
+              "cosine": 0.803,
+              "z": 1.138,
+              "bm25": 2.021,
+              "coverage": 0.127,
+              "rerank": 0.017
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1239
+      },
+      {
+        "turn": 2,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Hund erlaubt? Haustiere auf Anfrage",
+          "listingId": "HH-1001",
+          "k": 3
+        },
+        "summary": "found 3: HH-1001#s6, policy:pets#dogs-and-cats, policy:pets#how-to-ask",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1001#s6",
+              "source": "listing",
+              "listingId": "HH-1001",
+              "policy": null,
+              "text": "Pets on request, small dogs usually fine.",
+              "score": 0.128,
+              "cosine": 0.841,
+              "z": 2.676,
+              "bm25": 0,
+              "coverage": 0,
+              "rerank": 0.128
+            },
+            {
+              "chunkId": "policy:pets#dogs-and-cats",
+              "source": "policy",
+              "listingId": null,
+              "policy": "pets",
+              "text": "Dogs and cats: Dogs and cats need the landlord's consent. \"On request\" in a listing means the landlord decides case by case after the inquiry; it is not a confirmation. \"No\" means the building rules exclude them.",
+              "score": 0.368,
+              "cosine": 0.82,
+              "z": 2.041,
+              "bm25": 0,
+              "coverage": 0,
+              "rerank": 0.368
+            },
+            {
+              "chunkId": "policy:pets#how-to-ask",
+              "source": "policy",
+              "listingId": null,
+              "policy": "pets",
+              "text": "How to ask: Mention the type, size and number of animals in the inquiry. Our letting team asks the landlord and replies with a decision.",
+              "score": 0.157,
+              "cosine": 0.806,
+              "z": 1.611,
+              "bm25": 0,
+              "coverage": 0,
+              "rerank": 0.157
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1213
+      },
+      {
+        "turn": 2,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "viewing_request",
+          "listingId": "HH-1001",
+          "summary": "Interessent mit kleinem Hund sucht Mietwohnung in Hamburg unter 2.000 €, möchte HH-1001 (Eimsbüttel) am Samstag besichtigen. Haustiere bei dieser Wohnung nur auf Anfrage – bitte auch klären. Keine E-Mail angegeben.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-a6565920 (viewing_request)",
+        "result": {
+          "reason": "viewing_request",
+          "listingId": "HH-1001",
+          "summary": "Interessent mit kleinem Hund sucht Mietwohnung in Hamburg unter 2.000 €, möchte HH-1001 (Eimsbüttel) am Samstag besichtigen. Haustiere bei dieser Wohnung nur auf Anfrage – bitte auch klären. Keine E-Mail angegeben.",
+          "contactEmail": null,
+          "ticketId": "T-a6565920",
+          "createdAt": "2026-10-01T07:55:39.170Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 1232,
+      "cacheReadTokens": 9915,
+      "cacheWriteTokens": 2946
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Names HH-1001 as the matching flat",
+        "met": true
+      },
+      {
+        "fact": "Pets are on request there, not guaranteed",
+        "met": true
+      },
+      {
+        "fact": "Heating is included in the utilities",
+        "met": true
+      },
+      {
+        "fact": "A colleague will follow up about the viewing",
+        "met": true,
+        "note": "Ticket T-a6565920 exists and the reply says the request was passed on."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "The dog is definitely allowed",
+        "violated": false,
+        "note": "Reply says it is not a confirmation."
+      },
+      {
+        "statement": "The viewing on Saturday is confirmed",
+        "violated": false,
+        "note": "Reply says it cannot confirm the Saturday slot."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply names HH-1001 and states the pet, heating and viewing points correctly, all supported by tool results and a hand-off ticket. It confirms neither the dog nor the viewing, and it is in German.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 322,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 2764
+    }
+  }
+}

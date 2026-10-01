@@ -1,0 +1,160 @@
+{
+  "case": {
+    "id": "search-munich-no-match-de",
+    "lang": "de",
+    "inquiry": "Ich suche eine Mietwohnung in München unter 1.500 € im Monat.",
+    "history": [],
+    "listings": [],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "No rental listing in Munich matches a budget under 1,500 EUR"
+    ],
+    "mustNot": [
+      "M-3001 costs under 1,500 EUR"
+    ],
+    "tags": [
+      "search"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "search-munich-no-match-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 15130,
+  "costUsd": 0.0269036,
+  "guardEvents": [
+    {
+      "violations": [
+        {
+          "guard": "citation",
+          "message": "The reply states figures but cites no source. Add [listingId] or [chunkId] markers after each fact."
+        }
+      ],
+      "repairing": true
+    }
+  ],
+  "result": {
+    "reply": "Für Ihre Kriterien habe ich in München leider keine passende Mietwohnung gefunden. Derzeit haben wir dort nur ein Mietangebot: eine möblierte 2-Zimmer-Wohnung in Schwabing [M-3001]. Sie hat 55 m² [M-3001] und kostet 2100 EUR/Monat [M-3001], liegt also über Ihrem Budget. Frei ist sie ab dem 2026-10-01 [M-3001], Haustiere sind nicht erlaubt [M-3001]. Wenn Sie möchten, suche ich mit einer anderen Mietgrenze oder in einer anderen Stadt weiter.",
+    "citations": [
+      {
+        "listingId": "M-3001",
+        "chunkId": null
+      },
+      {
+        "listingId": "M-3001",
+        "chunkId": null
+      },
+      {
+        "listingId": "M-3001",
+        "chunkId": null
+      },
+      {
+        "listingId": "M-3001",
+        "chunkId": null
+      },
+      {
+        "listingId": "M-3001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_listings",
+        "arguments": {
+          "city": "München",
+          "offerType": "rent",
+          "maxPrice": 1500,
+          "propertyType": "apartment"
+        },
+        "summary": "0 listings: ",
+        "result": {
+          "total": 0,
+          "results": []
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 3,
+        "tool": "search_listings",
+        "arguments": {
+          "city": "München",
+          "offerType": "rent",
+          "limit": 5
+        },
+        "summary": "1 listings: M-3001",
+        "result": {
+          "total": 1,
+          "results": [
+            {
+              "id": "M-3001",
+              "title": "Furnished 2-room flat in Schwabing",
+              "city": "München",
+              "district": "Schwabing",
+              "offerType": "rent",
+              "propertyType": "apartment",
+              "price": 2100,
+              "priceUnit": "EUR/month",
+              "livingAreaSqm": 55,
+              "rooms": 2,
+              "availableFrom": "2026-10-01",
+              "petsAllowed": "no"
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 12,
+      "outputTokens": 946,
+      "cacheReadTokens": 11703,
+      "cacheWriteTokens": 1119
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "No rental listing in Munich matches a budget under 1,500 EUR",
+        "met": true,
+        "note": "Reply says no suitable rental found and the only one costs 2100, above budget."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "M-3001 costs under 1,500 EUR",
+        "violated": false,
+        "note": "Reply states it costs 2100 EUR/month, above budget."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply correctly says nothing in Munich fits under 1,500 EUR and reports M-3001 at 2100 EUR, all consistent with the tool results. It is written in German, matching the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 225,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 623
+    }
+  }
+}

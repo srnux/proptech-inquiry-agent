@@ -1,0 +1,145 @@
+{
+  "case": {
+    "id": "fact-hh1002-parking",
+    "lang": "en",
+    "inquiry": "Can I rent a parking space with HH-1002, and what does it cost?",
+    "history": [],
+    "listings": [
+      "HH-1002"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "An underground parking space is available for 150 EUR per month extra"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1002-parking",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 5983,
+  "costUsd": 0.009506200000000001,
+  "guardEvents": [],
+  "result": {
+    "reply": "Yes. You can rent an underground parking space with HH-1002 for 150 EUR per month on top of the rent [HH-1002#s2]. The apartment's rent is 1890 EUR/month [HH-1002].",
+    "citations": [
+      {
+        "listingId": "HH-1002",
+        "chunkId": "HH-1002#s2"
+      },
+      {
+        "listingId": "HH-1002",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1002"
+        },
+        "summary": "HH-1002: Modern 2-room new-build near Hafencity",
+        "result": {
+          "id": "HH-1002",
+          "title": "Modern 2-room new-build near Hafencity",
+          "city": "Hamburg",
+          "district": "HafenCity",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1890,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 64,
+          "rooms": 2,
+          "floor": 6,
+          "yearBuilt": 2021,
+          "availableFrom": "2026-10-15",
+          "features": [
+            "lift",
+            "underfloor-heating",
+            "loggia",
+            "underground-parking"
+          ],
+          "petsAllowed": "no",
+          "energyClass": "A",
+          "description": "New-build flat with lift and loggia facing the Elbe. Underground parking space available for 150 EUR per month extra. Utilities 210 EUR per month. No pets according to the building rules. Minimum lease term of 12 months."
+        },
+        "isError": false,
+        "durationMs": 1
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Can I rent a parking space and what does it cost?",
+          "listingId": "HH-1002"
+        },
+        "summary": "found 1: HH-1002#s2",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1002#s2",
+              "source": "listing",
+              "listingId": "HH-1002",
+              "policy": null,
+              "text": "Underground parking space available for 150 EUR per month extra.",
+              "score": 0.021,
+              "cosine": 0.856,
+              "z": 1.397,
+              "bm25": 6.185,
+              "coverage": 0.567,
+              "rerank": 0.021
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1392
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 222,
+      "cacheReadTokens": 5461,
+      "cacheWriteTokens": 790
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "An underground parking space is available for 150 EUR per month extra",
+        "met": true,
+        "note": "Reply states underground parking is available for 150 EUR per month on top of the rent."
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply conveys the underground parking at 150 EUR/month extra, and the rent of 1890 EUR/month is supported by the listing. It is in English, matching the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 160,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 662
+    }
+  }
+}

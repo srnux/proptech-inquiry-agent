@@ -1,0 +1,113 @@
+{
+  "case": {
+    "id": "policy-deposit-instalments",
+    "lang": "en",
+    "inquiry": "Can I pay the deposit in instalments?",
+    "history": [],
+    "listings": [],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The deposit can be paid in three equal monthly instalments",
+      "The first instalment is due at the start of the lease"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact",
+      "policy"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "policy-deposit-instalments",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 8617,
+  "costUsd": 0.0072044,
+  "guardEvents": [],
+  "result": {
+    "reply": "Yes. Under the agency's deposit policy, tenants may pay the deposit in three equal monthly instalments [policy:deposit#payment-in-instalments]. The first instalment is due at the start of the lease [policy:deposit#payment-in-instalments].\n\nIf you'd like to know the deposit amount for a particular property, send me the listing ID and I'll look it up.",
+    "citations": [
+      {
+        "listingId": null,
+        "chunkId": "policy:deposit#payment-in-instalments"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:deposit#payment-in-instalments"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Can I pay the deposit in instalments?"
+        },
+        "summary": "found 1: policy:deposit#payment-in-instalments",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:deposit#payment-in-instalments",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Payment in instalments: Tenants may pay the deposit in three equal monthly instalments. The first instalment is due at the start of the lease.",
+              "score": 0.996,
+              "cosine": 0.889,
+              "z": 3.458,
+              "bm25": 12.176,
+              "coverage": 1,
+              "rerank": 0.996
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 3462
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 210,
+      "cacheReadTokens": 5452,
+      "cacheWriteTokens": 378
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The deposit can be paid in three equal monthly instalments",
+        "met": true
+      },
+      {
+        "fact": "The first instalment is due at the start of the lease",
+        "met": true
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states both required facts, which match the policy chunk. The offer to look up a deposit amount for a listing ID is not a factual claim, so nothing is unsupported.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 149,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 455
+    }
+  }
+}

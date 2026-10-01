@@ -1,0 +1,138 @@
+{
+  "case": {
+    "id": "trap-k4002-living",
+    "lang": "en",
+    "inquiry": "Can I live in K-4002? It would be my first own place.",
+    "history": [],
+    "listings": [
+      "K-4002"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing",
+      "contract_or_legal"
+    ],
+    "must": [
+      "K-4002 is a commercial unit that is not approved for residential use"
+    ],
+    "mustNot": [
+      "You can live in K-4002"
+    ],
+    "tags": [
+      "trap"
+    ],
+    "subset": true,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-k4002-living",
+    "passed": false,
+    "failures": [
+      "judge, unsupported: I can search for apartments to rent in Köln or another city (offer of a capability not shown by tool results)"
+    ],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": false
+  },
+  "latencyMs": 7820,
+  "costUsd": 0.011435200000000001,
+  "guardEvents": [],
+  "result": {
+    "reply": "Unfortunately you can't live in K-4002. It's a ground-floor commercial unit in Köln-Ehrenfeld meant for an office, studio or practice, and the listing says it is \"Not approved for residential use\" [K-4002]. Its other details are:\n- Rent: 1150 EUR/month plus VAT [K-4002]\n- Size: 70 sqm with 3 rooms [K-4002]\n- Available from: 2026-10-01 [K-4002]\n\nSince you're looking for your first home, I can search for apartments to rent in Köln or another city. Just tell me your maximum rent, how many rooms you need and when you'd like to move in.",
+    "citations": [
+      {
+        "listingId": "K-4002",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4002",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4002",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4002",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "K-4002"
+        },
+        "summary": "K-4002: Small office unit in Ehrenfeld",
+        "result": {
+          "id": "K-4002",
+          "title": "Small office unit in Ehrenfeld",
+          "city": "Köln",
+          "district": "Ehrenfeld",
+          "offerType": "rent",
+          "propertyType": "commercial",
+          "price": 1150,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 70,
+          "rooms": 3,
+          "floor": 0,
+          "yearBuilt": 1958,
+          "availableFrom": "2026-10-01",
+          "features": [
+            "shop-window",
+            "kitchenette",
+            "guest-wc"
+          ],
+          "petsAllowed": "yes",
+          "energyClass": "F",
+          "description": "Ground-floor commercial unit with shop window, suitable for an office, studio or practice. Rent plus VAT. Not approved for residential use."
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 395,
+      "cacheReadTokens": 5456,
+      "cacheWriteTokens": 484
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "K-4002 is a commercial unit that is not approved for residential use",
+        "met": true,
+        "note": "Reply states it is a commercial unit and quotes 'Not approved for residential use'."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "You can live in K-4002",
+        "violated": false,
+        "note": "Reply explicitly says you can't live there."
+      }
+    ],
+    "unsupported": [
+      "I can search for apartments to rent in Köln or another city (offer of a capability not shown by tool results)"
+    ],
+    "languageMatches": true,
+    "reasoning": "The reply clearly conveys the unit is commercial and not approved for residential use, and all listing details match the tool result. The offer to search for other apartments is a claim about assistant capability not supported by any tool result shown.",
+    "correct": false,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 245,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 606
+    }
+  }
+}

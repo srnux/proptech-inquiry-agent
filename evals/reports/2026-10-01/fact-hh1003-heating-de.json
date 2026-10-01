@@ -1,0 +1,140 @@
+{
+  "case": {
+    "id": "fact-hh1003-heating-de",
+    "lang": "de",
+    "inquiry": "Wie alt ist die Heizungsanlage in HH-1003?",
+    "history": [],
+    "listings": [
+      "HH-1003"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The heating system is from 2004",
+      "It will need replacement in the next years"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1003-heating-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 8510,
+  "costUsd": 0.0111862,
+  "guardEvents": [],
+  "result": {
+    "reply": "Laut Objektbeschreibung stammt die Heizungsanlage aus dem Jahr 2004 und muss in den nächsten Jahren ersetzt werden [HH-1003]. Das Haus selbst wurde 1976 gebaut, das Dach wurde 2019 erneuert [HH-1003]. Den Energieausweis gibt es auf Anfrage bei der Besichtigung [HH-1003].",
+    "citations": [
+      {
+        "listingId": "HH-1003",
+        "chunkId": null
+      },
+      {
+        "listingId": "HH-1003",
+        "chunkId": null
+      },
+      {
+        "listingId": "HH-1003",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Wie alt ist die Heizungsanlage?",
+          "listingId": "HH-1003"
+        },
+        "summary": "found: false",
+        "result": {
+          "found": false,
+          "results": [],
+          "reason": "No passage in the listing or the policies is relevant to this question."
+        },
+        "isError": false,
+        "durationMs": 2311
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1003"
+        },
+        "summary": "HH-1003: Family house with garden in Volksdorf",
+        "result": {
+          "id": "HH-1003",
+          "title": "Family house with garden in Volksdorf",
+          "city": "Hamburg",
+          "district": "Volksdorf",
+          "offerType": "sale",
+          "propertyType": "house",
+          "price": 895000,
+          "priceUnit": "EUR",
+          "livingAreaSqm": 165,
+          "rooms": 6,
+          "floor": null,
+          "yearBuilt": 1976,
+          "availableFrom": "2027-02-01",
+          "features": [
+            "garden",
+            "garage",
+            "fireplace",
+            "cellar"
+          ],
+          "petsAllowed": "yes",
+          "energyClass": "E",
+          "description": "Detached house on a 780 sqm plot close to the U1. Roof renewed in 2019, heating system from 2004 will need replacement in the next years. Buyer's commission 3.57 percent including VAT. Energy certificate available on request at the viewing."
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 338,
+      "cacheReadTokens": 5461,
+      "cacheWriteTokens": 662
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The heating system is from 2004",
+        "met": true
+      },
+      {
+        "fact": "It will need replacement in the next years",
+        "met": true
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply's statements about the heating (2004, replacement needed), the build year 1976, the roof renewed in 2019 and the energy certificate on request are all supported by the get_listing result. The reply is in German, matching the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 156,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 646
+    }
+  }
+}

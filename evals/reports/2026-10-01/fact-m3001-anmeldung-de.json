@@ -1,0 +1,148 @@
+{
+  "case": {
+    "id": "fact-m3001-anmeldung-de",
+    "lang": "de",
+    "inquiry": "Kann ich mich in M-3001 mit meinem Wohnsitz anmelden?",
+    "history": [],
+    "listings": [
+      "M-3001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "Registration of residence (Anmeldung) is possible"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-m3001-anmeldung-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 7563,
+  "costUsd": 0.0139176,
+  "guardEvents": [],
+  "result": {
+    "reply": "Ja, in M-3001 können Sie Ihren Wohnsitz anmelden. Laut Inserat ist die Anmeldung möglich [M-3001]. Es handelt sich um eine möblierte 2-Zimmer-Wohnung in Schwabing mit einem befristeten Mietvertrag über 18 Monate [M-3001].\n\nFür möblierte Wohnungen gilt bei uns: Sie müssen Ihren Wohnsitz innerhalb von zwei Wochen nach dem Einzug anmelden. Die Wohnungsgeberbestätigung bekommen Sie vom Vermieter [policy:furnished#registration].",
+    "citations": [
+      {
+        "listingId": "M-3001",
+        "chunkId": null
+      },
+      {
+        "listingId": "M-3001",
+        "chunkId": null
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:furnished#registration"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Wohnsitz anmelden Meldebescheinigung Wohnungsgeberbestätigung",
+          "listingId": "M-3001"
+        },
+        "summary": "found 1: policy:furnished#registration",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:furnished#registration",
+              "source": "policy",
+              "listingId": null,
+              "policy": "furnished",
+              "text": "Registration: Tenants must register their residence (Anmeldung) within two weeks of moving in. The landlord provides the confirmation of residence (Wohnungsgeberbestätigung).",
+              "score": 0.777,
+              "cosine": 0.847,
+              "z": 2.541,
+              "bm25": 3.58,
+              "coverage": 0.205,
+              "rerank": 0.777
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1292
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "M-3001"
+        },
+        "summary": "M-3001: Furnished 2-room flat in Schwabing",
+        "result": {
+          "id": "M-3001",
+          "title": "Furnished 2-room flat in Schwabing",
+          "city": "München",
+          "district": "Schwabing",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 2100,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 55,
+          "rooms": 2,
+          "floor": 2,
+          "yearBuilt": 1988,
+          "availableFrom": "2026-10-01",
+          "features": [
+            "furnished",
+            "balcony",
+            "lift"
+          ],
+          "petsAllowed": "no",
+          "energyClass": "C",
+          "description": "Fully furnished flat, rent is all-inclusive (warm rent including utilities, internet and electricity). Fixed-term lease for 18 months. Registration of residence (Anmeldung) possible."
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 423,
+      "cacheReadTokens": 5468,
+      "cacheWriteTokens": 868
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Registration of residence (Anmeldung) is possible",
+        "met": true,
+        "note": "Reply states Anmeldung is possible, supported by the listing description."
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply confirms that registration is possible, and the listing and the furnished policy support every claim it makes (18-month lease, two-week deadline, landlord provides the confirmation). It is in German, matching the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 165,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 852
+    }
+  }
+}

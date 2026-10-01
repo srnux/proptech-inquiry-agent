@@ -1,0 +1,192 @@
+{
+  "case": {
+    "id": "trap-staffelmiete-b2002",
+    "lang": "en",
+    "inquiry": "How will the rent for B-2002 change over the years?",
+    "history": [],
+    "listings": [
+      "B-2002"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The flat is let with a Staffelmiete (graduated rent)",
+      "The rent increases by 3 percent every year"
+    ],
+    "mustNot": [
+      "States a computed future rent in euros"
+    ],
+    "tags": [
+      "trap",
+      "trap-arithmetic"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-staffelmiete-b2002",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 13365,
+  "costUsd": 0.0212098,
+  "guardEvents": [],
+  "result": {
+    "reply": "B-2002 has a graduated rent (Staffelmiete), and the rent goes up 3 percent every year [B-2002#s4]. The current rent is 2350 EUR/month, and utilities of 320 EUR per month are listed separately [B-2002].\n\nWith a graduated rent, all future increases are written into the lease in advance, either as amounts or as dates with new rents. Each increase must come at least one year after the previous one [policy:graduated-rent#how-it-works]. Between those planned increases, the landlord can't raise the rent to match the local rent index (Mietspiegel). Increases after modernisation are also ruled out [policy:graduated-rent#what-it-excludes].\n\nThe listing doesn't give the exact year-by-year amounts or how long the graduated rent lasts. If you'd like that schedule, I can pass your question to a colleague.",
+    "citations": [
+      {
+        "listingId": "B-2002",
+        "chunkId": "B-2002#s4"
+      },
+      {
+        "listingId": "B-2002",
+        "chunkId": null
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:graduated-rent#how-it-works"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:graduated-rent#what-it-excludes"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "B-2002"
+        },
+        "summary": "B-2002: 4-room Altbau with two balconies in Friedrichshain",
+        "result": {
+          "id": "B-2002",
+          "title": "4-room Altbau with two balconies in Friedrichshain",
+          "city": "Berlin",
+          "district": "Friedrichshain",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 2350,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 112,
+          "rooms": 4,
+          "floor": 2,
+          "yearBuilt": 1912,
+          "availableFrom": "2026-12-01",
+          "features": [
+            "balcony",
+            "wooden-floors",
+            "high-ceilings",
+            "cellar"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "E",
+          "description": "Large Altbau flat with two balconies and 3.4 m ceilings. Gas central heating. Utilities 320 EUR per month. The flat is let as part of a Staffelmiete (graduated rent) with a 3 percent increase every year."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "How will the rent change over the years? rent increase, graduated or index rent",
+          "listingId": "B-2002"
+        },
+        "summary": "found 3: B-2002#s4, policy:graduated-rent#how-it-works, policy:graduated-rent#what-it-excludes",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "B-2002#s4",
+              "source": "listing",
+              "listingId": "B-2002",
+              "policy": null,
+              "text": "The flat is let as part of a Staffelmiete (graduated rent) with a 3 percent increase every year.",
+              "score": 0.233,
+              "cosine": 0.856,
+              "z": 1.186,
+              "bm25": 9.94,
+              "coverage": 0.462,
+              "rerank": 0.233
+            },
+            {
+              "chunkId": "policy:graduated-rent#how-it-works",
+              "source": "policy",
+              "listingId": null,
+              "policy": "graduated-rent",
+              "text": "How it works: With a graduated rent the future rent increases are written into the lease in advance, either as amounts or as dates with new rents. Each step must be at least one year after the previous one.",
+              "score": 0.885,
+              "cosine": 0.904,
+              "z": 2.924,
+              "bm25": 10.543,
+              "coverage": 0.462,
+              "rerank": 0.885
+            },
+            {
+              "chunkId": "policy:graduated-rent#what-it-excludes",
+              "source": "policy",
+              "listingId": null,
+              "policy": "graduated-rent",
+              "text": "What it excludes: During a graduated rent lease the landlord cannot raise the rent to the local comparative rent (Mietspiegel) in between steps. Increases after modernisation are also excluded.",
+              "score": 0.56,
+              "cosine": 0.88,
+              "z": 2.036,
+              "bm25": 9.046,
+              "coverage": 0.342,
+              "rerank": 0.56
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1264
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 691,
+      "cacheReadTokens": 5454,
+      "cacheWriteTokens": 1255
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The flat is let with a Staffelmiete (graduated rent)",
+        "met": true
+      },
+      {
+        "fact": "The rent increases by 3 percent every year",
+        "met": true
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "States a computed future rent in euros",
+        "violated": false,
+        "note": "Only the current rent of 2350 EUR is given; no future amounts are computed."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states the graduated rent and the 3 percent annual increase, both supported by the tool results. It gives no computed future euro amounts, and its policy statements match the knowledge results.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 208,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 1241
+    }
+  }
+}

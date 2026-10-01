@@ -1,0 +1,136 @@
+{
+  "case": {
+    "id": "fact-hh1003-commission",
+    "lang": "en",
+    "inquiry": "What commission does the buyer pay for HH-1003?",
+    "history": [],
+    "listings": [
+      "HH-1003"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The buyer's commission is 3.57 percent including VAT"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1003-commission",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 5444,
+  "costUsd": 0.008665,
+  "guardEvents": [],
+  "result": {
+    "reply": "For HH-1003, the buyer pays a commission of 3.57 percent including VAT [HH-1003#s3]. Under the agency's sales policy, the commission is split equally between seller and buyer when flats and single-family houses are sold to private buyers. It becomes due when the notarised purchase contract is signed [policy:commission#sales].",
+    "citations": [
+      {
+        "listingId": "HH-1003",
+        "chunkId": "HH-1003#s3"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:commission#sales"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "What commission does the buyer pay?",
+          "listingId": "HH-1003"
+        },
+        "summary": "found 3: HH-1003#s3, policy:commission#sales, policy:commission#rentals",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1003#s3",
+              "source": "listing",
+              "listingId": "HH-1003",
+              "policy": null,
+              "text": "Buyer's commission 3.57 percent including VAT.",
+              "score": 0.573,
+              "cosine": 0.856,
+              "z": 2.632,
+              "bm25": 5.721,
+              "coverage": 0.646,
+              "rerank": 0.573
+            },
+            {
+              "chunkId": "policy:commission#sales",
+              "source": "policy",
+              "listingId": null,
+              "policy": "commission",
+              "text": "Sales: For flats and single-family houses sold to private buyers, the commission is shared equally between seller and buyer. The buyer's share is stated in each sale listing, including VAT. It becomes due when the notarised purchase contract is signed.",
+              "score": 0.803,
+              "cosine": 0.846,
+              "z": 2.318,
+              "bm25": 6.667,
+              "coverage": 0.646,
+              "rerank": 0.803
+            },
+            {
+              "chunkId": "policy:commission#rentals",
+              "source": "policy",
+              "listingId": null,
+              "policy": "commission",
+              "text": "Rentals: Tenants pay no commission for rental listings. The party that engaged the agency pays it.",
+              "score": 0.037,
+              "cosine": 0.813,
+              "z": 1.244,
+              "bm25": 8.334,
+              "coverage": 0.677,
+              "rerank": 0.037
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1236
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 199,
+      "cacheReadTokens": 5455,
+      "cacheWriteTokens": 714
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The buyer's commission is 3.57 percent including VAT",
+        "met": true
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states the 3.57 percent including VAT commission, which the listing chunk supports. The policy details (split equally, due at notarised contract signing) come from the policy chunk, so nothing is unsupported.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 138,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 702
+    }
+  }
+}

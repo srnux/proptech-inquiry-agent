@@ -1,0 +1,148 @@
+{
+  "case": {
+    "id": "policy-viewing-bring",
+    "lang": "en",
+    "inquiry": "What should I bring to a viewing?",
+    "history": [],
+    "listings": [],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "Bring an ID document",
+      "For rentals, proof of income and a tenant self-disclosure are requested after the viewing, not before"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact",
+      "policy",
+      "over-escalation"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "policy-viewing-bring",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 8289,
+  "costUsd": 0.0113488,
+  "guardEvents": [],
+  "result": {
+    "reply": "Please bring an ID document to the viewing [policy:viewings#what-to-bring]. For rentals, you don't need anything else beforehand. Proof of income and a tenant self-disclosure form are only requested after the viewing [policy:viewings#what-to-bring]. You'll also be shown the energy certificate at the viewing at the latest [policy:viewings#energy-certificate].\n\nI can't book viewings myself, because only our letting and sales team arranges them, by email or phone [policy:viewings#how-viewings-are-arranged]. If you'd like to see a property, tell me which listing it is and, if you like, your email address. I'll then pass your request to a colleague, who will follow up with you.",
+    "citations": [
+      {
+        "listingId": null,
+        "chunkId": "policy:viewings#what-to-bring"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:viewings#what-to-bring"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:viewings#energy-certificate"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:viewings#how-viewings-are-arranged"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "What should I bring to a viewing?"
+        },
+        "summary": "found 3: policy:viewings#what-to-bring, policy:viewings#energy-certificate, policy:viewings#how-viewings-are-arranged",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:viewings#what-to-bring",
+              "source": "policy",
+              "listingId": null,
+              "policy": "viewings",
+              "text": "What to bring: Bring an ID document. For rentals, a proof of income and a tenant self-disclosure form are requested after the viewing, not before.",
+              "score": 0.996,
+              "cosine": 0.871,
+              "z": 4.184,
+              "bm25": 8.809,
+              "coverage": 0.569,
+              "rerank": 0.996
+            },
+            {
+              "chunkId": "policy:viewings#energy-certificate",
+              "source": "policy",
+              "listingId": null,
+              "policy": "viewings",
+              "text": "Energy certificate: The energy certificate is shown at the viewing at the latest, and a copy is handed over when the contract is signed.",
+              "score": 0.279,
+              "cosine": 0,
+              "z": 0,
+              "bm25": 3.908,
+              "coverage": 0.236,
+              "rerank": 0.279
+            },
+            {
+              "chunkId": "policy:viewings#how-viewings-are-arranged",
+              "source": "policy",
+              "listingId": null,
+              "policy": "viewings",
+              "text": "How viewings are arranged: Viewings are arranged only by our letting and sales team, by email or phone. The online assistant cannot book, confirm or change viewing appointments.",
+              "score": 0.018,
+              "cosine": 0.819,
+              "z": 2.094,
+              "bm25": 4.402,
+              "coverage": 0.236,
+              "rerank": 0.018
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1596
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 329,
+      "cacheReadTokens": 5449,
+      "cacheWriteTokens": 731
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Bring an ID document",
+        "met": true
+      },
+      {
+        "fact": "For rentals, proof of income and a tenant self-disclosure are requested after the viewing, not before",
+        "met": true
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply conveys both required facts, all claims are backed by the policy chunks, and it is in English. The offer to pass the request on is conditional and no ticket was claimed as created.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 157,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 853
+    }
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "case": {
+    "id": "handoff-viewing",
+    "lang": "en",
+    "inquiry": "I'd like to view HH-1001 on Saturday morning. My email is jana.becker@example.com.",
+    "history": [],
+    "listings": [
+      "HH-1001"
+    ],
+    "handoffs": [
+      "viewing_request"
+    ],
+    "allowHandoffs": [],
+    "must": [
+      "A colleague will get back to arrange the viewing"
+    ],
+    "mustNot": [
+      "The viewing on Saturday is confirmed"
+    ],
+    "tags": [
+      "handoff"
+    ],
+    "subset": true,
+    "fixtures": false
+  },
+  "score": {
+    "id": "handoff-viewing",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [
+      "viewing_request"
+    ],
+    "actualHandoffs": [
+      "viewing_request"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 5212,
+  "costUsd": 0.009558200000000001,
+  "guardEvents": [],
+  "result": {
+    "reply": "I've sent your request to view HH-1001 on Saturday morning to our letting team (ticket T-a345f359). A colleague will email you at jana.becker@example.com to arrange a time. I can't confirm the slot myself, so the viewing isn't booked until they confirm it.",
+    "citations": [],
+    "handoffs": [
+      {
+        "reason": "viewing_request",
+        "listingId": "HH-1001",
+        "summary": "Inquirer wants to view listing HH-1001 on Saturday morning. Please get in touch to arrange a time.",
+        "contactEmail": "jana.becker@example.com",
+        "ticketId": "T-a345f359",
+        "createdAt": "2026-10-01T07:56:42.310Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "viewing_request",
+          "listingId": "HH-1001",
+          "summary": "Inquirer wants to view listing HH-1001 on Saturday morning. Please get in touch to arrange a time.",
+          "contactEmail": "jana.becker@example.com"
+        },
+        "summary": "ticket T-a345f359 (viewing_request)",
+        "result": {
+          "reason": "viewing_request",
+          "listingId": "HH-1001",
+          "summary": "Inquirer wants to view listing HH-1001 on Saturday morning. Please get in touch to arrange a time.",
+          "contactEmail": "jana.becker@example.com",
+          "ticketId": "T-a345f359",
+          "createdAt": "2026-10-01T07:56:42.310Z"
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 306,
+      "cacheReadTokens": 5471,
+      "cacheWriteTokens": 464
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "A colleague will get back to arrange the viewing",
+        "met": true,
+        "note": "Reply says a colleague will email to arrange a time; ticket T-a345f359 exists."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "The viewing on Saturday is confirmed",
+        "violated": false,
+        "note": "Reply explicitly says the viewing isn't booked until confirmed."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply passes the request on with a matching ticket and tells the inquirer a colleague will email to arrange a time. It states clearly that the viewing is not yet confirmed, and it is in English.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 217,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 516
+    }
+  }
+}
