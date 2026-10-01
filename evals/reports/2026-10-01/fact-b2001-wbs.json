@@ -1,0 +1,107 @@
+{
+  "case": {
+    "id": "fact-b2001-wbs",
+    "lang": "en",
+    "inquiry": "Do I need a WBS for B-2001?",
+    "history": [],
+    "listings": [
+      "B-2001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "A WBS is not required"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-b2001-wbs",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 6079,
+  "costUsd": 0.005619399999999999,
+  "guardEvents": [],
+  "result": {
+    "reply": "No, you don't need a WBS (housing entitlement certificate) for B-2001 [B-2001#s5].",
+    "citations": [
+      {
+        "listingId": "B-2001",
+        "chunkId": "B-2001#s5"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Do I need a WBS (Wohnberechtigungsschein)?",
+          "listingId": "B-2001"
+        },
+        "summary": "found 1: B-2001#s5",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "B-2001#s5",
+              "source": "listing",
+              "listingId": "B-2001",
+              "policy": null,
+              "text": "A WBS (housing entitlement certificate) is not required.",
+              "score": 0.874,
+              "cosine": 0.87,
+              "z": 3.059,
+              "bm25": 3.942,
+              "coverage": 0.317,
+              "rerank": 0.874
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1223
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 136,
+      "cacheReadTokens": 5452,
+      "cacheWriteTokens": 357
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "A WBS is not required",
+        "met": true,
+        "note": "Reply states no WBS is needed, matching the tool result."
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states that no WBS is required for B-2001, which is exactly what the tool result says. It adds no unsupported claims and is written in English, matching the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 136,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 331
+    }
+  }
+}

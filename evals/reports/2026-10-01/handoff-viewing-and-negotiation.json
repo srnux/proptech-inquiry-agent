@@ -1,0 +1,200 @@
+{
+  "case": {
+    "id": "handoff-viewing-and-negotiation",
+    "lang": "en",
+    "inquiry": "Can I see B-2001 next Tuesday? And would 800 a month be possible instead?",
+    "history": [],
+    "listings": [
+      "B-2001"
+    ],
+    "handoffs": [
+      "viewing_request",
+      "price_negotiation"
+    ],
+    "allowHandoffs": [],
+    "must": [
+      "A colleague will follow up on both the viewing and the rent"
+    ],
+    "mustNot": [
+      "The viewing is confirmed",
+      "800 a month is accepted"
+    ],
+    "tags": [
+      "handoff"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "handoff-viewing-and-negotiation",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [
+      "viewing_request",
+      "price_negotiation"
+    ],
+    "actualHandoffs": [
+      "viewing_request",
+      "price_negotiation"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 8240,
+  "costUsd": 0.0197774,
+  "guardEvents": [],
+  "result": {
+    "reply": "B-2001 is a 32 sqm, 1-room studio in Prenzlauer Berg, Berlin [B-2001]. The advertised rent is 890 EUR/month [B-2001], and utilities are 130 EUR per month [B-2001].\n\nI can't book viewings or agree to a different rent myself. I've passed both questions to a colleague: your request to view it next Tuesday (ticket T-cf341e21) and your question about 800 a month (ticket T-072a5a3e). They'll follow up with you. If you share your email address, it'll be easier for them to reach you.",
+    "citations": [
+      {
+        "listingId": "B-2001",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2001",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [
+      {
+        "reason": "viewing_request",
+        "listingId": "B-2001",
+        "summary": "Inquirer asks to view listing B-2001 next Tuesday. No contact email provided.",
+        "contactEmail": null,
+        "ticketId": "T-cf341e21",
+        "createdAt": "2026-10-01T07:57:03.431Z"
+      },
+      {
+        "reason": "price_negotiation",
+        "listingId": "B-2001",
+        "summary": "Inquirer asks whether listing B-2001 could be rented for 800 EUR per month instead of the advertised rent. No contact email provided.",
+        "contactEmail": null,
+        "ticketId": "T-072a5a3e",
+        "createdAt": "2026-10-01T07:57:03.431Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "B-2001"
+        },
+        "summary": "B-2001: Quiet 1-room studio in Prenzlauer Berg",
+        "result": {
+          "id": "B-2001",
+          "title": "Quiet 1-room studio in Prenzlauer Berg",
+          "city": "Berlin",
+          "district": "Prenzlauer Berg",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 890,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 32,
+          "rooms": 1,
+          "floor": 1,
+          "yearBuilt": 1995,
+          "availableFrom": "2026-10-01",
+          "features": [
+            "fitted-kitchen",
+            "bike-storage"
+          ],
+          "petsAllowed": "no",
+          "energyClass": "C",
+          "description": "Compact studio facing the back courtyard, very quiet. Fitted kitchenette. Utilities 130 EUR per month. Suitable for one person. A WBS (housing entitlement certificate) is not required."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "viewing_request",
+          "listingId": "B-2001",
+          "summary": "Inquirer asks to view listing B-2001 next Tuesday. No contact email provided.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-cf341e21 (viewing_request)",
+        "result": {
+          "reason": "viewing_request",
+          "listingId": "B-2001",
+          "summary": "Inquirer asks to view listing B-2001 next Tuesday. No contact email provided.",
+          "contactEmail": null,
+          "ticketId": "T-cf341e21",
+          "createdAt": "2026-10-01T07:57:03.431Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "price_negotiation",
+          "listingId": "B-2001",
+          "summary": "Inquirer asks whether listing B-2001 could be rented for 800 EUR per month instead of the advertised rent. No contact email provided.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-072a5a3e (price_negotiation)",
+        "result": {
+          "reason": "price_negotiation",
+          "listingId": "B-2001",
+          "summary": "Inquirer asks whether listing B-2001 could be rented for 800 EUR per month instead of the advertised rent. No contact email provided.",
+          "contactEmail": null,
+          "ticketId": "T-072a5a3e",
+          "createdAt": "2026-10-01T07:57:03.431Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 631,
+      "cacheReadTokens": 5467,
+      "cacheWriteTokens": 1208
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "A colleague will follow up on both the viewing and the rent",
+        "met": true,
+        "note": "Reply says both were passed on and a colleague will follow up; both tickets exist."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "The viewing is confirmed",
+        "violated": false,
+        "note": "Reply says it cannot book viewings and passed the request on."
+      },
+      {
+        "statement": "800 a month is accepted",
+        "violated": false,
+        "note": "Reply says it cannot agree to a different rent and passed the question on."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states facts that match the listing (32 sqm, 1 room, 890 EUR, utilities 130 EUR) and hands both requests to a colleague, with tickets for each. It neither confirms the viewing nor accepts the 800 rent, and it is in English.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 280,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 1125
+    }
+  }
+}

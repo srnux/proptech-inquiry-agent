@@ -1,0 +1,173 @@
+{
+  "case": {
+    "id": "trap-k4002-living-de",
+    "lang": "de",
+    "inquiry": "Ich suche eine günstige Wohnung in Köln-Ehrenfeld. Wäre K-4002 etwas für mich?",
+    "history": [],
+    "listings": [
+      "K-4002"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "K-4002 is a commercial unit and is not approved for residential use"
+    ],
+    "mustNot": [
+      "K-4002 is suitable to live in"
+    ],
+    "tags": [
+      "trap"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-k4002-living-de",
+    "passed": false,
+    "failures": [
+      "judge, unsupported: Wir haben in Köln derzeit nur eine Mietwohnung"
+    ],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": false
+  },
+  "latencyMs": 10265,
+  "costUsd": 0.0188378,
+  "guardEvents": [],
+  "result": {
+    "reply": "K-4002 ist leider nichts für Sie, weil es keine Wohnung ist. Es ist eine Gewerbeeinheit (Büro) im Erdgeschoss in Ehrenfeld mit Schaufenster, die als Büro, Atelier oder Praxis gedacht ist [K-4002]. Laut Inserat ist sie **nicht für Wohnzwecke zugelassen** [K-4002]. Die Miete beträgt 1150 EUR/Monat zuzüglich Mehrwertsteuer [K-4002].\n\nWir haben in Köln derzeit nur eine Mietwohnung, und die liegt nicht in Ehrenfeld. Es ist K-4001, eine 3-Zimmer-Wohnung in Deutz mit 81 m² für 1380 EUR/Monat, frei ab 2026-11-01 [K-4001]. Haustiere sind dort nur nach Anfrage erlaubt [K-4001].\n\nWenn Sie mir sagen, wie viel Miete Sie höchstens zahlen möchten und wie viele Zimmer Sie brauchen, kann ich gezielter suchen.",
+    "citations": [
+      {
+        "listingId": "K-4002",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4002",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4002",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "K-4002"
+        },
+        "summary": "K-4002: Small office unit in Ehrenfeld",
+        "result": {
+          "id": "K-4002",
+          "title": "Small office unit in Ehrenfeld",
+          "city": "Köln",
+          "district": "Ehrenfeld",
+          "offerType": "rent",
+          "propertyType": "commercial",
+          "price": 1150,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 70,
+          "rooms": 3,
+          "floor": 0,
+          "yearBuilt": 1958,
+          "availableFrom": "2026-10-01",
+          "features": [
+            "shop-window",
+            "kitchenette",
+            "guest-wc"
+          ],
+          "petsAllowed": "yes",
+          "energyClass": "F",
+          "description": "Ground-floor commercial unit with shop window, suitable for an office, studio or practice. Rent plus VAT. Not approved for residential use."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 2,
+        "tool": "search_listings",
+        "arguments": {
+          "city": "Köln",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "limit": 10
+        },
+        "summary": "1 listings: K-4001",
+        "result": {
+          "total": 1,
+          "results": [
+            {
+              "id": "K-4001",
+              "title": "3-room flat near the Rhine in Deutz",
+              "city": "Köln",
+              "district": "Deutz",
+              "offerType": "rent",
+              "propertyType": "apartment",
+              "price": 1380,
+              "priceUnit": "EUR/month",
+              "livingAreaSqm": 81,
+              "rooms": 3,
+              "availableFrom": "2026-11-01",
+              "petsAllowed": "on-request"
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 646,
+      "cacheReadTokens": 8629,
+      "cacheWriteTokens": 832
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "K-4002 is a commercial unit and is not approved for residential use",
+        "met": true,
+        "note": "The reply says it is a Gewerbeeinheit and not approved for residential use."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "K-4002 is suitable to live in",
+        "violated": false,
+        "note": "The reply says K-4002 is not suitable for the inquirer because it is not a residential unit."
+      }
+    ],
+    "unsupported": [
+      "Wir haben in Köln derzeit nur eine Mietwohnung"
+    ],
+    "languageMatches": true,
+    "reasoning": "The reply conveys the commercial-only status of K-4002 and does not call it suitable to live in. However, 'nur eine Mietwohnung' in Köln overgeneralizes from a search that returned one result, which makes it an unsupported claim about the agency's overall inventory.",
+    "correct": false,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 277,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 997
+    }
+  }
+}

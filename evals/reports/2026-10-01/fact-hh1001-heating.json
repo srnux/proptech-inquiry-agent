@@ -1,0 +1,213 @@
+{
+  "case": {
+    "id": "fact-hh1001-heating",
+    "lang": "en",
+    "inquiry": "Is heating included in the rent for HH-1001?",
+    "history": [],
+    "listings": [
+      "HH-1001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "Heating is included in the utilities (Nebenkosten), which are an additional 240 EUR per month"
+    ],
+    "mustNot": [
+      "Heating is included in the cold rent with no utilities on top"
+    ],
+    "tags": [
+      "fact"
+    ],
+    "subset": true,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1001-heating",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 10409,
+  "costUsd": 0.030948200000000002,
+  "guardEvents": [],
+  "result": {
+    "reply": "Heating isn't included in the 1650 EUR/month rent itself [HH-1001]. It's covered by the utilities (Nebenkosten), which cost an additional 240 EUR per month, heating included [HH-1001#s5].\n\nThat utilities figure is a monthly advance payment on top of the cold rent [policy:utilities#what-the-monthly-figure-means]. Household electricity and internet aren't part of the utilities. You would arrange those directly [policy:utilities#electricity-and-internet].",
+    "citations": [
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      },
+      {
+        "listingId": "HH-1001",
+        "chunkId": "HH-1001#s5"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:utilities#what-the-monthly-figure-means"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:utilities#electricity-and-internet"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Is heating included in the rent?",
+          "listingId": "HH-1001"
+        },
+        "summary": "found 5: HH-1001#s5, policy:furnished#all-inclusive-rent, policy:utilities#what-the-monthly-figure-means, policy:utilities#electricity-and-internet, policy:deposit#amount",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1001#s5",
+              "source": "listing",
+              "listingId": "HH-1001",
+              "policy": null,
+              "text": "Utilities (Nebenkosten) are an additional 240 EUR per month, heating included.",
+              "score": 0.637,
+              "cosine": 0.849,
+              "z": 1.161,
+              "bm25": 4.987,
+              "coverage": 0.749,
+              "rerank": 0.637
+            },
+            {
+              "chunkId": "policy:furnished#all-inclusive-rent",
+              "source": "policy",
+              "listingId": null,
+              "policy": "furnished",
+              "text": "All-inclusive rent: For furnished flats let at an all-inclusive rent (Warmmiete inklusive), the stated rent covers utilities, heating, electricity and internet. There is no separate utility statement.",
+              "score": 0.972,
+              "cosine": 0.887,
+              "z": 2.278,
+              "bm25": 4.438,
+              "coverage": 0.611,
+              "rerank": 0.972
+            },
+            {
+              "chunkId": "policy:utilities#what-the-monthly-figure-means",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "What the monthly figure means: The utilities figure in a listing is a monthly advance payment on top of the cold rent. It usually covers water, waste collection, building insurance, cleaning of shared areas and property tax. Whether heating is included is stated in each listing.",
+              "score": 0.913,
+              "cosine": 0.853,
+              "z": 1.277,
+              "bm25": 5.013,
+              "coverage": 1,
+              "rerank": 0.913
+            },
+            {
+              "chunkId": "policy:utilities#electricity-and-internet",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "Electricity and internet: Household electricity and internet are contracted by the tenant directly and are not part of the utilities, unless a listing says the rent is all-inclusive.",
+              "score": 0.122,
+              "cosine": 0.849,
+              "z": 1.162,
+              "bm25": 1.637,
+              "coverage": 0.251,
+              "rerank": 0.122
+            },
+            {
+              "chunkId": "policy:deposit#amount",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Amount: For residential rentals the deposit is at most three months' net cold rent (Nettokaltmiete). Utilities are not included in that calculation. Each listing states the deposit that applies to it.",
+              "score": 0.089,
+              "cosine": 0.856,
+              "z": 1.362,
+              "bm25": 3.9,
+              "coverage": 0.64,
+              "rerank": 0.089
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1849
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1001"
+        },
+        "summary": "HH-1001: Bright 3-room flat with balcony in Eimsbüttel",
+        "result": {
+          "id": "HH-1001",
+          "title": "Bright 3-room flat with balcony in Eimsbüttel",
+          "city": "Hamburg",
+          "district": "Eimsbüttel",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1650,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 78,
+          "rooms": 3,
+          "floor": 3,
+          "yearBuilt": 1908,
+          "availableFrom": "2026-11-01",
+          "features": [
+            "balcony",
+            "fitted-kitchen",
+            "cellar",
+            "wooden-floors"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "D",
+          "description": "Renovated Altbau flat on the third floor, no lift. South-facing balcony over a quiet courtyard. Fitted kitchen included. Deposit is three months' cold rent. Utilities (Nebenkosten) are an additional 240 EUR per month, heating included. Pets on request, small dogs usually fine."
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 439,
+      "cacheReadTokens": 2771,
+      "cacheWriteTokens": 4318
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Heating is included in the utilities (Nebenkosten), which are an additional 240 EUR per month",
+        "met": true,
+        "note": "Reply states heating is covered by the utilities of 240 EUR/month on top of the rent."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Heating is included in the cold rent with no utilities on top",
+        "violated": false,
+        "note": "Reply says heating isn't in the rent itself and that utilities are extra."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply correctly says heating is covered by the 240 EUR/month utilities on top of the rent, and it does not say heating is in the cold rent. Every claim is supported by the listing and policy chunks, and the reply is in English like the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 257,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 1487
+    }
+  }
+}

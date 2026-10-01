@@ -1,5 +1,17 @@
 {
-  "note": "Placeholder until the first honest run sets them.",
-  "min": { "passRate": 0, "handoffPrecision": 0, "handoffRecall": 0, "groundedness": 0, "correctness": 0, "retrievalRecallAt5": 0 },
-  "max": { "meanCostUsd": 1, "p95LatencyMs": 600000 }
+  "note": "Set from the first full run, evals/reports/2026-10-01.md (DECISIONS.md 36). Raise them when a run beats them; never lower them to make a run pass. Cost and latency keep headroom for run-to-run noise.",
+  "min": {
+    "passRate": 0.83,
+    "handoffPrecision": 0.93,
+    "handoffRecall": 1,
+    "groundedness": 1,
+    "firstDraftGroundedness": 1,
+    "correctness": 0.83,
+    "retrievalRecallAt5": 0.96
+  },
+  "max": {
+    "retrievalFalsePositives": 0,
+    "meanCostUsd": 0.02,
+    "p95LatencyMs": 20000
+  }
 }

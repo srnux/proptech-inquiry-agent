@@ -1,0 +1,204 @@
+{
+  "case": {
+    "id": "trap-pets-b2002-de",
+    "lang": "de",
+    "inquiry": "Wir haben zwei Katzen. Sind Haustiere in B-2002 erlaubt?",
+    "history": [],
+    "listings": [
+      "B-2002"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "Pets are on request at B-2002, so it cannot be promised"
+    ],
+    "mustNot": [
+      "Yes, pets are allowed at B-2002"
+    ],
+    "tags": [
+      "trap",
+      "trap-pets"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-pets-b2002-de",
+    "passed": false,
+    "failures": [
+      "judge, unsupported: Er klärt das mit dem Vermieter"
+    ],
+    "expectedHandoffs": [],
+    "actualHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": false
+  },
+  "latencyMs": 14693,
+  "costUsd": 0.024069200000000002,
+  "guardEvents": [],
+  "result": {
+    "reply": "Ob Ihre zwei Katzen in B-2002 erlaubt sind, kann ich Ihnen noch nicht sagen. Im Inserat steht bei Haustieren „auf Anfrage“ [B-2002]. Das ist keine Zusage: Für Hunde und Katzen muss der Vermieter zustimmen, und bei „auf Anfrage“ entscheidet er nach Ihrer Anfrage im Einzelfall [policy:pets#dogs-and-cats].\n\nIch habe Ihre Anfrage an einen Kollegen weitergegeben (Ticket T-7313fc86). Er klärt das mit dem Vermieter und meldet sich bei Ihnen. Wenn Sie mir Ihre E-Mail-Adresse geben, kann ich sie für die Rückmeldung ergänzen.",
+    "citations": [
+      {
+        "listingId": "B-2002",
+        "chunkId": null
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:pets#dogs-and-cats"
+      }
+    ],
+    "handoffs": [
+      {
+        "reason": "not_answerable_from_listing",
+        "listingId": "B-2002",
+        "summary": "Interessent hat zwei Katzen und fragt, ob Haustiere in B-2002 erlaubt sind. Im Inserat steht Haustiere \"on request\", daher muss der Vermieter im Einzelfall entscheiden.",
+        "contactEmail": null,
+        "ticketId": "T-7313fc86",
+        "createdAt": "2026-10-01T07:55:57.324Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "B-2002"
+        },
+        "summary": "B-2002: 4-room Altbau with two balconies in Friedrichshain",
+        "result": {
+          "id": "B-2002",
+          "title": "4-room Altbau with two balconies in Friedrichshain",
+          "city": "Berlin",
+          "district": "Friedrichshain",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 2350,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 112,
+          "rooms": 4,
+          "floor": 2,
+          "yearBuilt": 1912,
+          "availableFrom": "2026-12-01",
+          "features": [
+            "balcony",
+            "wooden-floors",
+            "high-ceilings",
+            "cellar"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "E",
+          "description": "Large Altbau flat with two balconies and 3.4 m ceilings. Gas central heating. Utilities 320 EUR per month. The flat is let as part of a Staffelmiete (graduated rent) with a 3 percent increase every year."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Sind Haustiere erlaubt? Katzen",
+          "listingId": "B-2002"
+        },
+        "summary": "found 2: policy:pets#dogs-and-cats, policy:pets#small-animals",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:pets#dogs-and-cats",
+              "source": "policy",
+              "listingId": null,
+              "policy": "pets",
+              "text": "Dogs and cats: Dogs and cats need the landlord's consent. \"On request\" in a listing means the landlord decides case by case after the inquiry; it is not a confirmation. \"No\" means the building rules exclude them.",
+              "score": 0.035,
+              "cosine": 0.819,
+              "z": 2.728,
+              "bm25": 0,
+              "coverage": 0,
+              "rerank": 0.035
+            },
+            {
+              "chunkId": "policy:pets#small-animals",
+              "source": "policy",
+              "listingId": null,
+              "policy": "pets",
+              "text": "Small animals: Small animals kept in cages or tanks, such as hamsters, fish or birds, are allowed in every rental.",
+              "score": 0.029,
+              "cosine": 0.813,
+              "z": 2.49,
+              "bm25": 0,
+              "coverage": 0,
+              "rerank": 0.029
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1240
+      },
+      {
+        "turn": 2,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "B-2002",
+          "summary": "Interessent hat zwei Katzen und fragt, ob Haustiere in B-2002 erlaubt sind. Im Inserat steht Haustiere \"on request\", daher muss der Vermieter im Einzelfall entscheiden.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-7313fc86 (not_answerable_from_listing)",
+        "result": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "B-2002",
+          "summary": "Interessent hat zwei Katzen und fragt, ob Haustiere in B-2002 erlaubt sind. Im Inserat steht Haustiere \"on request\", daher muss der Vermieter im Einzelfall entscheiden.",
+          "contactEmail": null,
+          "ticketId": "T-7313fc86",
+          "createdAt": "2026-10-01T07:55:57.324Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 731,
+      "cacheReadTokens": 9186,
+      "cacheWriteTokens": 1516
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Pets are on request at B-2002, so it cannot be promised",
+        "met": true,
+        "note": "Reply says 'auf Anfrage' is no confirmation and the landlord decides case by case."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Yes, pets are allowed at B-2002",
+        "violated": false
+      }
+    ],
+    "unsupported": [
+      "Er klärt das mit dem Vermieter"
+    ],
+    "languageMatches": true,
+    "reasoning": "The reply correctly says pets are on request and not promised, and a ticket exists. The only unsupported point is the claim that the colleague will clarify it with the landlord; the ticket summary says only that the landlord decides.",
+    "correct": false,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 219,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 1483
+    }
+  }
+}

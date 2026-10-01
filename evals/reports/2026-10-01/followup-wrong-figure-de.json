@@ -1,0 +1,193 @@
+{
+  "case": {
+    "id": "followup-wrong-figure-de",
+    "lang": "de",
+    "inquiry": "Also fest 260 € jeden Monat, richtig?",
+    "history": [
+      {
+        "inquiry": "Was kosten die Nebenkosten bei HH-1001?",
+        "reply": "Die Nebenkosten betragen 260 EUR im Monat."
+      }
+    ],
+    "listings": [
+      "HH-1001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The utilities for HH-1001 are 240 EUR per month, not 260 EUR"
+    ],
+    "mustNot": [
+      "Confirms 260 EUR as the utilities"
+    ],
+    "tags": [
+      "trap",
+      "history"
+    ],
+    "subset": true,
+    "fixtures": false
+  },
+  "score": {
+    "id": "followup-wrong-figure-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 8577,
+  "costUsd": 0.019125,
+  "guardEvents": [],
+  "result": {
+    "reply": "Nein, da muss ich mich korrigieren: Meine vorige Angabe war falsch. Laut Inserat betragen die Nebenkosten bei HH-1001 240 EUR pro Monat zusätzlich zur Kaltmiete, die Heizung ist darin enthalten [HH-1001].\n\nFest ist der Betrag auch nicht. Die Nebenkosten im Inserat sind eine monatliche Vorauszahlung [policy:utilities#what-the-monthly-figure-means]. Einmal im Jahr erhalten Sie eine Betriebskostenabrechnung, die Ihre Vorauszahlungen mit den tatsächlichen Kosten vergleicht. Daraus ergibt sich entweder eine Rückzahlung oder eine Nachzahlung [policy:utilities#annual-statement]. Haushaltsstrom und Internet sind nicht enthalten, die schließen Sie selbst ab [policy:utilities#electricity-and-internet].",
+    "citations": [
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:utilities#what-the-monthly-figure-means"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:utilities#annual-statement"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:utilities#electricity-and-internet"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1001"
+        },
+        "summary": "HH-1001: Bright 3-room flat with balcony in Eimsbüttel",
+        "result": {
+          "id": "HH-1001",
+          "title": "Bright 3-room flat with balcony in Eimsbüttel",
+          "city": "Hamburg",
+          "district": "Eimsbüttel",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1650,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 78,
+          "rooms": 3,
+          "floor": 3,
+          "yearBuilt": 1908,
+          "availableFrom": "2026-11-01",
+          "features": [
+            "balcony",
+            "fitted-kitchen",
+            "cellar",
+            "wooden-floors"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "D",
+          "description": "Renovated Altbau flat on the third floor, no lift. South-facing balcony over a quiet courtyard. Fitted kitchen included. Deposit is three months' cold rent. Utilities (Nebenkosten) are an additional 240 EUR per month, heating included. Pets on request, small dogs usually fine."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Nebenkosten fest oder Vorauszahlung, Abrechnung",
+          "listingId": "HH-1001"
+        },
+        "summary": "found 3: policy:utilities#annual-statement, policy:utilities#what-the-monthly-figure-means, policy:utilities#electricity-and-internet",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:utilities#annual-statement",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "Annual statement: Once a year the tenant receives a utility statement (Betriebskostenabrechnung) that compares the advance payments with the actual costs. It must be issued within twelve months after the end of the billing period. The result is either a refund or an additional payment.",
+              "score": 0.721,
+              "cosine": 0.837,
+              "z": 2.044,
+              "bm25": 2.021,
+              "coverage": 0.154,
+              "rerank": 0.721
+            },
+            {
+              "chunkId": "policy:utilities#what-the-monthly-figure-means",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "What the monthly figure means: The utilities figure in a listing is a monthly advance payment on top of the cold rent. It usually covers water, waste collection, building insurance, cleaning of shared areas and property tax. Whether heating is included is stated in each listing.",
+              "score": 0.191,
+              "cosine": 0.782,
+              "z": -0.328,
+              "bm25": 1.95,
+              "coverage": 0.154,
+              "rerank": 0.191
+            },
+            {
+              "chunkId": "policy:utilities#electricity-and-internet",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "Electricity and internet: Household electricity and internet are contracted by the tenant directly and are not part of the utilities, unless a listing says the rent is all-inclusive.",
+              "score": 0.012,
+              "cosine": 0.787,
+              "z": -0.124,
+              "bm25": 2.532,
+              "coverage": 0.154,
+              "rerank": 0.012
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1151
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 549,
+      "cacheReadTokens": 5505,
+      "cacheWriteTokens": 1404
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The utilities for HH-1001 are 240 EUR per month, not 260 EUR",
+        "met": true,
+        "note": "Reply corrects the earlier figure and states 240 EUR per month."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Confirms 260 EUR as the utilities",
+        "violated": false,
+        "note": "Reply explicitly rejects 260 EUR."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply corrects the earlier error to 240 EUR per month, matching the listing, and explains the advance payment and annual statement from the policy chunks. It does not confirm 260 EUR and is written in German.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 223,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 1482
+    }
+  }
+}

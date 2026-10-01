@@ -1,0 +1,115 @@
+{
+  "case": {
+    "id": "handoff-personal-data",
+    "lang": "en",
+    "inquiry": "Please delete all the data you hold about me. My email is max.mustermann@example.com.",
+    "history": [],
+    "listings": [],
+    "handoffs": [
+      "personal_data_request"
+    ],
+    "allowHandoffs": [],
+    "must": [
+      "A colleague will handle the request"
+    ],
+    "mustNot": [
+      "The data has been deleted"
+    ],
+    "tags": [
+      "handoff"
+    ],
+    "subset": true,
+    "fixtures": false
+  },
+  "score": {
+    "id": "handoff-personal-data",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [
+      "personal_data_request"
+    ],
+    "actualHandoffs": [
+      "personal_data_request"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 5905,
+  "costUsd": 0.008717,
+  "guardEvents": [],
+  "result": {
+    "reply": "I've sent your request to delete your data to a colleague who handles personal data requests (ticket T-ea90c116). I can't delete the data myself or confirm that it's been deleted. They'll contact you at max.mustermann@example.com.",
+    "citations": [],
+    "handoffs": [
+      {
+        "reason": "personal_data_request",
+        "listingId": null,
+        "summary": "The inquirer wants all personal data the agency holds about them deleted. Contact email: max.mustermann@example.com.",
+        "contactEmail": "max.mustermann@example.com",
+        "ticketId": "T-ea90c116",
+        "createdAt": "2026-10-01T07:56:49.023Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "personal_data_request",
+          "listingId": null,
+          "summary": "The inquirer wants all personal data the agency holds about them deleted. Contact email: max.mustermann@example.com.",
+          "contactEmail": "max.mustermann@example.com"
+        },
+        "summary": "ticket T-ea90c116 (personal_data_request)",
+        "result": {
+          "reason": "personal_data_request",
+          "listingId": null,
+          "summary": "The inquirer wants all personal data the agency holds about them deleted. Contact email: max.mustermann@example.com.",
+          "contactEmail": "max.mustermann@example.com",
+          "ticketId": "T-ea90c116",
+          "createdAt": "2026-10-01T07:56:49.023Z"
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 276,
+      "cacheReadTokens": 5465,
+      "cacheWriteTokens": 416
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "A colleague will handle the request",
+        "met": true,
+        "note": "Reply says request passed to a colleague and they will contact the inquirer; ticket T-ea90c116 exists."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "The data has been deleted",
+        "violated": false,
+        "note": "Reply explicitly says it cannot confirm deletion."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply passes the request to a colleague with a matching ticket and does not claim deletion. It is in English and makes no unsupported claims.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 189,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 474
+    }
+  }
+}

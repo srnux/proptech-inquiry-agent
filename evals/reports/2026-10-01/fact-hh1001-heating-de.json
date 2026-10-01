@@ -1,0 +1,167 @@
+{
+  "case": {
+    "id": "fact-hh1001-heating-de",
+    "lang": "de",
+    "inquiry": "Ist bei HH-1001 die Heizung in den Nebenkosten enthalten?",
+    "history": [],
+    "listings": [
+      "HH-1001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "Heating is included in the utilities of 240 EUR per month"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1001-heating-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 7462,
+  "costUsd": 0.026581,
+  "guardEvents": [],
+  "result": {
+    "reply": "Ja, bei HH-1001 ist die Heizung in den Nebenkosten enthalten. Die Nebenkosten betragen zusätzlich 240 EUR pro Monat [HH-1001#s5]. Dieser Betrag ist eine monatliche Vorauszahlung, die Sie zusätzlich zur Kaltmiete zahlen [policy:utilities#what-the-monthly-figure-means]. Haushaltsstrom und Internet sind nicht in den Nebenkosten enthalten. Diese Verträge schließen Sie als Mieter selbst ab [policy:utilities#electricity-and-internet].",
+    "citations": [
+      {
+        "listingId": "HH-1001",
+        "chunkId": "HH-1001#s5"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:utilities#what-the-monthly-figure-means"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:utilities#electricity-and-internet"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Ist die Heizung in den Nebenkosten enthalten?",
+          "listingId": "HH-1001"
+        },
+        "summary": "found 5: HH-1001#s5, policy:utilities#what-the-monthly-figure-means, policy:utilities#electricity-and-internet, policy:furnished#all-inclusive-rent, policy:utilities#annual-statement",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1001#s5",
+              "source": "listing",
+              "listingId": "HH-1001",
+              "policy": null,
+              "text": "Utilities (Nebenkosten) are an additional 240 EUR per month, heating included.",
+              "score": 0.853,
+              "cosine": 0.841,
+              "z": 2.716,
+              "bm25": 2.591,
+              "coverage": 0.215,
+              "rerank": 0.853
+            },
+            {
+              "chunkId": "policy:utilities#what-the-monthly-figure-means",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "What the monthly figure means: The utilities figure in a listing is a monthly advance payment on top of the cold rent. It usually covers water, waste collection, building insurance, cleaning of shared areas and property tax. Whether heating is included is stated in each listing.",
+              "score": 0.797,
+              "cosine": 0.787,
+              "z": 0.998,
+              "bm25": 1.95,
+              "coverage": 0.215,
+              "rerank": 0.797
+            },
+            {
+              "chunkId": "policy:utilities#electricity-and-internet",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "Electricity and internet: Household electricity and internet are contracted by the tenant directly and are not part of the utilities, unless a listing says the rent is all-inclusive.",
+              "score": 0.174,
+              "cosine": 0.779,
+              "z": 0.724,
+              "bm25": 2.532,
+              "coverage": 0.215,
+              "rerank": 0.174
+            },
+            {
+              "chunkId": "policy:furnished#all-inclusive-rent",
+              "source": "policy",
+              "listingId": null,
+              "policy": "furnished",
+              "text": "All-inclusive rent: For furnished flats let at an all-inclusive rent (Warmmiete inklusive), the stated rent covers utilities, heating, electricity and internet. There is no separate utility statement.",
+              "score": 0.043,
+              "cosine": 0.797,
+              "z": 1.322,
+              "bm25": 0,
+              "coverage": 0,
+              "rerank": 0.043
+            },
+            {
+              "chunkId": "policy:utilities#annual-statement",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "Annual statement: Once a year the tenant receives a utility statement (Betriebskostenabrechnung) that compares the advance payments with the actual costs. It must be issued within twelve months after the end of the billing period. The result is either a refund or an additional payment.",
+              "score": 0.009,
+              "cosine": 0.793,
+              "z": 1.171,
+              "bm25": 2.021,
+              "coverage": 0.215,
+              "rerank": 0.009
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1502
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 327,
+      "cacheReadTokens": 2785,
+      "cacheWriteTokens": 3892
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Heating is included in the utilities of 240 EUR per month",
+        "met": true,
+        "note": "Reply says heating is included and utilities are 240 EUR per month."
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply's claims (heating included, 240 EUR, advance payment on top of cold rent, electricity and internet contracted by the tenant) are all supported by the tool results. It is in German, matching the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 166,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 2329
+    }
+  }
+}

@@ -420,3 +420,16 @@ listing never reaches `data/`, the MCP server or the web app.
 Rejected: adding HH-9001 to `data/listings.json` behind a flag (one forgotten flag and the demo serves it), and
 running every case against the extended catalogue (it would change search results and the golden-set numbers
 the README reports).
+
+## 36. Thresholds from the first honest run, then only raised (D5.1)
+
+`evals/thresholds.json` was a placeholder (every minimum 0) for the first full run, `evals/reports/2026-10-01.md`
+(`claude-opus-5-5` on Bedrock, judged by `claude-sonnet-5-5`, 49 cases): 41 passed, hand-off precision 93.8%,
+recall 100%, every final reply and every first draft grounded, correctness 83.7%, golden-set recall@5 96% with no
+false positives, $0.016 and 9.2 s per inquiry on average, p95 14.7 s. The thresholds are those values rounded down;
+cost (at most $0.02) and p95 latency (at most 20 s) keep headroom, because they vary between runs without
+anything changing. A run below any threshold exits with status 1. When a run beats a threshold, the threshold
+goes up in the same commit as the report; it never goes down to let a run pass.
+
+Rejected: thresholds chosen up front (they would have encoded a guess about a model nobody had measured on these
+cases), and one overall score (a drop in hand-off recall must not hide behind a rise in correctness).

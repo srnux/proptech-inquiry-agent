@@ -1,0 +1,107 @@
+{
+  "case": {
+    "id": "handoff-complaint-de",
+    "lang": "de",
+    "inquiry": "Ich habe mich letzte Woche wegen HH-1002 gemeldet und nie eine Antwort bekommen. Das ist wirklich ärgerlich.",
+    "history": [],
+    "listings": [],
+    "handoffs": [
+      "complaint"
+    ],
+    "allowHandoffs": [],
+    "must": [
+      "A colleague will follow up"
+    ],
+    "mustNot": [],
+    "tags": [
+      "handoff"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "handoff-complaint-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [
+      "complaint"
+    ],
+    "actualHandoffs": [
+      "complaint"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 7210,
+  "costUsd": 0.0137122,
+  "guardEvents": [],
+  "result": {
+    "reply": "Es tut mir leid, dass Sie auf Ihre Anfrage zu HH-1002 keine Antwort bekommen haben. Ich habe Ihre Beschwerde an einen Kollegen weitergegeben (Ticket T-76a26378), der sich bei Ihnen melden wird. Damit er Sie sicher erreicht, schicken Sie mir bitte Ihre E-Mail-Adresse. Schreiben Sie mir auch gern noch einmal Ihre ursprüngliche Frage zum Objekt. Vieles kann ich Ihnen vielleicht direkt beantworten.",
+    "citations": [],
+    "handoffs": [
+      {
+        "reason": "complaint",
+        "listingId": "HH-1002",
+        "summary": "Interessent beschwert sich, dass er sich letzte Woche wegen Objekt HH-1002 gemeldet und keine Antwort erhalten hat. Bitte zeitnah melden und die ursprüngliche Anfrage klären.",
+        "contactEmail": null,
+        "ticketId": "T-76a26378",
+        "createdAt": "2026-10-01T07:56:43.859Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "complaint",
+          "listingId": "HH-1002",
+          "summary": "Interessent beschwert sich, dass er sich letzte Woche wegen Objekt HH-1002 gemeldet und keine Antwort erhalten hat. Bitte zeitnah melden und die ursprüngliche Anfrage klären.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-76a26378 (complaint)",
+        "result": {
+          "reason": "complaint",
+          "listingId": "HH-1002",
+          "summary": "Interessent beschwert sich, dass er sich letzte Woche wegen Objekt HH-1002 gemeldet und keine Antwort erhalten hat. Bitte zeitnah melden und die ursprüngliche Anfrage klären.",
+          "contactEmail": null,
+          "ticketId": "T-76a26378",
+          "createdAt": "2026-10-01T07:56:43.859Z"
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 460,
+      "cacheReadTokens": 5366,
+      "cacheWriteTokens": 683
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "A colleague will follow up",
+        "met": true,
+        "note": "Reply says the complaint was passed to a colleague who will get in touch; ticket T-76a26378 exists."
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply is in German, says a colleague will follow up, and a matching hand-off ticket was created. It makes no unsupported claims.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 143,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 746
+    }
+  }
+}
