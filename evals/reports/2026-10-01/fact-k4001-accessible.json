@@ -1,0 +1,149 @@
+{
+  "case": {
+    "id": "fact-k4001-accessible",
+    "lang": "en",
+    "inquiry": "Is K-4001 suitable for a wheelchair user?",
+    "history": [],
+    "listings": [
+      "K-4001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The flat is step-free with a lift, wide doors and a walk-in shower, suitable for wheelchair users"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-k4001-accessible",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 7707,
+  "costUsd": 0.0107954,
+  "guardEvents": [],
+  "result": {
+    "reply": "Yes. The listing describes K-4001 as a step-free flat with a lift, wide doors and a walk-in shower, and says it is suitable for wheelchair users [K-4001#s1]. It is also tagged with the \"accessible\" and \"lift\" features [K-4001]. The flat is on the 5th floor [K-4001].\n\nIf you'd like to check the details in person, I can ask a colleague to arrange a viewing.",
+    "citations": [
+      {
+        "listingId": "K-4001",
+        "chunkId": "K-4001#s1"
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "K-4001"
+        },
+        "summary": "K-4001: 3-room flat near the Rhine in Deutz",
+        "result": {
+          "id": "K-4001",
+          "title": "3-room flat near the Rhine in Deutz",
+          "city": "Köln",
+          "district": "Deutz",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1380,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 81,
+          "rooms": 3,
+          "floor": 5,
+          "yearBuilt": 2001,
+          "availableFrom": "2026-11-01",
+          "features": [
+            "lift",
+            "balcony",
+            "fitted-kitchen",
+            "accessible"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "C",
+          "description": "Step-free flat with lift, wide doors and a walk-in shower, suitable for wheelchair users. Balcony with a view of the cathedral. Utilities 250 EUR per month. Deposit two months' cold rent."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "wheelchair accessible, step-free access, lift",
+          "listingId": "K-4001"
+        },
+        "summary": "found 1: K-4001#s1",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "K-4001#s1",
+              "source": "listing",
+              "listingId": "K-4001",
+              "policy": null,
+              "text": "Step-free flat with lift, wide doors and a walk-in shower, suitable for wheelchair users.",
+              "score": 0.938,
+              "cosine": 0.92,
+              "z": 4.461,
+              "bm25": 12.702,
+              "coverage": 0.579,
+              "rerank": 0.938
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1717
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 286,
+      "cacheReadTokens": 5457,
+      "cacheWriteTokens": 792
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The flat is step-free with a lift, wide doors and a walk-in shower, suitable for wheelchair users",
+        "met": true,
+        "note": "Reply states all of these, citing the listing."
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply conveys the accessibility facts exactly as the tool results state them, and the floor and feature tags are supported. The offer to ask a colleague to arrange a viewing is an offer, not a claim about the listing, so it is not an unsupported claim.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 187,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 745
+    }
+  }
+}

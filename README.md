@@ -13,7 +13,7 @@ All listing and policy data is synthetic.
 | 2 | Hybrid retrieval over listing texts and policy pages, local embeddings | done |
 | 3 | Agent loop, citation and number guards, `POST /inquiries` (SSE), Streamable HTTP MCP, `pnpm ask` | done, acceptance inquiry and live test passed on `claude-opus-5-5` (Bedrock) |
 | 4 | React UI: chat, tool-call trace, live hand-off queue, citation chips; runs without a key on a demo model | done |
-| 5 | Eval suite: correct answers, correct escalations, no invented facts | planned |
+| 5 | Eval suite: 49 cases, model judge, thresholds; `pnpm eval` writes a report with a trace per case | done, 46 of 49 cases pass on `claude-opus-5-5` ([report](evals/reports/2026-10-01-after-fixes.md)) |
 | 6 | Architecture write-up, pgvector, CI | planned |
 
 Details, tasks and open decisions per slice are in [ROADMAP.md](ROADMAP.md); the reasons behind each
@@ -66,9 +66,9 @@ Two stages, like a librarian who first pulls likely pages off the shelf and then
    collected passage and scores whether it answers it. Only passages above a threshold calibrated on
    [a golden set](evals/retrieval-golden.json) are returned. If none is, the answer is `found: false`.
 
-Measured on the golden set (25 questions with an answer, 8 without, German and English): the right passage
-is in the top 5 for **24 of 25**, and **none** of the questions without an answer returns anything. The one
-miss is listed in `DECISIONS.md` 19. About 1.4 seconds per question on a laptop CPU.
+Measured on the golden set (26 questions with an answer, 8 without, German and English): the right passage
+is in the top 5 for **all 26**, and **none** of the questions without an answer returns anything. The last
+miss, a German commission question, was fixed by an eval finding (`DECISIONS.md` 37). About 1.4 seconds per question on a laptop CPU.
 
 Why two stages, with the measurements that led there: `DECISIONS.md` 16 to 19.
 
@@ -94,6 +94,39 @@ The model is `claude-opus-5-5` by default; `ANTHROPIC_MODEL` and `ANTHROPIC_EFFO
 (`DECISIONS.md` 23). To run on Amazon Bedrock instead, set `MODEL_PROVIDER=bedrock`, `AWS_REGION` and
 `AWS_BEARER_TOKEN_BEDROCK` (`DECISIONS.md` 25). Tests use a scripted model and need no key;
 `packages/server/test/agent-live.test.ts` runs against the real model when credentials are set in the environment.
+
+## Evals
+
+`pnpm eval` runs the 49 cases in [evals/cases.jsonl](evals/cases.jsonl) through the real agent loop: fact and
+policy questions, searches, every hand-off reason, follow-ups, the traps (pets "on request" is not a yes, the
+facade levy is not final, Staffelmiete is 3% a year, the Munich rent is all-inclusive, the Köln unit is not for
+living in, polite haggling is still a negotiation) and a listing whose text tells the agent to confirm viewings.
+Code checks the hand-offs, the listings and every figure; a different model (`claude-sonnet-5-5`) grades the facts
+against [a written rubric](evals/rubric.md). The report lands in `evals/reports/<date>.md`, and every case in it
+links to the full trace of its run (`DECISIONS.md` 32 to 38).
+
+| Metric | First run | After the fixes | Threshold |
+|---|---|---|---|
+| Cases passed | 41 / 49 | 46 / 49 | 90% |
+| Hand-off precision / recall | 93.8% / 100% | 100% / 100% | 93% / 100% |
+| Replies with every figure grounded (final / first draft) | 100% / 100% | 100% / 100% | 100% / 100% |
+| Correct, by the judge | 83.7% | 93.9% | 90% |
+| Golden-set recall@5, false positives | 96%, 0 | 100%, 0 | 100%, 0 |
+| Cost, latency per inquiry | $0.016, 9.2 s (p95 14.7 s) | $0.014, 8.6 s (p95 13.8 s) | $0.02, p95 20 s |
+
+Both runs are [committed](evals/reports/), `claude-opus-5-5` on Bedrock. The first run found three problems, each
+fixed in its own commit: the judge counted hand-off wording as unsupported claims, the commission policy was
+invisible to German questions (`DECISIONS.md` 37), and follow-ups "corrected" earlier replies that were right
+(`DECISIONS.md` 38). Of the three cases still failing, two are borderline inferences the judge flags ("so you
+would have to use the stairs") and one is real: the agent offers to add an email address to a ticket, which no
+tool can do.
+
+```bash
+pnpm eval                 # all cases; needs credentials for the agent and the judge; exits 1 below a threshold
+pnpm eval --subset        # the 12 cases meant for every pull request, about 90 s and $0.25
+pnpm eval --case handoff-viewing --case trap-pets-hh1001
+MODEL_PROVIDER=demo EMBEDDER=hashing pnpm eval --no-judge   # offline: demo model, no judge
+```
 
 ## Run it
 
@@ -138,6 +171,9 @@ All scripts run from the repository root.
 data/listings.json              synthetic catalogue, validated with zod at load
 data/policies/*.md              synthetic policy pages, one topic each
 evals/retrieval-golden.json     questions with the chunks that must be found, plus questions with no answer
+evals/cases.jsonl               agent eval cases; rubric.md for the judge, thresholds.json, run.ts (`pnpm eval`)
+evals/reports/                  one committed report per full run, with a trace file per case
+evals/fixtures/                 test-only listings (the prompt-injection case), never served by the app
 retrieval.thresholds.json       relevance thresholds per embedding model
 packages/core/src/domain/       listing model, repository, hand-off queue
 packages/core/src/retrieval/    chunker, BM25, embedders, vector store, reranker, search

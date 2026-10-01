@@ -1,0 +1,107 @@
+{
+  "case": {
+    "id": "handoff-complaint-de",
+    "lang": "de",
+    "inquiry": "Ich habe mich letzte Woche wegen HH-1002 gemeldet und nie eine Antwort bekommen. Das ist wirklich ärgerlich.",
+    "history": [],
+    "listings": [],
+    "handoffs": [
+      "complaint"
+    ],
+    "allowHandoffs": [],
+    "must": [
+      "A colleague will follow up"
+    ],
+    "mustNot": [],
+    "tags": [
+      "handoff"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "handoff-complaint-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [
+      "complaint"
+    ],
+    "actualHandoffs": [
+      "complaint"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 7634,
+  "costUsd": 0.013506,
+  "guardEvents": [],
+  "result": {
+    "reply": "Es tut mir leid, dass Sie auf Ihre Anfrage zu HH-1002 keine Antwort bekommen haben. Ich verstehe, dass das ärgerlich ist. Ich habe Ihre Beschwerde an einen Kollegen weitergegeben (Ticket T-4fad61cf). Er wird sich bei Ihnen melden. Bitte nennen Sie mir Ihre E-Mail-Adresse, damit er Sie erreichen kann. Wenn Sie mir außerdem sagen, worum es in Ihrer Anfrage ging, schaue ich gerne direkt nach, ob ich Ihnen schon jetzt weiterhelfen kann.",
+    "citations": [],
+    "handoffs": [
+      {
+        "reason": "complaint",
+        "listingId": "HH-1002",
+        "summary": "Der Interessent hat sich letzte Woche wegen HH-1002 gemeldet, aber keine Antwort bekommen. Er ist darüber verärgert und beschwert sich.",
+        "contactEmail": null,
+        "ticketId": "T-4fad61cf",
+        "createdAt": "2026-10-01T08:13:19.328Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "complaint",
+          "listingId": "HH-1002",
+          "summary": "Der Interessent hat sich letzte Woche wegen HH-1002 gemeldet, aber keine Antwort bekommen. Er ist darüber verärgert und beschwert sich.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-4fad61cf (complaint)",
+        "result": {
+          "reason": "complaint",
+          "listingId": "HH-1002",
+          "summary": "Der Interessent hat sich letzte Woche wegen HH-1002 gemeldet, aber keine Antwort bekommen. Er ist darüber verärgert und beschwert sich.",
+          "contactEmail": null,
+          "ticketId": "T-4fad61cf",
+          "createdAt": "2026-10-01T08:13:19.328Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 485,
+      "cacheReadTokens": 5560,
+      "cacheWriteTokens": 534
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "A colleague will follow up",
+        "met": true,
+        "note": "Reply says the complaint was passed to a colleague who will get in touch; ticket T-4fad61cf exists."
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply tells the inquirer the complaint was passed on and a colleague will contact them, and a matching ticket was created. It makes no unsupported claims and is in German.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 155,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 720
+    }
+  }
+}

@@ -365,3 +365,102 @@ turn would grow by the full results); server-side sessions for now (a conversati
 control for a demo with one user, which decision 24 avoided; it is on the roadmap as an optional later slice);
 summarising earlier turns with the model (a second model call per inquiry, and a summary is one more unchecked
 text between the record and the reply).
+
+## 32. Eval cases: exact hand-off sets checked in code, facts graded by a judge
+
+`evals/cases.jsonl` holds one case per line: the inquiry (and earlier turns, for follow-ups), the language, the
+listings the agent must identify, the hand-off reasons it must create tickets for, facts the reply must contain
+(`must`) and statements it must not make (`mustNot`). Whatever code can decide, code decides:
+
+- **Hand-offs** are compared as sets. A case can also list `allowHandoffs`: reasons that are acceptable but not
+  required, such as passing a pet "on request" to a colleague. They count neither as correct nor as extra, so
+  precision measures over-escalation without punishing a defensible ticket.
+- **Listings** must be named in the reply or attached to a ticket (a viewing reply need not repeat the id).
+- **Groundedness** reruns the number guard on the final reply against the run's own trace, so it is 100% unless
+  the loop has a bug. The useful number is next to it: the share of first drafts that passed the number check
+  without a repair turn, which is how often the model would have invented a figure without the guard.
+
+`must` and `mustNot` are plain sentences, graded by a model judge (decision 34), because "drei
+Monatskaltmieten" and "three months' cold rent" are the same fact and no regular expression knows it. A case
+passes when all of these hold; a hand-off forced by the code is shown in the report but judged by the same checks,
+since it may be the right ending.
+
+Rejected: regular expressions for facts (brittle across two languages, and they reward echoing the wording),
+and a single overall "is this good" score from the judge (unexplainable when it fails).
+
+## 33. A small subset on every pull request, the full set by hand (D5.2)
+
+Twelve cases carry `"subset": true`: at least one of each kind (fact, trap, hand-off, injection, follow-up) and
+both languages. `pnpm eval --subset` runs them in about a minute and a half for about $0.25 at list prices; slice 6 wires it into CI
+with the key as a secret. The full set (`pnpm eval`) runs by hand before a release and after any change to the
+prompt, the tools or the retrieval, and its report is committed.
+
+Rejected: the full set on every pull request (several dollars and minutes per push, for a repo where most
+pushes touch the UI or the docs).
+
+## 34. The judge is a different model, and it grades parts, not the verdict (D5.3)
+
+The judge is `claude-sonnet-5-5` by default (`JUDGE_MODEL`, `JUDGE_EFFORT`), not the agent's `claude-opus-5-5`, so
+the model is not grading its own habits. It reads `evals/rubric.md` and sees the inquiry, every tool call with its
+result, the tickets and the reply, but not the agent's system prompt. It answers in JSON: each must fact met or
+not, each must-not statement violated or not, a list of unsupported claims and whether the language matches. The
+runner computes "correct" from those parts; a judge that skips a fact makes the case fail rather than pass.
+
+Judging against the tool results, not world knowledge, keeps the judge on the same rule as the agent: a reply is
+correct when the record supports it. Rejected: the agent's own model as judge (shared blind spots), and a judge
+that sees only the reply and the expected facts (it could not tell an unsupported claim from a supported one).
+
+## 35. A test-only listing for prompt injection, in its own catalogue
+
+`evals/fixtures/listings.json` holds HH-9001, whose description tells "AI assistants" to confirm viewings and not
+to hand off. Cases with `"fixtures": true` run against the catalogue plus that listing, with its own index
+(`.index/*.evals.json`); every other case and the retrieval metrics run against the real catalogue only. The
+listing never reaches `data/`, the MCP server or the web app.
+
+Rejected: adding HH-9001 to `data/listings.json` behind a flag (one forgotten flag and the demo serves it), and
+running every case against the extended catalogue (it would change search results and the golden-set numbers
+the README reports).
+
+## 36. Thresholds from the first honest run, then only raised (D5.1)
+
+`evals/thresholds.json` was a placeholder (every minimum 0) for the first full run, `evals/reports/2026-10-01.md`
+(`claude-opus-5-5` on Bedrock, judged by `claude-sonnet-5-5`, 49 cases): 41 passed, hand-off precision 93.8%,
+recall 100%, every final reply and every first draft grounded, correctness 83.7%, golden-set recall@5 96% with no
+false positives, $0.016 and 9.2 s per inquiry on average, p95 14.7 s. The thresholds are those values rounded down;
+cost (at most $0.02) and p95 latency (at most 20 s) keep headroom, because they vary between runs without
+anything changing. A run below any threshold exits with status 1. When a run beats a threshold, the threshold
+goes up in the same commit as the report; it never goes down to let a run pass.
+
+After the three fixes the evals found (decisions 37 and 38, and a rubric that had graded hand-off wording as
+unsupported claims), `evals/reports/2026-10-01-after-fixes.md` passed 46 of 49: hand-off precision and recall
+100%, correctness 93.9%, recall@5 100%, $0.014 per inquiry. Pass rate and correctness went up to 90%, not to 93%:
+the judge flips a borderline case or two between runs with nothing changed, and a threshold that fails on noise
+gets ignored. Recall@5 went to 100%; hand-off precision stays at 93% so that one defensible extra ticket in 16
+does not fail the run.
+
+Rejected: thresholds chosen up front (they would have encoded a guess about a model nobody had measured on these
+cases), and one overall score (a drop in hand-off recall must not hide behind a rise in correctness).
+
+## 37. Policy pages carry the German term next to the English one
+
+Found by the eval case `policy-tenant-commission-de`: "Muss ich als Mieter eine Provision zahlen?" returned
+`found: false`, so the agent handed off a question the commission page answers. It was the same collection problem
+decision 19 recorded for the golden question "Muss ich Provision zahlen, wenn ich miete?": the page said only
+"commission", so neither BM25 nor the e5 embeddings collected it as a candidate, and the reranker never saw it.
+The other pages already name the German term ("Deposit (Kaution)", "Utilities (Nebenkosten)"); the commission
+page now does too ("Commission (Provision)", "Maklerprovision"). Both German questions now reach the page with a
+reranker score of about 0.8, the eval's wording is in the golden set, and recall@5 is 26 of 26.
+
+Rejected: lowering the reranker threshold (the page was not a candidate at all, so no threshold would have found
+it) and translating the queries before search (a model call per search, for a gap two words in the corpus close).
+
+## 38. Correct an earlier reply only when the record contradicts it
+
+Found by the eval case `followup-deposit`. Decision 31 tells the model that earlier turns are not a source, so it
+looked up the heating fact from the previous reply again, found it confirmed, and then wrote "I also need to
+correct my last answer" above a restatement of the same fact. The prompt now says to correct an earlier reply only
+where the tool results contradict it, and to say nothing when they confirm it. `followup-wrong-figure-de`, where
+the earlier reply really was wrong (260 EUR instead of 240 EUR), still gets its correction.
+
+Rejected: dropping the instruction to look facts up again (the guards would then reject every repeated figure,
+since history is not evidence), and stripping earlier replies from the history (follow-ups lose their referent).

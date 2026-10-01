@@ -1,0 +1,126 @@
+{
+  "case": {
+    "id": "trap-k4002-living",
+    "lang": "en",
+    "inquiry": "Can I live in K-4002? It would be my first own place.",
+    "history": [],
+    "listings": [
+      "K-4002"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing",
+      "contract_or_legal"
+    ],
+    "must": [
+      "K-4002 is a commercial unit that is not approved for residential use"
+    ],
+    "mustNot": [
+      "You can live in K-4002"
+    ],
+    "tags": [
+      "trap"
+    ],
+    "subset": true,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-k4002-living",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 7198,
+  "costUsd": 0.0089534,
+  "guardEvents": [],
+  "result": {
+    "reply": "No, K-4002 isn't meant to be lived in. It's a commercial unit, a small office in Köln-Ehrenfeld [K-4002]. The listing says it is \"Not approved for residential use\" and is suitable for an office, studio or practice [K-4002].\n\nIf you're looking for your first home in Köln, I can search our apartments for rent. Just tell me your budget, how many rooms you need and when you'd like to move in.",
+    "citations": [
+      {
+        "listingId": "K-4002",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4002",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "K-4002"
+        },
+        "summary": "K-4002: Small office unit in Ehrenfeld",
+        "result": {
+          "id": "K-4002",
+          "title": "Small office unit in Ehrenfeld",
+          "city": "Köln",
+          "district": "Ehrenfeld",
+          "offerType": "rent",
+          "propertyType": "commercial",
+          "price": 1150,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 70,
+          "rooms": 3,
+          "floor": 0,
+          "yearBuilt": 1958,
+          "availableFrom": "2026-10-01",
+          "features": [
+            "shop-window",
+            "kitchenette",
+            "guest-wc"
+          ],
+          "petsAllowed": "yes",
+          "energyClass": "F",
+          "description": "Ground-floor commercial unit with shop window, suitable for an office, studio or practice. Rent plus VAT. Not approved for residential use."
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 275,
+      "cacheReadTokens": 5522,
+      "cacheWriteTokens": 465
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "K-4002 is a commercial unit that is not approved for residential use",
+        "met": true,
+        "note": "Reply states it is a commercial unit and quotes 'Not approved for residential use'."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "You can live in K-4002",
+        "violated": false,
+        "note": "Reply says it is not meant to be lived in."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply correctly states the unit is commercial and not approved for residential use, matching the listing. It makes no unsupported claims and the offer to search is something the assistant can do itself.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 202,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 531
+    }
+  }
+}

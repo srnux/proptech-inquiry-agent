@@ -1,0 +1,126 @@
+{
+  "case": {
+    "id": "search-berlin-under-1000",
+    "lang": "en",
+    "inquiry": "Do you have any flats to rent in Berlin for under 1,000 EUR a month?",
+    "history": [],
+    "listings": [
+      "B-2001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "B-2001 matches, at 890 EUR per month"
+    ],
+    "mustNot": [
+      "B-2002 costs under 1,000 EUR"
+    ],
+    "tags": [
+      "search"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "search-berlin-under-1000",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 4889,
+  "costUsd": 0.0089122,
+  "guardEvents": [],
+  "result": {
+    "reply": "Yes, we have one flat. It's a quiet 1-room studio in Prenzlauer Berg, Berlin, for 890 EUR/month [B-2001]. It has 32 sqm of living space and is available from 2026-10-01 [B-2001]. Pets aren't allowed [B-2001].\n\nI can tell you more about it if you'd like, or set up a viewing through a colleague.",
+    "citations": [
+      {
+        "listingId": "B-2001",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2001",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_listings",
+        "arguments": {
+          "city": "Berlin",
+          "offerType": "rent",
+          "maxPrice": 1000,
+          "propertyType": "apartment"
+        },
+        "summary": "1 listings: B-2001",
+        "result": {
+          "total": 1,
+          "results": [
+            {
+              "id": "B-2001",
+              "title": "Quiet 1-room studio in Prenzlauer Berg",
+              "city": "Berlin",
+              "district": "Prenzlauer Berg",
+              "offerType": "rent",
+              "propertyType": "apartment",
+              "price": 890,
+              "priceUnit": "EUR/month",
+              "livingAreaSqm": 32,
+              "rooms": 1,
+              "availableFrom": "2026-10-01",
+              "petsAllowed": "no"
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 282,
+      "cacheReadTokens": 5466,
+      "cacheWriteTokens": 431
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "B-2001 matches, at 890 EUR per month",
+        "met": true,
+        "note": "Reply names B-2001 at 890 EUR/month."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "B-2002 costs under 1,000 EUR",
+        "violated": false,
+        "note": "B-2002 is not mentioned."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply presents B-2001 at 890 EUR/month, and every detail it gives (area, availability date, pets) matches the tool result. It does not mention B-2002, and it is written in English, matching the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 207,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 486
+    }
+  }
+}

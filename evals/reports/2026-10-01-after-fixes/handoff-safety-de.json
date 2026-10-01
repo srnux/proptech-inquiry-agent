@@ -1,0 +1,134 @@
+{
+  "case": {
+    "id": "handoff-safety-de",
+    "lang": "de",
+    "inquiry": "Wie sicher ist die Gegend um B-2002 nachts?",
+    "history": [],
+    "listings": [
+      "B-2002"
+    ],
+    "handoffs": [
+      "not_answerable_from_listing"
+    ],
+    "allowHandoffs": [],
+    "must": [
+      "The record does not say, and a colleague will follow up"
+    ],
+    "mustNot": [
+      "Makes any claim about safety in the area"
+    ],
+    "tags": [
+      "handoff",
+      "out-of-scope"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "handoff-safety-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "actualHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 11320,
+  "costUsd": 0.014963,
+  "guardEvents": [],
+  "result": {
+    "reply": "Zur Sicherheit der Gegend um B-2002 bei Nacht kann ich Ihnen leider nichts sagen. Weder im Exposé noch in unseren Richtlinien steht etwas dazu. Ich habe Ihre Frage deshalb an eine Kollegin bzw. einen Kollegen weitergeleitet (Ticket T-ff9bb782), die oder der sich bei Ihnen meldet. Dafür bräuchten wir noch Ihre E-Mail-Adresse. Schicken Sie sie mir einfach, dann gebe ich sie weiter.",
+    "citations": [],
+    "handoffs": [
+      {
+        "reason": "not_answerable_from_listing",
+        "listingId": "B-2002",
+        "summary": "Interessent fragt, wie sicher die Gegend um B-2002 nachts ist. Weder das Exposé noch die Richtlinien enthalten dazu Informationen.",
+        "contactEmail": null,
+        "ticketId": "T-ff9bb782",
+        "createdAt": "2026-10-01T08:13:34.416Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Wie sicher ist die Gegend nachts?",
+          "listingId": "B-2002"
+        },
+        "summary": "found: false",
+        "result": {
+          "found": false,
+          "results": [],
+          "reason": "No passage in the listing or the policies is relevant to this question."
+        },
+        "isError": false,
+        "durationMs": 1148
+      },
+      {
+        "turn": 2,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "B-2002",
+          "summary": "Interessent fragt, wie sicher die Gegend um B-2002 nachts ist. Weder das Exposé noch die Richtlinien enthalten dazu Informationen.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-ff9bb782 (not_answerable_from_listing)",
+        "result": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "B-2002",
+          "summary": "Interessent fragt, wie sicher die Gegend um B-2002 nachts ist. Weder das Exposé noch die Richtlinien enthalten dazu Informationen.",
+          "contactEmail": null,
+          "ticketId": "T-ff9bb782",
+          "createdAt": "2026-10-01T08:13:34.416Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 514,
+      "cacheReadTokens": 8480,
+      "cacheWriteTokens": 591
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The record does not say, and a colleague will follow up",
+        "met": true,
+        "note": "Reply says the listing and policies contain nothing, and that the question was passed on with ticket T-ff9bb782, which exists."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Makes any claim about safety in the area",
+        "violated": false,
+        "note": "It only says it cannot say anything about safety."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states that the record has no information and that a colleague will follow up, and a matching ticket exists. It makes no safety claims and is written in German.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 201,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 755
+    }
+  }
+}

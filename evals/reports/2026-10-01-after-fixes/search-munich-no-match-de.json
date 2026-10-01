@@ -1,0 +1,138 @@
+{
+  "case": {
+    "id": "search-munich-no-match-de",
+    "lang": "de",
+    "inquiry": "Ich suche eine Mietwohnung in München unter 1.500 € im Monat.",
+    "history": [],
+    "listings": [],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "No rental listing in Munich matches a budget under 1,500 EUR"
+    ],
+    "mustNot": [
+      "M-3001 costs under 1,500 EUR"
+    ],
+    "tags": [
+      "search"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "search-munich-no-match-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 9697,
+  "costUsd": 0.0155866,
+  "guardEvents": [],
+  "result": {
+    "reply": "Leider haben wir in München derzeit keine Mietwohnung unter 1.500 € im Monat im Angebot. Die einzige Mietwohnung in München ist eine möblierte 2-Zimmer-Wohnung in Schwabing. Sie kostet 2100 EUR/Monat, hat 55 m² und ist ab dem 01.10.2026 verfügbar [M-3001]. Haustiere sind dort nicht erlaubt [M-3001].\n\nIch kann auch gern in einer anderen Stadt suchen oder Ihre Kriterien anpassen.",
+    "citations": [
+      {
+        "listingId": "M-3001",
+        "chunkId": null
+      },
+      {
+        "listingId": "M-3001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_listings",
+        "arguments": {
+          "city": "München",
+          "offerType": "rent",
+          "maxPrice": 1500,
+          "propertyType": "apartment"
+        },
+        "summary": "0 listings: ",
+        "result": {
+          "total": 0,
+          "results": []
+        },
+        "isError": false,
+        "durationMs": 1
+      },
+      {
+        "turn": 2,
+        "tool": "search_listings",
+        "arguments": {
+          "city": "München",
+          "offerType": "rent",
+          "limit": 5
+        },
+        "summary": "1 listings: M-3001",
+        "result": {
+          "total": 1,
+          "results": [
+            {
+              "id": "M-3001",
+              "title": "Furnished 2-room flat in Schwabing",
+              "city": "München",
+              "district": "Schwabing",
+              "offerType": "rent",
+              "propertyType": "apartment",
+              "price": 2100,
+              "priceUnit": "EUR/month",
+              "livingAreaSqm": 55,
+              "rooms": 2,
+              "availableFrom": "2026-10-01",
+              "petsAllowed": "no"
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 531,
+      "cacheReadTokens": 8498,
+      "cacheWriteTokens": 647
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "No rental listing in Munich matches a budget under 1,500 EUR",
+        "met": true,
+        "note": "The reply says there is no rental flat in München under 1.500 €/month."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "M-3001 costs under 1,500 EUR",
+        "violated": false,
+        "note": "The reply gives the price as 2100 EUR/month."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states that nothing in Munich is under 1,500 EUR and reports M-3001 at 2100 EUR/month, as the tool results show. All details given (furnished, Schwabing, 55 m², available from 01.10.2026, no pets) are supported by the search result.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 243,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 587
+    }
+  }
+}

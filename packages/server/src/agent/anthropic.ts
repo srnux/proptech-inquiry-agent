@@ -107,7 +107,9 @@ export class AnthropicModel implements ModelClient {
         model: this.id,
         max_tokens: req.maxTokens,
         system: [{ type: "text", text: req.system, cache_control: { type: "ephemeral" } }],
-        tools: req.tools.map((t) => ({ name: t.name, description: t.description, input_schema: t.inputSchema as Anthropic.Tool.InputSchema })),
+        ...(req.tools.length && {
+          tools: req.tools.map((t) => ({ name: t.name, description: t.description, input_schema: t.inputSchema as Anthropic.Tool.InputSchema })),
+        }),
         messages: req.messages.map((m: Message) => ({
           role: m.role,
           content: typeof m.content === "string" ? m.content : m.content.map(toParam),

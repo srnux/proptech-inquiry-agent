@@ -1,0 +1,162 @@
+{
+  "case": {
+    "id": "fact-hh1001-deposit-de",
+    "lang": "de",
+    "inquiry": "Wie hoch ist die Kaution für HH-1001?",
+    "history": [],
+    "listings": [
+      "HH-1001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The deposit is three months' cold rent"
+    ],
+    "mustNot": [
+      "States a deposit amount in euros computed from the rent (for example 4.950 €)"
+    ],
+    "tags": [
+      "fact",
+      "trap-arithmetic"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1001-deposit-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 11399,
+  "costUsd": 0.013443799999999999,
+  "guardEvents": [],
+  "result": {
+    "reply": "Laut Inserat beträgt die Kaution für HH-1001 drei Monatskaltmieten [HH-1001]. Die Miete ist mit 1650 EUR/Monat angegeben [HH-1001]. Die Nebenkosten von 240 EUR pro Monat (inklusive Heizung) kommen noch dazu [HH-1001]. Sie fließen aber nicht in die Kaution ein, denn bei Wohnungen richtet sich die Kaution nur nach der Nettokaltmiete [policy:deposit#amount].",
+    "citations": [
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      },
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      },
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:deposit#amount"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Wie hoch ist die Kaution?",
+          "listingId": "HH-1001"
+        },
+        "summary": "found 1: policy:deposit#amount",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:deposit#amount",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Amount: For residential rentals the deposit is at most three months' net cold rent (Nettokaltmiete). Utilities are not included in that calculation. Each listing states the deposit that applies to it.",
+              "score": 0.02,
+              "cosine": 0.745,
+              "z": 0.988,
+              "bm25": 2.596,
+              "coverage": 1,
+              "rerank": 0.02
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1254
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1001"
+        },
+        "summary": "HH-1001: Bright 3-room flat with balcony in Eimsbüttel",
+        "result": {
+          "id": "HH-1001",
+          "title": "Bright 3-room flat with balcony in Eimsbüttel",
+          "city": "Hamburg",
+          "district": "Eimsbüttel",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1650,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 78,
+          "rooms": 3,
+          "floor": 3,
+          "yearBuilt": 1908,
+          "availableFrom": "2026-11-01",
+          "features": [
+            "balcony",
+            "fitted-kitchen",
+            "cellar",
+            "wooden-floors"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "D",
+          "description": "Renovated Altbau flat on the third floor, no lift. South-facing balcony over a quiet courtyard. Fitted kitchen included. Deposit is three months' cold rent. Utilities (Nebenkosten) are an additional 240 EUR per month, heating included. Pets on request, small dogs usually fine."
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 398,
+      "cacheReadTokens": 5524,
+      "cacheWriteTokens": 871
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The deposit is three months' cold rent",
+        "met": true,
+        "note": "Reply states drei Monatskaltmieten, supported by the listing description."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "States a deposit amount in euros computed from the rent (for example 4.950 €)",
+        "violated": false,
+        "note": "No computed euro deposit is given; only rent and utilities are quoted."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states the deposit as three months' cold rent, which the listing and policy support, and gives no computed euro amount. The rent and utilities figures match the listing, and the reply is in German.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 218,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 876
+    }
+  }
+}

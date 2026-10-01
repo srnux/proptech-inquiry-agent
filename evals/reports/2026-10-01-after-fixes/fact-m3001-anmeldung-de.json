@@ -1,0 +1,124 @@
+{
+  "case": {
+    "id": "fact-m3001-anmeldung-de",
+    "lang": "de",
+    "inquiry": "Kann ich mich in M-3001 mit meinem Wohnsitz anmelden?",
+    "history": [],
+    "listings": [
+      "M-3001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "Registration of residence (Anmeldung) is possible"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-m3001-anmeldung-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 9334,
+  "costUsd": 0.011245799999999999,
+  "guardEvents": [],
+  "result": {
+    "reply": "Ja, laut Inserat ist eine Anmeldung des Wohnsitzes in M-3001 möglich [M-3001#s3]. Nach den allgemeinen Richtlinien der Agentur müssen Mieter ihren Wohnsitz innerhalb von zwei Wochen nach dem Einzug anmelden. Die Bestätigung, die Sie dafür brauchen (Wohnungsgeberbestätigung), bekommen Sie vom Vermieter [policy:furnished#registration].",
+    "citations": [
+      {
+        "listingId": "M-3001",
+        "chunkId": "M-3001#s3"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:furnished#registration"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Kann ich mich mit meinem Wohnsitz anmelden? Wohnsitzanmeldung, Meldebescheinigung, Wohnungsgeberbestätigung",
+          "listingId": "M-3001"
+        },
+        "summary": "found 2: M-3001#s3, policy:furnished#registration",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "M-3001#s3",
+              "source": "listing",
+              "listingId": "M-3001",
+              "policy": null,
+              "text": "Registration of residence (Anmeldung) possible.",
+              "score": 0.01,
+              "cosine": 0.858,
+              "z": 2.779,
+              "bm25": 0,
+              "coverage": 0,
+              "rerank": 0.01
+            },
+            {
+              "chunkId": "policy:furnished#registration",
+              "source": "policy",
+              "listingId": null,
+              "policy": "furnished",
+              "text": "Registration: Tenants must register their residence (Anmeldung) within two weeks of moving in. The landlord provides the confirmation of residence (Wohnungsgeberbestätigung).",
+              "score": 0.816,
+              "cosine": 0.861,
+              "z": 2.879,
+              "bm25": 3.584,
+              "coverage": 0.114,
+              "rerank": 0.816
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1312
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 348,
+      "cacheReadTokens": 5534,
+      "cacheWriteTokens": 631
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Registration of residence (Anmeldung) is possible",
+        "met": true,
+        "note": "Reply states the listing says registration is possible."
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states registration is possible, the two-week deadline, and the landlord-provided confirmation, all supported by the tool results. The policy is tagged 'furnished' but the reply presents it as general agency guidelines, which is a minor framing issue and not a clear unsupported claim.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 178,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 679
+    }
+  }
+}

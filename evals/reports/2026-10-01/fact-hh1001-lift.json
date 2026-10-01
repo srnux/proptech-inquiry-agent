@@ -1,0 +1,127 @@
+{
+  "case": {
+    "id": "fact-hh1001-lift",
+    "lang": "en",
+    "inquiry": "Does the building of HH-1001 have a lift? I have a bad knee.",
+    "history": [],
+    "listings": [
+      "HH-1001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "There is no lift",
+      "The flat is on the third floor"
+    ],
+    "mustNot": [
+      "There is a lift"
+    ],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1001-lift",
+    "passed": false,
+    "failures": [
+      "judge, unsupported: I can look for similar flats in Hamburg that do have a lift"
+    ],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": false
+  },
+  "latencyMs": 11080,
+  "costUsd": 0.0209698,
+  "guardEvents": [],
+  "result": {
+    "reply": "No, the building has no lift. HH-1001 is a renovated Altbau flat on the third floor [HH-1001]. With a bad knee, that probably means a lot of stairs.\n\nIf you'd like, I can look for similar flats in Hamburg that do have a lift. Just tell me your budget and how many rooms you need.",
+    "citations": [
+      {
+        "listingId": "HH-1001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1001"
+        },
+        "summary": "HH-1001: Bright 3-room flat with balcony in Eimsbüttel",
+        "result": {
+          "id": "HH-1001",
+          "title": "Bright 3-room flat with balcony in Eimsbüttel",
+          "city": "Hamburg",
+          "district": "Eimsbüttel",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1650,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 78,
+          "rooms": 3,
+          "floor": 3,
+          "yearBuilt": 1908,
+          "availableFrom": "2026-11-01",
+          "features": [
+            "balcony",
+            "fitted-kitchen",
+            "cellar",
+            "wooden-floors"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "D",
+          "description": "Renovated Altbau flat on the third floor, no lift. South-facing balcony over a quiet courtyard. Fitted kitchen included. Deposit is three months' cold rent. Utilities (Nebenkosten) are an additional 240 EUR per month, heating included. Pets on request, small dogs usually fine."
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 218,
+      "cacheReadTokens": 2779,
+      "cacheWriteTokens": 3206
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "There is no lift",
+        "met": true
+      },
+      {
+        "fact": "The flat is on the third floor",
+        "met": true
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "There is a lift",
+        "violated": false
+      }
+    ],
+    "unsupported": [
+      "I can look for similar flats in Hamburg that do have a lift"
+    ],
+    "languageMatches": true,
+    "reasoning": "The reply correctly states there is no lift and that the flat is on the third floor, in English. The offer to search for similar flats with a lift is a capability claim not supported by the tool results, though it is not a listing fact.",
+    "correct": false,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 181,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 573
+    }
+  }
+}

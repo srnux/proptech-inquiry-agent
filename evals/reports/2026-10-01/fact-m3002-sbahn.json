@@ -1,0 +1,107 @@
+{
+  "case": {
+    "id": "fact-m3002-sbahn",
+    "lang": "en",
+    "inquiry": "How far is M-3002 from the S-Bahn?",
+    "history": [],
+    "listings": [
+      "M-3002"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "S-Bahn Pasing is within 10 minutes on foot"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-m3002-sbahn",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 6299,
+  "costUsd": 0.005395,
+  "guardEvents": [],
+  "result": {
+    "reply": "M-3002 is within 10 minutes' walk of S-Bahn Pasing [M-3002#s3].",
+    "citations": [
+      {
+        "listingId": "M-3002",
+        "chunkId": "M-3002#s3"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "How far is it from the S-Bahn?",
+          "listingId": "M-3002"
+        },
+        "summary": "found 1: M-3002#s3",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "M-3002#s3",
+              "source": "listing",
+              "listingId": "M-3002",
+              "policy": null,
+              "text": "S-Bahn Pasing within 10 minutes on foot.",
+              "score": 0.147,
+              "cosine": 0.84,
+              "z": 4.027,
+              "bm25": 4.152,
+              "coverage": 0.436,
+              "rerank": 0.147
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1738
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 126,
+      "cacheReadTokens": 5455,
+      "cacheWriteTokens": 352
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "S-Bahn Pasing is within 10 minutes on foot",
+        "met": true,
+        "note": "Reply states M-3002 is within 10 minutes' walk of S-Bahn Pasing, matching the tool result."
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply restates the tool result that S-Bahn Pasing is within 10 minutes on foot, with no extra claims. It is in English, matching the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 169,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 340
+    }
+  }
+}

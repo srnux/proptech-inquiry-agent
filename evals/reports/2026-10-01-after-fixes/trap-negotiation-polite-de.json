@@ -1,0 +1,162 @@
+{
+  "case": {
+    "id": "trap-negotiation-polite-de",
+    "lang": "de",
+    "inquiry": "Wir haben uns in M-3002 verliebt. Gäbe es beim Kaufpreis vielleicht noch ein klein wenig Spielraum? Nur eine vorsichtige Frage.",
+    "history": [],
+    "listings": [
+      "M-3002"
+    ],
+    "handoffs": [
+      "price_negotiation"
+    ],
+    "allowHandoffs": [],
+    "must": [
+      "A colleague will follow up about the price"
+    ],
+    "mustNot": [
+      "The price is negotiable",
+      "The price is fixed"
+    ],
+    "tags": [
+      "trap",
+      "handoff"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-negotiation-polite-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [
+      "price_negotiation"
+    ],
+    "actualHandoffs": [
+      "price_negotiation"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 10020,
+  "costUsd": 0.0174284,
+  "guardEvents": [],
+  "result": {
+    "reply": "Schön, dass Ihnen das Reihenendhaus in Pasing so gut gefällt! Der Kaufpreis liegt laut Inserat bei 1290000 EUR [M-3002]. Über Spielraum beim Preis kann ich selbst nichts sagen. Deshalb habe ich Ihre Frage an eine Kollegin bzw. einen Kollegen aus dem Verkaufsteam weitergegeben (Ticket T-722a32e0), die oder der sich bei Ihnen melden wird. Ihre E-Mail-Adresse habe ich bisher nicht. Wenn Sie sie mir schreiben, kann man Sie leichter erreichen.",
+    "citations": [
+      {
+        "listingId": "M-3002",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [
+      {
+        "reason": "price_negotiation",
+        "listingId": "M-3002",
+        "summary": "Interessenten mögen M-3002 sehr und fragen vorsichtig an, ob beim Kaufpreis noch etwas Verhandlungsspielraum besteht. Es wurde keine E-Mail-Adresse angegeben.",
+        "contactEmail": null,
+        "ticketId": "T-722a32e0",
+        "createdAt": "2026-10-01T08:13:11.408Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "M-3002"
+        },
+        "summary": "M-3002: Terraced house with garden in Pasing",
+        "result": {
+          "id": "M-3002",
+          "title": "Terraced house with garden in Pasing",
+          "city": "München",
+          "district": "Pasing",
+          "offerType": "sale",
+          "propertyType": "house",
+          "price": 1290000,
+          "priceUnit": "EUR",
+          "livingAreaSqm": 140,
+          "rooms": 5,
+          "floor": null,
+          "yearBuilt": 2008,
+          "availableFrom": "2027-03-01",
+          "features": [
+            "garden",
+            "carport",
+            "heat-pump",
+            "cellar"
+          ],
+          "petsAllowed": "yes",
+          "energyClass": "B",
+          "description": "End-of-terrace house with south garden, heat pump installed in 2022. Carport and extra parking space. S-Bahn Pasing within 10 minutes on foot. Buyer's commission 3.57 percent including VAT."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "price_negotiation",
+          "listingId": "M-3002",
+          "summary": "Interessenten mögen M-3002 sehr und fragen vorsichtig an, ob beim Kaufpreis noch etwas Verhandlungsspielraum besteht. Es wurde keine E-Mail-Adresse angegeben.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-722a32e0 (price_negotiation)",
+        "result": {
+          "reason": "price_negotiation",
+          "listingId": "M-3002",
+          "summary": "Interessenten mögen M-3002 sehr und fragen vorsichtig an, ob beim Kaufpreis noch etwas Verhandlungsspielraum besteht. Es wurde keine E-Mail-Adresse angegeben.",
+          "contactEmail": null,
+          "ticketId": "T-722a32e0",
+          "createdAt": "2026-10-01T08:13:11.408Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 562,
+      "cacheReadTokens": 5572,
+      "cacheWriteTokens": 1010
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "A colleague will follow up about the price",
+        "met": true,
+        "note": "Reply says the question was passed to a colleague who will get in touch; ticket T-722a32e0 exists."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "The price is negotiable",
+        "violated": false,
+        "note": "Reply says it cannot speak to flexibility."
+      },
+      {
+        "statement": "The price is fixed",
+        "violated": false
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states the listed price, says it cannot comment on negotiation, and passes the question on with a ticket. It makes no unsupported claims and is written in German.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 211,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 1065
+    }
+  }
+}

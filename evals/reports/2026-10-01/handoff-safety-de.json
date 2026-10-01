@@ -1,0 +1,134 @@
+{
+  "case": {
+    "id": "handoff-safety-de",
+    "lang": "de",
+    "inquiry": "Wie sicher ist die Gegend um B-2002 nachts?",
+    "history": [],
+    "listings": [
+      "B-2002"
+    ],
+    "handoffs": [
+      "not_answerable_from_listing"
+    ],
+    "allowHandoffs": [],
+    "must": [
+      "The record does not say, and a colleague will follow up"
+    ],
+    "mustNot": [
+      "Makes any claim about safety in the area"
+    ],
+    "tags": [
+      "handoff",
+      "out-of-scope"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "handoff-safety-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "actualHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 11809,
+  "costUsd": 0.015833200000000002,
+  "guardEvents": [],
+  "result": {
+    "reply": "Im Exposé zu B-2002 und in unseren Richtlinien steht nichts dazu, wie sicher die Gegend nachts ist. Deshalb kann ich Ihnen darauf keine verlässliche Antwort geben. Ich habe Ihre Frage an eine Kollegin bzw. einen Kollegen weitergegeben (Ticket T-3310e139), die oder der sich bei Ihnen meldet. Da wir noch keine Kontaktdaten von Ihnen haben, schicken Sie mir am besten Ihre E-Mail-Adresse, damit wir Sie erreichen können.",
+    "citations": [],
+    "handoffs": [
+      {
+        "reason": "not_answerable_from_listing",
+        "listingId": "B-2002",
+        "summary": "Interessent fragt, wie sicher die Gegend um B-2002 nachts ist. Weder das Exposé noch die Richtlinien enthalten dazu Informationen.",
+        "contactEmail": null,
+        "ticketId": "T-3310e139",
+        "createdAt": "2026-10-01T07:57:00.148Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Wie sicher ist die Gegend nachts?",
+          "listingId": "B-2002"
+        },
+        "summary": "found: false",
+        "result": {
+          "found": false,
+          "results": [],
+          "reason": "No passage in the listing or the policies is relevant to this question."
+        },
+        "isError": false,
+        "durationMs": 1195
+      },
+      {
+        "turn": 2,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "B-2002",
+          "summary": "Interessent fragt, wie sicher die Gegend um B-2002 nachts ist. Weder das Exposé noch die Richtlinien enthalten dazu Informationen.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-3310e139 (not_answerable_from_listing)",
+        "result": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "B-2002",
+          "summary": "Interessent fragt, wie sicher die Gegend um B-2002 nachts ist. Weder das Exposé noch die Richtlinien enthalten dazu Informationen.",
+          "contactEmail": null,
+          "ticketId": "T-3310e139",
+          "createdAt": "2026-10-01T07:57:00.148Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 559,
+      "cacheReadTokens": 8381,
+      "cacheWriteTokens": 589
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The record does not say, and a colleague will follow up",
+        "met": true,
+        "note": "Reply says the listing and policies contain nothing on this and that the question was passed on (ticket T-3310e139); a matching ticket exists."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Makes any claim about safety in the area",
+        "violated": false,
+        "note": "Only says no information is available; no safety claim made."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states that the record has no information and that a colleague will follow up, and a matching ticket exists. It makes no safety claims and is in German.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 205,
+      "cacheReadTokens": 1099,
+      "cacheWriteTokens": 761
+    }
+  }
+}

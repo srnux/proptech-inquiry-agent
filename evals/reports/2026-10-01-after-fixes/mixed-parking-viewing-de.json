@@ -1,0 +1,182 @@
+{
+  "case": {
+    "id": "mixed-parking-viewing-de",
+    "lang": "de",
+    "inquiry": "Gibt es bei HH-1002 einen Stellplatz? Und ich würde die Wohnung gerne am Freitag besichtigen.",
+    "history": [],
+    "listings": [
+      "HH-1002"
+    ],
+    "handoffs": [
+      "viewing_request"
+    ],
+    "allowHandoffs": [],
+    "must": [
+      "An underground parking space is available for 150 EUR per month extra",
+      "A colleague will follow up about the viewing"
+    ],
+    "mustNot": [
+      "The viewing on Friday is confirmed"
+    ],
+    "tags": [
+      "handoff",
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "mixed-parking-viewing-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [
+      "viewing_request"
+    ],
+    "actualHandoffs": [
+      "viewing_request"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 9418,
+  "costUsd": 0.019574400000000002,
+  "guardEvents": [],
+  "result": {
+    "reply": "Ja, zu HH-1002 gibt es einen Tiefgaragenstellplatz [HH-1002]. Er kostet 150 EUR pro Monat zusätzlich zur Miete [HH-1002].\n\nIhren Wunsch, die Wohnung am Freitag zu besichtigen, habe ich an eine Kollegin bzw. einen Kollegen weitergegeben (Ticket T-a9f0b65b). Diese Person meldet sich bei Ihnen, um einen Termin abzustimmen. Den Termin selbst kann ich nicht zusagen. Wenn Sie mir Ihre E-Mail-Adresse schicken, kann das Team Sie direkt erreichen.",
+    "citations": [
+      {
+        "listingId": "HH-1002",
+        "chunkId": null
+      },
+      {
+        "listingId": "HH-1002",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [
+      {
+        "reason": "viewing_request",
+        "listingId": "HH-1002",
+        "summary": "Interessent möchte die Wohnung HH-1002 am Freitag besichtigen. Bitte Termin abstimmen.",
+        "contactEmail": null,
+        "ticketId": "T-a9f0b65b",
+        "createdAt": "2026-10-01T08:13:47.157Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Gibt es einen Stellplatz?",
+          "listingId": "HH-1002"
+        },
+        "summary": "found: false",
+        "result": {
+          "found": false,
+          "results": [],
+          "reason": "No passage in the listing or the policies is relevant to this question."
+        },
+        "isError": false,
+        "durationMs": 1151
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1002"
+        },
+        "summary": "HH-1002: Modern 2-room new-build near Hafencity",
+        "result": {
+          "id": "HH-1002",
+          "title": "Modern 2-room new-build near Hafencity",
+          "city": "Hamburg",
+          "district": "HafenCity",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1890,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 64,
+          "rooms": 2,
+          "floor": 6,
+          "yearBuilt": 2021,
+          "availableFrom": "2026-10-15",
+          "features": [
+            "lift",
+            "underfloor-heating",
+            "loggia",
+            "underground-parking"
+          ],
+          "petsAllowed": "no",
+          "energyClass": "A",
+          "description": "New-build flat with lift and loggia facing the Elbe. Underground parking space available for 150 EUR per month extra. Utilities 210 EUR per month. No pets according to the building rules. Minimum lease term of 12 months."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "viewing_request",
+          "listingId": "HH-1002",
+          "summary": "Interessent möchte die Wohnung HH-1002 am Freitag besichtigen. Bitte Termin abstimmen.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-a9f0b65b (viewing_request)",
+        "result": {
+          "reason": "viewing_request",
+          "listingId": "HH-1002",
+          "summary": "Interessent möchte die Wohnung HH-1002 am Freitag besichtigen. Bitte Termin abstimmen.",
+          "contactEmail": null,
+          "ticketId": "T-a9f0b65b",
+          "createdAt": "2026-10-01T08:13:47.157Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 643,
+      "cacheReadTokens": 5552,
+      "cacheWriteTokens": 1116
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "An underground parking space is available for 150 EUR per month extra",
+        "met": true
+      },
+      {
+        "fact": "A colleague will follow up about the viewing",
+        "met": true,
+        "note": "Ticket T-a9f0b65b exists and the reply says a colleague will get in touch."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "The viewing on Friday is confirmed",
+        "violated": false,
+        "note": "The reply explicitly says it cannot confirm the appointment."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The parking space and its 150 EUR monthly price are supported by the listing, and the viewing request was handed off with a ticket and not confirmed. The reply is in German and makes no unsupported claims.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 243,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 1058
+    }
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "case": {
+    "id": "fact-k4001-accessible",
+    "lang": "en",
+    "inquiry": "Is K-4001 suitable for a wheelchair user?",
+    "history": [],
+    "listings": [
+      "K-4001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The flat is step-free with a lift, wide doors and a walk-in shower, suitable for wheelchair users"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-k4001-accessible",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 8153,
+  "costUsd": 0.0112086,
+  "guardEvents": [],
+  "result": {
+    "reply": "Yes, the listing says K-4001 is suitable for wheelchair users. It describes the flat as step-free, with a lift, wide doors and a walk-in shower [K-4001#s1]. \"Accessible\" is also one of its listed features [K-4001]. The flat is on floor 5, so you'd reach it by the lift [K-4001].\n\nIf you need other details checked, like door widths or parking, I can pass your question to a colleague.",
+    "citations": [
+      {
+        "listingId": "K-4001",
+        "chunkId": "K-4001#s1"
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      },
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "K-4001"
+        },
+        "summary": "K-4001: 3-room flat near the Rhine in Deutz",
+        "result": {
+          "id": "K-4001",
+          "title": "3-room flat near the Rhine in Deutz",
+          "city": "Köln",
+          "district": "Deutz",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1380,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 81,
+          "rooms": 3,
+          "floor": 5,
+          "yearBuilt": 2001,
+          "availableFrom": "2026-11-01",
+          "features": [
+            "lift",
+            "balcony",
+            "fitted-kitchen",
+            "accessible"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "C",
+          "description": "Step-free flat with lift, wide doors and a walk-in shower, suitable for wheelchair users. Balcony with a view of the cathedral. Utilities 250 EUR per month. Deposit two months' cold rent."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "wheelchair accessible, step-free access, lift",
+          "listingId": "K-4001"
+        },
+        "summary": "found 1: K-4001#s1",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "K-4001#s1",
+              "source": "listing",
+              "listingId": "K-4001",
+              "policy": null,
+              "text": "Step-free flat with lift, wide doors and a walk-in shower, suitable for wheelchair users.",
+              "score": 0.954,
+              "cosine": 0.918,
+              "z": 4.422,
+              "bm25": 12.718,
+              "coverage": 0.579,
+              "rerank": 0.954
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 2012
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 306,
+      "cacheReadTokens": 5523,
+      "cacheWriteTokens": 792
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The flat is step-free with a lift, wide doors and a walk-in shower, suitable for wheelchair users",
+        "met": true
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply restates the listing's accessibility details, which the tool results support (step-free, lift, wide doors, walk-in shower, accessible feature, floor 5). The offer to pass other questions to a colleague is an offer of hand-off, not a factual claim.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 170,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 749
+    }
+  }
+}

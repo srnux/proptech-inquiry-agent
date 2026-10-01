@@ -1,0 +1,105 @@
+{
+  "case": {
+    "id": "policy-tenant-commission-de",
+    "lang": "de",
+    "inquiry": "Muss ich als Mieter eine Provision zahlen?",
+    "history": [],
+    "listings": [],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "Tenants pay no commission for rental listings"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact",
+      "policy"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "policy-tenant-commission-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 6183,
+  "costUsd": 0.0057338,
+  "guardEvents": [],
+  "result": {
+    "reply": "Nein, bei Mietobjekten zahlen Mieter keine Provision (Maklerprovision). Die zahlt die Partei, die die Agentur beauftragt hat [policy:commission#rentals].",
+    "citations": [
+      {
+        "listingId": null,
+        "chunkId": "policy:commission#rentals"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Muss ich als Mieter eine Provision zahlen?"
+        },
+        "summary": "found 1: policy:commission#rentals",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:commission#rentals",
+              "source": "policy",
+              "listingId": null,
+              "policy": "commission",
+              "text": "Rentals: Tenants pay no commission (Maklerprovision) for rental listings. The party that engaged the agency pays it.",
+              "score": 0.844,
+              "cosine": 0.813,
+              "z": 2.207,
+              "bm25": 3.497,
+              "coverage": 0.143,
+              "rerank": 0.844
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1149
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 141,
+      "cacheReadTokens": 5524,
+      "cacheWriteTokens": 357
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Tenants pay no commission for rental listings",
+        "met": true,
+        "note": "Reply states that tenants pay no commission for rental properties."
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply restates the policy chunk accurately (tenants pay no commission; the party that engaged the agency pays) and is in German. No unsupported claims.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 139,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 388
+    }
+  }
+}
