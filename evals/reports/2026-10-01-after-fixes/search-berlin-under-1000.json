@@ -1,0 +1,134 @@
+{
+  "case": {
+    "id": "search-berlin-under-1000",
+    "lang": "en",
+    "inquiry": "Do you have any flats to rent in Berlin for under 1,000 EUR a month?",
+    "history": [],
+    "listings": [
+      "B-2001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "B-2001 matches, at 890 EUR per month"
+    ],
+    "mustNot": [
+      "B-2002 costs under 1,000 EUR"
+    ],
+    "tags": [
+      "search"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "search-berlin-under-1000",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 5120,
+  "costUsd": 0.0093254,
+  "guardEvents": [],
+  "result": {
+    "reply": "Yes, we have one flat for rent in Berlin under 1,000 EUR a month. It's a quiet 1-room studio in Prenzlauer Berg [B-2001]. The rent is 890 EUR/month [B-2001], and the studio is 32 sqm [B-2001]. It's available from 2026-10-01 [B-2001], and pets are not allowed [B-2001].\n\nI can look up more details for you or search with different criteria.",
+    "citations": [
+      {
+        "listingId": "B-2001",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2001",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2001",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2001",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_listings",
+        "arguments": {
+          "city": "Berlin",
+          "offerType": "rent",
+          "maxPrice": 1000,
+          "propertyType": "apartment"
+        },
+        "summary": "1 listings: B-2001",
+        "result": {
+          "total": 1,
+          "results": [
+            {
+              "id": "B-2001",
+              "title": "Quiet 1-room studio in Prenzlauer Berg",
+              "city": "Berlin",
+              "district": "Prenzlauer Berg",
+              "offerType": "rent",
+              "propertyType": "apartment",
+              "price": 890,
+              "priceUnit": "EUR/month",
+              "livingAreaSqm": 32,
+              "rooms": 1,
+              "availableFrom": "2026-10-01",
+              "petsAllowed": "no"
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 302,
+      "cacheReadTokens": 5532,
+      "cacheWriteTokens": 431
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "B-2001 matches, at 890 EUR per month",
+        "met": true,
+        "note": "Reply names B-2001 at 890 EUR/month."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "B-2002 costs under 1,000 EUR",
+        "violated": false,
+        "note": "B-2002 is not mentioned."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply reports the single search result, B-2001 at 890 EUR/month, and every detail matches the tool output. It does not mention B-2002, and it is in English.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 190,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 502
+    }
+  }
+}

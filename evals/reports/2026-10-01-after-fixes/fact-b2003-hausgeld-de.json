@@ -1,0 +1,165 @@
+{
+  "case": {
+    "id": "fact-b2003-hausgeld-de",
+    "lang": "de",
+    "inquiry": "Wie hoch ist das Hausgeld bei B-2003?",
+    "history": [],
+    "listings": [
+      "B-2003"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The Hausgeld is 410 EUR per month",
+      "120 EUR of it goes to the maintenance reserve"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": true,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-b2003-hausgeld-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 8369,
+  "costUsd": 0.0153492,
+  "guardEvents": [],
+  "result": {
+    "reply": "Das Hausgeld für B-2003 beträgt 410 EUR pro Monat. Davon gehen 120 EUR in die Erhaltungsrücklage [B-2003#s2]. Mit dem Hausgeld werden die laufenden Kosten des Gebäudes bezahlt und Geld für die Instandhaltung zurückgelegt [policy:condominiums#service-charge-hausgeld].\n\nGut zu wissen: Die Eigentümergemeinschaft hat für 2027 eine Fassadensanierung beschlossen. Die Sonderumlage dafür ist geschätzt, steht aber noch nicht fest [B-2003].",
+    "citations": [
+      {
+        "listingId": "B-2003",
+        "chunkId": "B-2003#s2"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:condominiums#service-charge-hausgeld"
+      },
+      {
+        "listingId": "B-2003",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "B-2003"
+        },
+        "summary": "B-2003: Owner-occupied 3-room condo in Charlottenburg",
+        "result": {
+          "id": "B-2003",
+          "title": "Owner-occupied 3-room condo in Charlottenburg",
+          "city": "Berlin",
+          "district": "Charlottenburg",
+          "offerType": "sale",
+          "propertyType": "apartment",
+          "price": 549000,
+          "priceUnit": "EUR",
+          "livingAreaSqm": 86,
+          "rooms": 3,
+          "floor": 4,
+          "yearBuilt": 1962,
+          "availableFrom": "2026-11-15",
+          "features": [
+            "lift",
+            "balcony",
+            "cellar"
+          ],
+          "petsAllowed": "yes",
+          "energyClass": "D",
+          "description": "Vacant condominium, ready to move in. Hausgeld (service charge) 410 EUR per month, of which 120 EUR goes to the maintenance reserve. The owners' association decided a facade renovation for 2027; the special levy is estimated but not final."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Wie hoch ist das Hausgeld?",
+          "listingId": "B-2003"
+        },
+        "summary": "found 2: B-2003#s2, policy:condominiums#service-charge-hausgeld",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "B-2003#s2",
+              "source": "listing",
+              "listingId": "B-2003",
+              "policy": null,
+              "text": "Hausgeld (service charge) 410 EUR per month, of which 120 EUR goes to the maintenance reserve.",
+              "score": 0.208,
+              "cosine": 0.856,
+              "z": 3.594,
+              "bm25": 3.027,
+              "coverage": 1,
+              "rerank": 0.208
+            },
+            {
+              "chunkId": "policy:condominiums#service-charge-hausgeld",
+              "source": "policy",
+              "listingId": null,
+              "policy": "condominiums",
+              "text": "Service charge (Hausgeld): Owners of a condominium pay a monthly service charge (Hausgeld) to the owners' association. It covers running costs of the building and a contribution to the maintenance reserve (Erhaltungsrücklage). Part of it can be passed on to a tenant if the flat is let.",
+              "score": 0.019,
+              "cosine": 0.818,
+              "z": 2.314,
+              "bm25": 3.828,
+              "coverage": 1,
+              "rerank": 0.019
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1148
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 441,
+      "cacheReadTokens": 5526,
+      "cacheWriteTokens": 1080
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The Hausgeld is 410 EUR per month",
+        "met": true
+      },
+      {
+        "fact": "120 EUR of it goes to the maintenance reserve",
+        "met": true
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states 410 EUR per month with 120 EUR going to the maintenance reserve, matching the listing. The facade renovation and special levy details are also in the listing description and the policy text supports the explanation of Hausgeld.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 170,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 1051
+    }
+  }
+}

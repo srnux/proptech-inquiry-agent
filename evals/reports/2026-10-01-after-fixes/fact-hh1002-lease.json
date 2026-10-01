@@ -1,0 +1,132 @@
+{
+  "case": {
+    "id": "fact-hh1002-lease",
+    "lang": "en",
+    "inquiry": "What is the minimum lease term for HH-1002?",
+    "history": [],
+    "listings": [
+      "HH-1002"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The minimum lease term is 12 months"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1002-lease",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 4854,
+  "costUsd": 0.006908,
+  "guardEvents": [],
+  "result": {
+    "reply": "HH-1002 has a minimum lease term of 12 months [HH-1002#s5].",
+    "citations": [
+      {
+        "listingId": "HH-1002",
+        "chunkId": "HH-1002#s5"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "minimum lease term",
+          "listingId": "HH-1002"
+        },
+        "summary": "found 3: HH-1002#s5, policy:furnished#fixed-terms, policy:deposit#amount",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1002#s5",
+              "source": "listing",
+              "listingId": "HH-1002",
+              "policy": null,
+              "text": "Minimum lease term of 12 months.",
+              "score": 0.976,
+              "cosine": 0.882,
+              "z": 2.135,
+              "bm25": 9.406,
+              "coverage": 1,
+              "rerank": 0.976
+            },
+            {
+              "chunkId": "policy:furnished#fixed-terms",
+              "source": "policy",
+              "listingId": null,
+              "policy": "furnished",
+              "text": "Fixed terms: Furnished flats are often let for a fixed term. The end date is stated in the lease, and the lease ends on that date without notice.",
+              "score": 0.021,
+              "cosine": 0.865,
+              "z": 1.611,
+              "bm25": 6.702,
+              "coverage": 0.58,
+              "rerank": 0.021
+            },
+            {
+              "chunkId": "policy:deposit#amount",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Amount: For residential rentals the deposit is at most three months' net cold rent (Nettokaltmiete). Utilities are not included in that calculation. Each listing states the deposit that applies to it.",
+              "score": 0.009,
+              "cosine": 0.836,
+              "z": 0.695,
+              "bm25": 0,
+              "coverage": 0,
+              "rerank": 0.009
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1134
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 113,
+      "cacheReadTokens": 5520,
+      "cacheWriteTokens": 704
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The minimum lease term is 12 months",
+        "met": true
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states the 12-month minimum lease term, which the HH-1002 listing chunk supports. It adds no other claims and is in English, matching the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 116,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 604
+    }
+  }
+}

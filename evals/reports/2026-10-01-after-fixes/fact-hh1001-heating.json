@@ -1,0 +1,175 @@
+{
+  "case": {
+    "id": "fact-hh1001-heating",
+    "lang": "en",
+    "inquiry": "Is heating included in the rent for HH-1001?",
+    "history": [],
+    "listings": [
+      "HH-1001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "Heating is included in the utilities (Nebenkosten), which are an additional 240 EUR per month"
+    ],
+    "mustNot": [
+      "Heating is included in the cold rent with no utilities on top"
+    ],
+    "tags": [
+      "fact"
+    ],
+    "subset": true,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1001-heating",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 6728,
+  "costUsd": 0.013383,
+  "guardEvents": [],
+  "result": {
+    "reply": "Heating isn't part of the base rent, but it is covered by the utilities. For HH-1001, utilities (Nebenkosten) cost an extra 240 EUR per month, and that includes heating [HH-1001#s5]. The utilities figure is a monthly advance payment on top of the cold rent [policy:utilities#what-the-monthly-figure-means]. Household electricity and internet aren't included. You'd set those up yourself with the providers [policy:utilities#electricity-and-internet].",
+    "citations": [
+      {
+        "listingId": "HH-1001",
+        "chunkId": "HH-1001#s5"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:utilities#what-the-monthly-figure-means"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:utilities#electricity-and-internet"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Is heating included in the rent?",
+          "listingId": "HH-1001"
+        },
+        "summary": "found 5: HH-1001#s5, policy:furnished#all-inclusive-rent, policy:utilities#what-the-monthly-figure-means, policy:utilities#electricity-and-internet, policy:deposit#amount",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1001#s5",
+              "source": "listing",
+              "listingId": "HH-1001",
+              "policy": null,
+              "text": "Utilities (Nebenkosten) are an additional 240 EUR per month, heating included.",
+              "score": 0.663,
+              "cosine": 0.849,
+              "z": 1.185,
+              "bm25": 4.993,
+              "coverage": 0.749,
+              "rerank": 0.663
+            },
+            {
+              "chunkId": "policy:furnished#all-inclusive-rent",
+              "source": "policy",
+              "listingId": null,
+              "policy": "furnished",
+              "text": "All-inclusive rent: For furnished flats let at an all-inclusive rent (Warmmiete inklusive), the stated rent covers utilities, heating, electricity and internet. There is no separate utility statement.",
+              "score": 0.975,
+              "cosine": 0.886,
+              "z": 2.282,
+              "bm25": 4.443,
+              "coverage": 0.611,
+              "rerank": 0.975
+            },
+            {
+              "chunkId": "policy:utilities#what-the-monthly-figure-means",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "What the monthly figure means: The utilities figure in a listing is a monthly advance payment on top of the cold rent. It usually covers water, waste collection, building insurance, cleaning of shared areas and property tax. Whether heating is included is stated in each listing.",
+              "score": 0.927,
+              "cosine": 0.857,
+              "z": 1.402,
+              "bm25": 5.02,
+              "coverage": 1,
+              "rerank": 0.927
+            },
+            {
+              "chunkId": "policy:utilities#electricity-and-internet",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "Electricity and internet: Household electricity and internet are contracted by the tenant directly and are not part of the utilities, unless a listing says the rent is all-inclusive.",
+              "score": 0.094,
+              "cosine": 0.848,
+              "z": 1.146,
+              "bm25": 1.639,
+              "coverage": 0.251,
+              "rerank": 0.094
+            },
+            {
+              "chunkId": "policy:deposit#amount",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Amount: For residential rentals the deposit is at most three months' net cold rent (Nettokaltmiete). Utilities are not included in that calculation. Each listing states the deposit that applies to it.",
+              "score": 0.075,
+              "cosine": 0.856,
+              "z": 1.393,
+              "bm25": 3.905,
+              "coverage": 0.64,
+              "rerank": 0.075
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1315
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 322,
+      "cacheReadTokens": 5520,
+      "cacheWriteTokens": 1163
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Heating is included in the utilities (Nebenkosten), which are an additional 240 EUR per month",
+        "met": true,
+        "note": "Reply states utilities are an extra 240 EUR/month including heating."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Heating is included in the cold rent with no utilities on top",
+        "violated": false,
+        "note": "Reply says heating is not part of the base rent but covered by the utilities."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply matches the listing chunk: heating is included in the 240 EUR monthly utilities on top of the rent. The electricity and internet statement is supported by the policy chunk.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 227,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 1161
+    }
+  }
+}

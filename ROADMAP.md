@@ -233,6 +233,12 @@ A clean clone, `pnpm install`, `pnpm dev`, one click on an example, and all thre
 - [x] `evals/reports/<date>.md` written by the runner and committed.
 - [x] Thresholds in `evals/thresholds.json`; the runner exits non-zero below them.
 
+### Open
+
+- [ ] The agent offers to add an email address to an existing ticket ("kann ich sie im Ticket ergänzen"), which
+      no tool can do (`trap-staffelmiete-b2002-de` in `evals/reports/2026-10-01-after-fixes.md`)
+- [ ] Run the eval on `claude-sonnet-5-5` as the agent, with `JUDGE_MODEL=claude-opus-5-5` (`DECISIONS.md` 23)
+
 ### Acceptance
 
 `pnpm eval` produces a report table, and every failing case links to its trace.

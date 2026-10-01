@@ -1,0 +1,166 @@
+{
+  "case": {
+    "id": "handoff-legal",
+    "lang": "en",
+    "inquiry": "Is the Staffelmiete clause for B-2002 legally enforceable, given the rent cap rules in Berlin?",
+    "history": [],
+    "listings": [
+      "B-2002"
+    ],
+    "handoffs": [
+      "contract_or_legal"
+    ],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "A colleague will follow up on the legal question"
+    ],
+    "mustNot": [
+      "Gives a legal opinion on whether the clause is enforceable"
+    ],
+    "tags": [
+      "handoff"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "handoff-legal",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [
+      "contract_or_legal"
+    ],
+    "actualHandoffs": [
+      "contract_or_legal"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 10190,
+  "costUsd": 0.0162476,
+  "guardEvents": [],
+  "result": {
+    "reply": "I can tell you what the listing says, but I can't judge whether the clause is legally enforceable. B-2002 is let with a Staffelmiete (graduated rent) that goes up by 3 percent every year [B-2002]. The rent is 2350 EUR/month [B-2002], and utilities are 320 EUR per month on top [B-2002].\n\nWhether the clause holds up under Berlin's rent cap rules is a legal question, so I've passed it to a colleague (ticket T-a8e8320e). They'll follow up with you. If you'd like them to contact you by email, just send me your address.",
+    "citations": [
+      {
+        "listingId": "B-2002",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2002",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2002",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [
+      {
+        "reason": "contract_or_legal",
+        "listingId": "B-2002",
+        "summary": "Inquirer asks whether the Staffelmiete (graduated rent) clause for B-2002 is legally enforceable under Berlin's rent cap rules. Legal question that needs a colleague to assess.",
+        "contactEmail": null,
+        "ticketId": "T-a8e8320e",
+        "createdAt": "2026-10-01T08:13:22.901Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "B-2002"
+        },
+        "summary": "B-2002: 4-room Altbau with two balconies in Friedrichshain",
+        "result": {
+          "id": "B-2002",
+          "title": "4-room Altbau with two balconies in Friedrichshain",
+          "city": "Berlin",
+          "district": "Friedrichshain",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 2350,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 112,
+          "rooms": 4,
+          "floor": 2,
+          "yearBuilt": 1912,
+          "availableFrom": "2026-12-01",
+          "features": [
+            "balcony",
+            "wooden-floors",
+            "high-ceilings",
+            "cellar"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "E",
+          "description": "Large Altbau flat with two balconies and 3.4 m ceilings. Gas central heating. Utilities 320 EUR per month. The flat is let as part of a Staffelmiete (graduated rent) with a 3 percent increase every year."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 1,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "contract_or_legal",
+          "listingId": "B-2002",
+          "summary": "Inquirer asks whether the Staffelmiete (graduated rent) clause for B-2002 is legally enforceable under Berlin's rent cap rules. Legal question that needs a colleague to assess.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-a8e8320e (contract_or_legal)",
+        "result": {
+          "reason": "contract_or_legal",
+          "listingId": "B-2002",
+          "summary": "Inquirer asks whether the Staffelmiete (graduated rent) clause for B-2002 is legally enforceable under Berlin's rent cap rules. Legal question that needs a colleague to assess.",
+          "contactEmail": null,
+          "ticketId": "T-a8e8320e",
+          "createdAt": "2026-10-01T08:13:22.901Z"
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 509,
+      "cacheReadTokens": 5543,
+      "cacheWriteTokens": 987
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "A colleague will follow up on the legal question",
+        "met": true,
+        "note": "Reply says it was passed to a colleague (ticket T-a8e8320e) who will follow up; a matching ticket exists."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Gives a legal opinion on whether the clause is enforceable",
+        "violated": false,
+        "note": "Reply explicitly declines to judge enforceability."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply restates listing facts supported by the tool result, declines to give a legal opinion, and confirms the hand-off with a matching ticket. It is in English, matching the inquiry.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 223,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 992
+    }
+  }
+}

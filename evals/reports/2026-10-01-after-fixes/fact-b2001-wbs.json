@@ -1,0 +1,143 @@
+{
+  "case": {
+    "id": "fact-b2001-wbs",
+    "lang": "en",
+    "inquiry": "Do I need a WBS for B-2001?",
+    "history": [],
+    "listings": [
+      "B-2001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "A WBS is not required"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-b2001-wbs",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 6254,
+  "costUsd": 0.0098326,
+  "guardEvents": [],
+  "result": {
+    "reply": "No, you don't need a WBS (housing entitlement certificate) for B-2001 [B-2001#s5]. The listing is a quiet 1-room studio in Prenzlauer Berg, Berlin, for 890 EUR/month, available from 2026-10-01 [B-2001].",
+    "citations": [
+      {
+        "listingId": "B-2001",
+        "chunkId": "B-2001#s5"
+      },
+      {
+        "listingId": "B-2001",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Do I need a WBS (Wohnberechtigungsschein)?",
+          "listingId": "B-2001"
+        },
+        "summary": "found 1: B-2001#s5",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "B-2001#s5",
+              "source": "listing",
+              "listingId": "B-2001",
+              "policy": null,
+              "text": "A WBS (housing entitlement certificate) is not required.",
+              "score": 0.884,
+              "cosine": 0.87,
+              "z": 3.061,
+              "bm25": 3.946,
+              "coverage": 0.317,
+              "rerank": 0.884
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1178
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "B-2001"
+        },
+        "summary": "B-2001: Quiet 1-room studio in Prenzlauer Berg",
+        "result": {
+          "id": "B-2001",
+          "title": "Quiet 1-room studio in Prenzlauer Berg",
+          "city": "Berlin",
+          "district": "Prenzlauer Berg",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 890,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 32,
+          "rooms": 1,
+          "floor": 1,
+          "yearBuilt": 1995,
+          "availableFrom": "2026-10-01",
+          "features": [
+            "fitted-kitchen",
+            "bike-storage"
+          ],
+          "petsAllowed": "no",
+          "energyClass": "C",
+          "description": "Compact studio facing the back courtyard, very quiet. Fitted kitchenette. Utilities 130 EUR per month. Suitable for one person. A WBS (housing entitlement certificate) is not required."
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 242,
+      "cacheReadTokens": 5518,
+      "cacheWriteTokens": 773
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "A WBS is not required",
+        "met": true,
+        "note": "The reply says no WBS is needed, which matches the tool result."
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states that no WBS is required, which the knowledge search and the listing both support. The extra details (quiet 1-room studio, Prenzlauer Berg, 890 EUR/month, available from 2026-10-01) all match the listing record.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 162,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 662
+    }
+  }
+}

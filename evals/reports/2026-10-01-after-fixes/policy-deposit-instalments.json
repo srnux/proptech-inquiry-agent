@@ -1,0 +1,109 @@
+{
+  "case": {
+    "id": "policy-deposit-instalments",
+    "lang": "en",
+    "inquiry": "Can I pay the deposit in instalments?",
+    "history": [],
+    "listings": [],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The deposit can be paid in three equal monthly instalments",
+      "The first instalment is due at the start of the lease"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact",
+      "policy"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "policy-deposit-instalments",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 6064,
+  "costUsd": 0.0064926,
+  "guardEvents": [],
+  "result": {
+    "reply": "Yes. Tenants can pay the deposit in three equal monthly instalments, and the first one is due when the lease starts [policy:deposit#payment-in-instalments].\n\nIf you want to know about the deposit for a specific listing, send me its id and I'll look it up.",
+    "citations": [
+      {
+        "listingId": null,
+        "chunkId": "policy:deposit#payment-in-instalments"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Can I pay the deposit in instalments?"
+        },
+        "summary": "found 1: policy:deposit#payment-in-instalments",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:deposit#payment-in-instalments",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Payment in instalments: Tenants may pay the deposit in three equal monthly instalments. The first instalment is due at the start of the lease.",
+              "score": 0.996,
+              "cosine": 0.894,
+              "z": 3.604,
+              "bm25": 12.185,
+              "coverage": 1,
+              "rerank": 0.996
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1264
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 174,
+      "cacheReadTokens": 5518,
+      "cacheWriteTokens": 377
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The deposit can be paid in three equal monthly instalments",
+        "met": true
+      },
+      {
+        "fact": "The first instalment is due at the start of the lease",
+        "met": true
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply matches the policy chunk exactly on both facts. The offer to look up a specific listing is something the assistant can do with its tools, so it is not an unsupported claim.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 150,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 420
+    }
+  }
+}

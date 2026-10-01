@@ -1,0 +1,149 @@
+{
+  "case": {
+    "id": "fact-hh1003-heating-de",
+    "lang": "de",
+    "inquiry": "Wie alt ist die Heizungsanlage in HH-1003?",
+    "history": [],
+    "listings": [
+      "HH-1003"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The heating system is from 2004",
+      "It will need replacement in the next years"
+    ],
+    "mustNot": [],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1003-heating-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 6171,
+  "costUsd": 0.0104944,
+  "guardEvents": [],
+  "result": {
+    "reply": "Die Heizungsanlage in HH-1003 stammt aus dem Jahr 2004. Laut Exposé muss sie in den nächsten Jahren ersetzt werden [HH-1003#s2]. Das Dach wurde 2019 erneuert [HH-1003#s2].",
+    "citations": [
+      {
+        "listingId": "HH-1003",
+        "chunkId": "HH-1003#s2"
+      },
+      {
+        "listingId": "HH-1003",
+        "chunkId": "HH-1003#s2"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Wie alt ist die Heizungsanlage?",
+          "listingId": "HH-1003"
+        },
+        "summary": "found 1: HH-1003#s2",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "HH-1003#s2",
+              "source": "listing",
+              "listingId": "HH-1003",
+              "policy": null,
+              "text": "Roof renewed in 2019, heating system from 2004 will need replacement in the next years.",
+              "score": 0.009,
+              "cosine": 0.767,
+              "z": 2.045,
+              "bm25": 0,
+              "coverage": 0,
+              "rerank": 0.009
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1161
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1003"
+        },
+        "summary": "HH-1003: Family house with garden in Volksdorf",
+        "result": {
+          "id": "HH-1003",
+          "title": "Family house with garden in Volksdorf",
+          "city": "Hamburg",
+          "district": "Volksdorf",
+          "offerType": "sale",
+          "propertyType": "house",
+          "price": 895000,
+          "priceUnit": "EUR",
+          "livingAreaSqm": 165,
+          "rooms": 6,
+          "floor": null,
+          "yearBuilt": 1976,
+          "availableFrom": "2027-02-01",
+          "features": [
+            "garden",
+            "garage",
+            "fireplace",
+            "cellar"
+          ],
+          "petsAllowed": "yes",
+          "energyClass": "E",
+          "description": "Detached house on a 780 sqm plot close to the U1. Roof renewed in 2019, heating system from 2004 will need replacement in the next years. Buyer's commission 3.57 percent including VAT. Energy certificate available on request at the viewing."
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 270,
+      "cacheReadTokens": 5527,
+      "cacheWriteTokens": 793
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The heating system is from 2004",
+        "met": true
+      },
+      {
+        "fact": "It will need replacement in the next years",
+        "met": true
+      }
+    ],
+    "mustNot": [],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply states the heating system is from 2004 and needs replacement in the next years, both supported by the listing text. The roof detail is also supported, and the reply is in German.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 134,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 695
+    }
+  }
+}

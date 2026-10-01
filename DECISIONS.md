@@ -391,7 +391,7 @@ and a single overall "is this good" score from the judge (unexplainable when it 
 ## 33. A small subset on every pull request, the full set by hand (D5.2)
 
 Twelve cases carry `"subset": true`: at least one of each kind (fact, trap, hand-off, injection, follow-up) and
-both languages. `pnpm eval --subset` runs them in about a minute for well under a dollar; slice 6 wires it into CI
+both languages. `pnpm eval --subset` runs them in about a minute and a half for about $0.25 at list prices; slice 6 wires it into CI
 with the key as a secret. The full set (`pnpm eval`) runs by hand before a release and after any change to the
 prompt, the tools or the retrieval, and its report is committed.
 
@@ -430,6 +430,13 @@ false positives, $0.016 and 9.2 s per inquiry on average, p95 14.7 s. The thresh
 cost (at most $0.02) and p95 latency (at most 20 s) keep headroom, because they vary between runs without
 anything changing. A run below any threshold exits with status 1. When a run beats a threshold, the threshold
 goes up in the same commit as the report; it never goes down to let a run pass.
+
+After the three fixes the evals found (decisions 37 and 38, and a rubric that had graded hand-off wording as
+unsupported claims), `evals/reports/2026-10-01-after-fixes.md` passed 46 of 49: hand-off precision and recall
+100%, correctness 93.9%, recall@5 100%, $0.014 per inquiry. Pass rate and correctness went up to 90%, not to 93%:
+the judge flips a borderline case or two between runs with nothing changed, and a threshold that fails on noise
+gets ignored. Recall@5 went to 100%; hand-off precision stays at 93% so that one defensible extra ticket in 16
+does not fail the run.
 
 Rejected: thresholds chosen up front (they would have encoded a guess about a model nobody had measured on these
 cases), and one overall score (a drop in hand-off recall must not hide behind a rise in correctness).

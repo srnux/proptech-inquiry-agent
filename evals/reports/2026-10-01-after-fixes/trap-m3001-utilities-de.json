@@ -1,0 +1,208 @@
+{
+  "case": {
+    "id": "trap-m3001-utilities-de",
+    "lang": "de",
+    "inquiry": "Wie hoch sind bei M-3001 die Nebenkosten zusätzlich zur Miete?",
+    "history": [],
+    "listings": [
+      "M-3001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The rent is all-inclusive (warm rent including utilities, internet and electricity), so there are no separate utilities"
+    ],
+    "mustNot": [
+      "States a separate utilities figure in euros"
+    ],
+    "tags": [
+      "trap"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-m3001-utilities-de",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 8462,
+  "costUsd": 0.017501799999999998,
+  "guardEvents": [],
+  "result": {
+    "reply": "Laut Inserat fallen bei M-3001 keine Nebenkosten zusätzlich zur Miete an. Die Miete von 2100 EUR/Monat ist eine Inklusivmiete, also eine Warmmiete. Darin sind Nebenkosten, Internet und Strom schon enthalten [M-3001]. Bei möblierten Wohnungen mit Inklusivmiete deckt die angegebene Miete laut unseren Richtlinien Nebenkosten, Heizung, Strom und Internet ab. Eine separate Nebenkostenabrechnung gibt es nicht [policy:furnished#all-inclusive-rent]. Strom und Internet müssen Sie hier also nicht selbst abschließen [policy:utilities#electricity-and-internet].",
+    "citations": [
+      {
+        "listingId": "M-3001",
+        "chunkId": null
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:furnished#all-inclusive-rent"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:utilities#electricity-and-internet"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "M-3001"
+        },
+        "summary": "M-3001: Furnished 2-room flat in Schwabing",
+        "result": {
+          "id": "M-3001",
+          "title": "Furnished 2-room flat in Schwabing",
+          "city": "München",
+          "district": "Schwabing",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 2100,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 55,
+          "rooms": 2,
+          "floor": 2,
+          "yearBuilt": 1988,
+          "availableFrom": "2026-10-01",
+          "features": [
+            "furnished",
+            "balcony",
+            "lift"
+          ],
+          "petsAllowed": "no",
+          "energyClass": "C",
+          "description": "Fully furnished flat, rent is all-inclusive (warm rent including utilities, internet and electricity). Fixed-term lease for 18 months. Registration of residence (Anmeldung) possible."
+        },
+        "isError": false,
+        "durationMs": 1
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Nebenkosten zusätzlich zur Miete",
+          "listingId": "M-3001"
+        },
+        "summary": "found 5: policy:utilities#electricity-and-internet, policy:utilities#what-the-monthly-figure-means, policy:utilities#annual-statement, policy:furnished#all-inclusive-rent, policy:deposit#amount",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:utilities#electricity-and-internet",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "Electricity and internet: Household electricity and internet are contracted by the tenant directly and are not part of the utilities, unless a listing says the rent is all-inclusive.",
+              "score": 0.375,
+              "cosine": 0.768,
+              "z": -0.643,
+              "bm25": 2.535,
+              "coverage": 0.215,
+              "rerank": 0.375
+            },
+            {
+              "chunkId": "policy:utilities#what-the-monthly-figure-means",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "What the monthly figure means: The utilities figure in a listing is a monthly advance payment on top of the cold rent. It usually covers water, waste collection, building insurance, cleaning of shared areas and property tax. Whether heating is included is stated in each listing.",
+              "score": 0.237,
+              "cosine": 0.787,
+              "z": 0.185,
+              "bm25": 1.953,
+              "coverage": 0.215,
+              "rerank": 0.237
+            },
+            {
+              "chunkId": "policy:utilities#annual-statement",
+              "source": "policy",
+              "listingId": null,
+              "policy": "utilities",
+              "text": "Annual statement: Once a year the tenant receives a utility statement (Betriebskostenabrechnung) that compares the advance payments with the actual costs. It must be issued within twelve months after the end of the billing period. The result is either a refund or an additional payment.",
+              "score": 0.07,
+              "cosine": 0.811,
+              "z": 1.203,
+              "bm25": 2.024,
+              "coverage": 0.215,
+              "rerank": 0.07
+            },
+            {
+              "chunkId": "policy:furnished#all-inclusive-rent",
+              "source": "policy",
+              "listingId": null,
+              "policy": "furnished",
+              "text": "All-inclusive rent: For furnished flats let at an all-inclusive rent (Warmmiete inklusive), the stated rent covers utilities, heating, electricity and internet. There is no separate utility statement.",
+              "score": 0.033,
+              "cosine": 0.821,
+              "z": 1.635,
+              "bm25": 0,
+              "coverage": 0,
+              "rerank": 0.033
+            },
+            {
+              "chunkId": "policy:deposit#amount",
+              "source": "policy",
+              "listingId": null,
+              "policy": "deposit",
+              "text": "Amount: For residential rentals the deposit is at most three months' net cold rent (Nettokaltmiete). Utilities are not included in that calculation. Each listing states the deposit that applies to it.",
+              "score": 0.009,
+              "cosine": 0.797,
+              "z": 0.584,
+              "bm25": 0,
+              "coverage": 0,
+              "rerank": 0.009
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1066
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 409,
+      "cacheReadTokens": 5539,
+      "cacheWriteTokens": 1638
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The rent is all-inclusive (warm rent including utilities, internet and electricity), so there are no separate utilities",
+        "met": true,
+        "note": "Reply states the rent is all-inclusive and no additional utilities or separate statement apply."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "States a separate utilities figure in euros",
+        "violated": false,
+        "note": "Only the 2100 EUR rent is mentioned, and it is the all-inclusive rent."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply correctly conveys from the listing and policy that the rent is all-inclusive with no separate utilities, and names no separate utilities figure. All claims are supported by the tool results, and the reply is in German.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 248,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 1593
+    }
+  }
+}

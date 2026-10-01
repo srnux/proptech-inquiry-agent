@@ -1,0 +1,222 @@
+{
+  "case": {
+    "id": "trap-pets-k4001",
+    "lang": "en",
+    "inquiry": "Quick yes or no: is my small dog allowed in K-4001?",
+    "history": [],
+    "listings": [
+      "K-4001"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "Pets are on request at K-4001, so it is neither a yes nor a no"
+    ],
+    "mustNot": [
+      "Yes, the dog is allowed",
+      "No, dogs are not allowed"
+    ],
+    "tags": [
+      "trap",
+      "trap-pets"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-pets-k4001",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 11966,
+  "costUsd": 0.0220006,
+  "guardEvents": [],
+  "result": {
+    "reply": "I can't give you a yes or no yet. For K-4001, pets are \"on request\" [K-4001]. That means the landlord decides on dogs case by case after you ask, so it isn't a yes [policy:pets#dogs-and-cats].\n\nI've passed your question to our letting team, and a colleague will follow up with the landlord's decision. It will help if you tell them your dog's type, size and how many animals you have [policy:pets#how-to-ask]. You can also share an email address so they can reach you.",
+    "citations": [
+      {
+        "listingId": "K-4001",
+        "chunkId": null
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:pets#dogs-and-cats"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:pets#how-to-ask"
+      }
+    ],
+    "handoffs": [
+      {
+        "reason": "not_answerable_from_listing",
+        "listingId": "K-4001",
+        "summary": "Inquirer asks whether their small dog is allowed in K-4001. The listing says pets are 'on request', so the landlord needs to decide. Please ask the landlord (get the dog's size and number from the inquirer) and reply.",
+        "contactEmail": null,
+        "ticketId": "T-77d7fccf",
+        "createdAt": "2026-10-01T08:12:38.356Z"
+      }
+    ],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "is my small dog allowed? pets",
+          "listingId": "K-4001"
+        },
+        "summary": "found 3: policy:pets#small-animals, policy:pets#dogs-and-cats, policy:pets#how-to-ask",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "policy:pets#small-animals",
+              "source": "policy",
+              "listingId": null,
+              "policy": "pets",
+              "text": "Small animals: Small animals kept in cages or tanks, such as hamsters, fish or birds, are allowed in every rental.",
+              "score": 0.71,
+              "cosine": 0.864,
+              "z": 2.886,
+              "bm25": 10.018,
+              "coverage": 0.728,
+              "rerank": 0.71
+            },
+            {
+              "chunkId": "policy:pets#dogs-and-cats",
+              "source": "policy",
+              "listingId": null,
+              "policy": "pets",
+              "text": "Dogs and cats: Dogs and cats need the landlord's consent. \"On request\" in a listing means the landlord decides case by case after the inquiry; it is not a confirmation. \"No\" means the building rules exclude them.",
+              "score": 0.126,
+              "cosine": 0.844,
+              "z": 2.243,
+              "bm25": 6,
+              "coverage": 0.479,
+              "rerank": 0.126
+            },
+            {
+              "chunkId": "policy:pets#how-to-ask",
+              "source": "policy",
+              "listingId": null,
+              "policy": "pets",
+              "text": "How to ask: Mention the type, size and number of animals in the inquiry. Our letting team asks the landlord and replies with a decision.",
+              "score": 0.126,
+              "cosine": 0.832,
+              "z": 1.857,
+              "bm25": 2.647,
+              "coverage": 0.206,
+              "rerank": 0.126
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1100
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "K-4001"
+        },
+        "summary": "K-4001: 3-room flat near the Rhine in Deutz",
+        "result": {
+          "id": "K-4001",
+          "title": "3-room flat near the Rhine in Deutz",
+          "city": "Köln",
+          "district": "Deutz",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 1380,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 81,
+          "rooms": 3,
+          "floor": 5,
+          "yearBuilt": 2001,
+          "availableFrom": "2026-11-01",
+          "features": [
+            "lift",
+            "balcony",
+            "fitted-kitchen",
+            "accessible"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "C",
+          "description": "Step-free flat with lift, wide doors and a walk-in shower, suitable for wheelchair users. Balcony with a view of the cathedral. Utilities 250 EUR per month. Deposit two months' cold rent."
+        },
+        "isError": false,
+        "durationMs": 0
+      },
+      {
+        "turn": 2,
+        "tool": "hand_off_to_human",
+        "arguments": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "K-4001",
+          "summary": "Inquirer asks whether their small dog is allowed in K-4001. The listing says pets are 'on request', so the landlord needs to decide. Please ask the landlord (get the dog's size and number from the inquirer) and reply.",
+          "contactEmail": null
+        },
+        "summary": "ticket T-77d7fccf (not_answerable_from_listing)",
+        "result": {
+          "reason": "not_answerable_from_listing",
+          "listingId": "K-4001",
+          "summary": "Inquirer asks whether their small dog is allowed in K-4001. The listing says pets are 'on request', so the landlord needs to decide. Please ask the landlord (get the dog's size and number from the inquirer) and reply.",
+          "contactEmail": null,
+          "ticketId": "T-77d7fccf",
+          "createdAt": "2026-10-01T08:12:38.356Z"
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 8,
+      "outputTokens": 592,
+      "cacheReadTokens": 9418,
+      "cacheWriteTokens": 1649
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "Pets are on request at K-4001, so it is neither a yes nor a no",
+        "met": true,
+        "note": "Reply says pets are on request and it isn't a yes, with no yes/no given."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Yes, the dog is allowed",
+        "violated": false
+      },
+      {
+        "statement": "No, dogs are not allowed",
+        "violated": false
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply correctly says pets are on request, gives neither a yes nor a no, and a hand-off ticket exists. All claims are supported by the listing and policy results.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 204,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 1459
+    }
+  }
+}
