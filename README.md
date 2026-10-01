@@ -1,9 +1,64 @@
 # proptech-inquiry-agent
 
-An agent that answers and triages inquiries about property listings. It is built on an MCP server, so the
-same tools work from Claude Desktop, Claude Code, the MCP Inspector or the agent loop in this repo.
+[![CI](https://github.com/srnux/proptech-inquiry-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/srnux/proptech-inquiry-agent/actions/workflows/ci.yml)
+
+An AI agent that answers questions about property listings from the record, and hands everything else to a
+human: viewings, negotiation, legal questions, complaints, anything the data does not cover. It works through an
+MCP server, so the same tools serve Claude Desktop, the MCP Inspector and the agent loop here, and checks in code
+reject any figure or citation the tools did not return. 49 eval cases measure it: 46 pass on `claude-opus-5-5`,
+and every hand-off goes where it should.
 
 All listing and policy data is synthetic.
+
+## Quick start
+
+```bash
+git clone https://github.com/srnux/proptech-inquiry-agent.git && cd proptech-inquiry-agent
+corepack enable   # once, provides the pnpm version pinned in package.json
+pnpm install
+pnpm dev          # the inquiry desk on http://localhost:5173, the API on 127.0.0.1:3000
+```
+
+Click one of the example inquiries. The conversation fills on the left, every tool call the agent made in
+the middle (click a row for its arguments and result), and the tickets for a colleague on the right. Each
+citation in a reply is a chip that opens the passage it came from. Follow-ups work ("and the deposit?"): the page
+sends the last five exchanges with each inquiry, and "New conversation" starts over (`DECISIONS.md` 31).
+
+Without `ANTHROPIC_API_KEY` (or the Bedrock settings) in `.env`, `pnpm dev` runs a rule-based demo model that
+drives the same tools and checks, and the page says so (`DECISIONS.md` 28). The first start downloads the two
+retrieval models (about 690 MB); `EMBEDDER=hashing pnpm dev` starts at once with weaker, English-only retrieval.
+
+How the parts fit together, and where each check sits: [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## The one design rule
+
+The agent answers facts from the record and escalates everything else. Viewings, negotiation, contract and
+legal questions, complaints, personal data requests and anything the record does not cover go to
+`hand_off_to_human`. The boundary sits in the tool contract, not only in a prompt, so it can be tested.
+
+Retrieval follows the same rule: when no passage is relevant, `search_knowledge` returns `found: false`
+instead of the closest weak match, and the tool description tells the model to hand off.
+
+## What broke
+
+The first full eval run passed 41 of 49 cases. It found three problems, each fixed in its own commit and
+measured again ([first run](evals/reports/2026-10-01.md), [after the fixes](evals/reports/2026-10-01-after-fixes.md)):
+
+- **German questions could not find the commission policy.** "Muss ich als Mieter eine Provision zahlen?" returned
+  `found: false`: the page said only "commission", so neither keyword nor vector search collected it. The page now
+  names "Provision" and "Maklerprovision", and golden-set recall@5 went from 96% to 100%
+  ([e8c1fb4](https://github.com/srnux/proptech-inquiry-agent/commit/e8c1fb4), `DECISIONS.md` 37).
+- **Follow-ups "corrected" answers that were right.** Told that earlier turns are not evidence, the agent looked the
+  fact up again, found it confirmed, and announced a correction anyway. It now corrects only what the record
+  contradicts; a case whose earlier figure really is wrong still gets its correction
+  ([f8a1fca](https://github.com/srnux/proptech-inquiry-agent/commit/f8a1fca), `DECISIONS.md` 38).
+- **The judge counted hand-off wording as invented claims.** "A colleague will contact you" is fine when a ticket
+  exists; "your viewing is confirmed" is not. That fixed the evaluator, not the agent
+  ([d1494b6](https://github.com/srnux/proptech-inquiry-agent/commit/d1494b6)).
+
+Still open: the agent offered to add an email address to an existing ticket, which no tool can do. The guards check
+that every figure and citation is in the record; they cannot check that a promise is one the tools can keep. The
+other two failing cases are borderline inferences the judge flags ("so you would have to use the stairs").
 
 ## Status
 
@@ -19,32 +74,6 @@ All listing and policy data is synthetic.
 
 Details, tasks and open decisions per slice are in [ROADMAP.md](ROADMAP.md); the reasons behind each
 choice are in [DECISIONS.md](DECISIONS.md).
-
-## Quick start
-
-```bash
-corepack enable   # once, provides the pnpm version pinned in package.json
-pnpm install
-pnpm dev          # API on 127.0.0.1:3000, the inquiry desk on http://localhost:5173
-```
-
-Click one of the example inquiries. The conversation fills on the left, every tool call the agent made in
-the middle (click a row for its arguments and result), and the tickets for a colleague on the right. Each
-citation in a reply is a chip that opens the passage it came from. Follow-ups work ("and the deposit?"): the page
-sends the last five exchanges with each inquiry, and "New conversation" starts over (`DECISIONS.md` 31).
-
-Without `ANTHROPIC_API_KEY` (or the Bedrock settings) in `.env`, `pnpm dev` runs a rule-based demo model that
-drives the same tools and checks, and the page says so (`DECISIONS.md` 28). The first start downloads the two
-retrieval models (about 690 MB); `EMBEDDER=hashing pnpm dev` starts at once with weaker, English-only retrieval.
-
-## The one design rule
-
-The agent answers facts from the record and escalates everything else. Viewings, negotiation, contract and
-legal questions, complaints, personal data requests and anything the record does not cover go to
-`hand_off_to_human`. The boundary sits in the tool contract, not only in a prompt, so it can be tested.
-
-Retrieval follows the same rule: when no passage is relevant, `search_knowledge` returns `found: false`
-instead of the closest weak match, and the tool description tells the model to hand off.
 
 ## Tools and resources
 
@@ -115,12 +144,12 @@ links to the full trace of its run (`DECISIONS.md` 32 to 38).
 | Golden-set recall@5, false positives | 96%, 0 | 100%, 0 | 100%, 0 |
 | Cost, latency per inquiry | $0.016, 9.2 s (p95 14.7 s) | $0.014, 8.6 s (p95 13.8 s) | $0.02, p95 20 s |
 
-Both runs are [committed](evals/reports/), `claude-opus-5-5` on Bedrock. The first run found three problems, each
-fixed in its own commit: the judge counted hand-off wording as unsupported claims, the commission policy was
-invisible to German questions (`DECISIONS.md` 37), and follow-ups "corrected" earlier replies that were right
-(`DECISIONS.md` 38). Of the three cases still failing, two are borderline inferences the judge flags ("so you
-would have to use the stairs") and one is real: the agent offers to add an email address to a ticket, which no
-tool can do.
+Both runs are [committed](evals/reports/), `claude-opus-5-5` on Bedrock. What the first run found and how each
+problem was fixed: [What broke](#what-broke).
+
+The subset also runs on GitHub Actions when started by hand (Actions → Eval subset → Run workflow), with
+`ANTHROPIC_API_KEY` or `AWS_BEARER_TOKEN_BEDROCK` as a repository secret. The report table appears on the run
+page (`DECISIONS.md` 39).
 
 ```bash
 pnpm eval                 # all cases; needs credentials for the agent and the judge; exits 1 below a threshold
