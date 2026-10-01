@@ -260,23 +260,34 @@ A clean clone, `pnpm install`, `pnpm dev`, one click on an example, and all thre
 
 ---
 
-## Slice 6: Write-up and polish
+## Slice 6: Write-up and polish  ✅ done
 
 **Goal:** the repo is a showcase. Readers are potential employers and dev.to readers; most of them read only the
 first screen of the README, some open `ARCHITECTURE.md`, few clone it.
 
 ### Tasks
 
-- [ ] `README.md` first screen: GIF of the UI answering one inquiry and handing off another, a three-sentence
-      pitch, quick start in five lines.
-- [ ] `ARCHITECTURE.md`: request flow diagram, the escalation boundary, where each guard sits, what runs offline.
-- [ ] "What broke" section in the README: the real failures the evals found in slice 5 and how each was fixed,
+- [x] `README.md` first screen: GIF of the UI answering one inquiry and handing off another, a three-sentence
+      pitch, quick start in five lines. Recorded on `claude-opus-5-5` by `apps/web/e2e/record-demo.ts`.
+- [x] `ARCHITECTURE.md`: request flow diagram, the escalation boundary, where each guard sits, what runs offline.
+- [x] "What broke" section in the README: the real failures the evals found in slice 5 and how each was fixed,
       linking to the committed reports.
-- [ ] GitHub Actions on every push: typecheck, unit tests, Playwright. Free, no secrets; a badge in the README.
-- [ ] GitHub Actions eval subset, started by hand only (`workflow_dispatch`), with the API key or Bedrock settings as
-      secrets. Revises `DECISIONS.md` 33 in a new entry.
-- [ ] Social preview image committed in `docs/assets/`; description and topics written down, set by hand in the
-      GitHub repository settings.
+- [x] GitHub Actions on every push: typecheck, unit tests, Playwright. Free, no secrets; a badge in the README.
+- [x] GitHub Actions eval subset, started by hand only (`workflow_dispatch`), with the API key or Bedrock settings as
+      secrets. Revises `DECISIONS.md` 33 in a new entry (`DECISIONS.md` 39).
+- [x] Social preview image committed in `docs/assets/social-preview.png`; description and topics below.
+
+### Open
+
+- [ ] First CI run on GitHub after the push: both jobs green, badge shows passing
+- [ ] Add a secret (`ANTHROPIC_API_KEY`, or `AWS_BEARER_TOKEN_BEDROCK` plus the variable `AWS_REGION`) and start
+      the eval subset once from the Actions tab
+- [ ] In the repository settings: upload `docs/assets/social-preview.png` as the social preview, set the description
+      and the topics:
+  - Description: "An AI agent that answers property-listing questions from the record and hands everything else to a
+    human. MCP server, hybrid RAG with a local reranker, citation and number guards, measured by evals."
+  - Topics: `mcp`, `model-context-protocol`, `ai-agents`, `llm`, `rag`, `claude`, `anthropic`, `evals`,
+    `typescript`, `react`, `proptech`, `real-estate`
 
 ### Acceptance
 

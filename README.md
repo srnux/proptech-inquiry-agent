@@ -74,7 +74,7 @@ other two failing cases are borderline inferences the judge flags ("so you would
 | 3 | Agent loop, citation and number guards, `POST /inquiries` (SSE), Streamable HTTP MCP, `pnpm ask` | done, acceptance inquiry and live test passed on `claude-opus-5-5` (Bedrock) |
 | 4 | React UI: chat, tool-call trace, live hand-off queue, citation chips; runs without a key on a demo model | done |
 | 5 | Eval suite: 49 cases, model judge, thresholds; `pnpm eval` writes a report with a trace per case | done, 46 of 49 cases pass on `claude-opus-5-5` ([report](evals/reports/2026-10-01-after-fixes.md)) |
-| 6 | Architecture write-up, CI | planned |
+| 6 | [ARCHITECTURE.md](ARCHITECTURE.md), demo GIF, "What broke", CI on every push, eval subset on GitHub Actions by hand | done |
 | 7 | pgvector behind the same store interface | optional, not scheduled |
 
 Details, tasks and open decisions per slice are in [ROADMAP.md](ROADMAP.md); the reasons behind each
