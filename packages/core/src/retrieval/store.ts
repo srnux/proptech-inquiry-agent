@@ -1,4 +1,4 @@
-/** Vector store boundary. In-memory now; a pgvector implementation can replace it (roadmap slice 6). */
+/** Vector store boundary. In-memory now; a pgvector implementation can replace it (roadmap slice 7, optional). */
 export interface VectorStore {
   upsert(items: { id: string; vector: number[] }[]): void;
   /** Cosine similarity, highest first. Vectors are expected to be L2-normalised. */
