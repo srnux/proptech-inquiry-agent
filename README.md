@@ -13,7 +13,7 @@ All listing and policy data is synthetic.
 | 2 | Hybrid retrieval over listing texts and policy pages, local embeddings | done |
 | 3 | Agent loop, citation and number guards, `POST /inquiries` (SSE), Streamable HTTP MCP, `pnpm ask` | done, acceptance inquiry and live test passed on `claude-opus-5-5` (Bedrock) |
 | 4 | React UI: chat, tool-call trace, live hand-off queue, citation chips; runs without a key on a demo model | done |
-| 5 | Eval suite: 49 cases, model judge, thresholds; `pnpm eval` writes a report with a trace per case | done, first report [2026-10-01](evals/reports/2026-10-01.md) |
+| 5 | Eval suite: 49 cases, model judge, thresholds; `pnpm eval` writes a report with a trace per case | done, 46 of 49 cases pass on `claude-opus-5-5` ([report](evals/reports/2026-10-01-after-fixes.md)) |
 | 6 | Architecture write-up, pgvector, CI | planned |
 
 Details, tasks and open decisions per slice are in [ROADMAP.md](ROADMAP.md); the reasons behind each
@@ -103,20 +103,27 @@ facade levy is not final, Staffelmiete is 3% a year, the Munich rent is all-incl
 living in, polite haggling is still a negotiation) and a listing whose text tells the agent to confirm viewings.
 Code checks the hand-offs, the listings and every figure; a different model (`claude-sonnet-5-5`) grades the facts
 against [a written rubric](evals/rubric.md). The report lands in `evals/reports/<date>.md`, and every case in it
-links to the full trace of its run (`DECISIONS.md` 32 to 36).
+links to the full trace of its run (`DECISIONS.md` 32 to 38).
 
-| Metric | First run, 2026-10-01 | Threshold |
-|---|---|---|
-| Cases passed | 41 / 49 | 83% |
-| Hand-off precision / recall | 93.8% / 100% | 93% / 100% |
-| Replies with every figure grounded (final / first draft) | 100% / 100% | 100% / 100% |
-| Correct, by the judge | 83.7% | 83% |
-| Golden-set recall@5, false positives | 96%, 0 | 96%, 0 |
-| Cost, latency per inquiry | $0.016, 9.2 s (p95 14.7 s) | $0.02, p95 20 s |
+| Metric | First run | After the fixes | Threshold |
+|---|---|---|---|
+| Cases passed | 41 / 49 | 46 / 49 | 90% |
+| Hand-off precision / recall | 93.8% / 100% | 100% / 100% | 93% / 100% |
+| Replies with every figure grounded (final / first draft) | 100% / 100% | 100% / 100% | 100% / 100% |
+| Correct, by the judge | 83.7% | 93.9% | 90% |
+| Golden-set recall@5, false positives | 96%, 0 | 100%, 0 | 100%, 0 |
+| Cost, latency per inquiry | $0.016, 9.2 s (p95 14.7 s) | $0.014, 8.6 s (p95 13.8 s) | $0.02, p95 20 s |
+
+Both runs are [committed](evals/reports/), `claude-opus-5-5` on Bedrock. The first run found three problems, each
+fixed in its own commit: the judge counted hand-off wording as unsupported claims, the commission policy was
+invisible to German questions (`DECISIONS.md` 37), and follow-ups "corrected" earlier replies that were right
+(`DECISIONS.md` 38). Of the three cases still failing, two are borderline inferences the judge flags ("so you
+would have to use the stairs") and one is real: the agent offers to add an email address to a ticket, which no
+tool can do.
 
 ```bash
 pnpm eval                 # all cases; needs credentials for the agent and the judge; exits 1 below a threshold
-pnpm eval --subset        # the 12 cases meant for every pull request
+pnpm eval --subset        # the 12 cases meant for every pull request, about 90 s and $0.25
 pnpm eval --case handoff-viewing --case trap-pets-hh1001
 MODEL_PROVIDER=demo EMBEDDER=hashing pnpm eval --no-judge   # offline: demo model, no judge
 ```

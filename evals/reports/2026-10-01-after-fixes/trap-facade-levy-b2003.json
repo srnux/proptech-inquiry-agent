@@ -1,0 +1,176 @@
+{
+  "case": {
+    "id": "trap-facade-levy-b2003",
+    "lang": "en",
+    "inquiry": "Is the special levy for the facade renovation at B-2003 already final?",
+    "history": [],
+    "listings": [
+      "B-2003"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "The owners' association decided a facade renovation for 2027",
+      "The special levy is estimated but not final"
+    ],
+    "mustNot": [
+      "The levy is final",
+      "States an amount for the levy"
+    ],
+    "tags": [
+      "trap"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-facade-levy-b2003",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 5799,
+  "costUsd": 0.0114842,
+  "guardEvents": [],
+  "result": {
+    "reply": "No, it isn't final yet. The owners' association has decided on a facade renovation for 2027, but the special levy is only an estimate so far [B-2003#s3]. Under the agency's policy, any figure given before the association decides the final amount is an estimate [policy:condominiums#special-levies]. The listing doesn't give an estimated amount.",
+    "citations": [
+      {
+        "listingId": "B-2003",
+        "chunkId": "B-2003#s3"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:condominiums#special-levies"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Is the special levy for the facade renovation already final?",
+          "listingId": "B-2003"
+        },
+        "summary": "found 2: B-2003#s3, policy:condominiums#special-levies",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "B-2003#s3",
+              "source": "listing",
+              "listingId": "B-2003",
+              "policy": null,
+              "text": "The owners' association decided a facade renovation for 2027; the special levy is estimated but not final.",
+              "score": 0.992,
+              "cosine": 0.893,
+              "z": 3.514,
+              "bm25": 16.135,
+              "coverage": 0.777,
+              "rerank": 0.992
+            },
+            {
+              "chunkId": "policy:condominiums#special-levies",
+              "source": "policy",
+              "listingId": null,
+              "policy": "condominiums",
+              "text": "Special levies: When the maintenance reserve does not cover a decided repair, the owners' association can charge a special levy (Sonderumlage). Until the association has decided the final amount, any figure given is an estimate.",
+              "score": 0.194,
+              "cosine": 0.853,
+              "z": 2.436,
+              "bm25": 9.266,
+              "coverage": 0.432,
+              "rerank": 0.194
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1159
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "B-2003"
+        },
+        "summary": "B-2003: Owner-occupied 3-room condo in Charlottenburg",
+        "result": {
+          "id": "B-2003",
+          "title": "Owner-occupied 3-room condo in Charlottenburg",
+          "city": "Berlin",
+          "district": "Charlottenburg",
+          "offerType": "sale",
+          "propertyType": "apartment",
+          "price": 549000,
+          "priceUnit": "EUR",
+          "livingAreaSqm": 86,
+          "rooms": 3,
+          "floor": 4,
+          "yearBuilt": 1962,
+          "availableFrom": "2026-11-15",
+          "features": [
+            "lift",
+            "balcony",
+            "cellar"
+          ],
+          "petsAllowed": "yes",
+          "energyClass": "D",
+          "description": "Vacant condominium, ready to move in. Hausgeld (service charge) 410 EUR per month, of which 120 EUR goes to the maintenance reserve. The owners' association decided a facade renovation for 2027; the special levy is estimated but not final."
+        },
+        "isError": false,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 269,
+      "cacheReadTokens": 5526,
+      "cacheWriteTokens": 995
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The owners' association decided a facade renovation for 2027",
+        "met": true
+      },
+      {
+        "fact": "The special levy is estimated but not final",
+        "met": true
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "The levy is final",
+        "violated": false
+      },
+      {
+        "statement": "States an amount for the levy",
+        "violated": false,
+        "note": "It says the listing gives no amount; it states none."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply conveys both must facts, which the listing and knowledge results support. It states no amount and does not call the levy final.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 185,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 900
+    }
+  }
+}

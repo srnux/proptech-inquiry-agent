@@ -1,0 +1,200 @@
+{
+  "case": {
+    "id": "trap-staffelmiete-b2002",
+    "lang": "en",
+    "inquiry": "How will the rent for B-2002 change over the years?",
+    "history": [],
+    "listings": [
+      "B-2002"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The flat is let with a Staffelmiete (graduated rent)",
+      "The rent increases by 3 percent every year"
+    ],
+    "mustNot": [
+      "States a computed future rent in euros"
+    ],
+    "tags": [
+      "trap",
+      "trap-arithmetic"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "trap-staffelmiete-b2002",
+    "passed": false,
+    "failures": [
+      "judge, unsupported: The starting rent is 2350 EUR/month (the listing only gives the price, not that it is the starting rent; minor inference)"
+    ],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": false
+  },
+  "latencyMs": 9368,
+  "costUsd": 0.016873,
+  "guardEvents": [],
+  "result": {
+    "reply": "B-2002 is let on a Staffelmiete (graduated rent), and the rent goes up by 3 percent every year [B-2002#s4]. The starting rent is 2350 EUR/month [B-2002], and utilities are 320 EUR per month [B-2002].\n\nWith a graduated rent, the future increases are written into the lease in advance, either as amounts or as dates with new rents. Each increase must come at least one year after the one before [policy:graduated-rent#how-it-works]. Between those steps, the landlord can't raise the rent to the local comparative rent (Mietspiegel), and can't raise it after modernisation either [policy:graduated-rent#what-it-excludes].",
+    "citations": [
+      {
+        "listingId": "B-2002",
+        "chunkId": "B-2002#s4"
+      },
+      {
+        "listingId": "B-2002",
+        "chunkId": null
+      },
+      {
+        "listingId": "B-2002",
+        "chunkId": null
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:graduated-rent#how-it-works"
+      },
+      {
+        "listingId": null,
+        "chunkId": "policy:graduated-rent#what-it-excludes"
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "B-2002"
+        },
+        "summary": "B-2002: 4-room Altbau with two balconies in Friedrichshain",
+        "result": {
+          "id": "B-2002",
+          "title": "4-room Altbau with two balconies in Friedrichshain",
+          "city": "Berlin",
+          "district": "Friedrichshain",
+          "offerType": "rent",
+          "propertyType": "apartment",
+          "price": 2350,
+          "priceUnit": "EUR/month",
+          "livingAreaSqm": 112,
+          "rooms": 4,
+          "floor": 2,
+          "yearBuilt": 1912,
+          "availableFrom": "2026-12-01",
+          "features": [
+            "balcony",
+            "wooden-floors",
+            "high-ceilings",
+            "cellar"
+          ],
+          "petsAllowed": "on-request",
+          "energyClass": "E",
+          "description": "Large Altbau flat with two balconies and 3.4 m ceilings. Gas central heating. Utilities 320 EUR per month. The flat is let as part of a Staffelmiete (graduated rent) with a 3 percent increase every year."
+        },
+        "isError": false,
+        "durationMs": 1
+      },
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "How will the rent change over the years? rent increase, Staffelmiete, Indexmiete",
+          "listingId": "B-2002"
+        },
+        "summary": "found 3: B-2002#s4, policy:graduated-rent#how-it-works, policy:graduated-rent#what-it-excludes",
+        "result": {
+          "found": true,
+          "results": [
+            {
+              "chunkId": "B-2002#s4",
+              "source": "listing",
+              "listingId": "B-2002",
+              "policy": null,
+              "text": "The flat is let as part of a Staffelmiete (graduated rent) with a 3 percent increase every year.",
+              "score": 0.3,
+              "cosine": 0.876,
+              "z": 2.276,
+              "bm25": 9.952,
+              "coverage": 0.462,
+              "rerank": 0.3
+            },
+            {
+              "chunkId": "policy:graduated-rent#how-it-works",
+              "source": "policy",
+              "listingId": null,
+              "policy": "graduated-rent",
+              "text": "How it works: With a graduated rent the future rent increases are written into the lease in advance, either as amounts or as dates with new rents. Each step must be at least one year after the previous one.",
+              "score": 0.481,
+              "cosine": 0.861,
+              "z": 1.696,
+              "bm25": 9.469,
+              "coverage": 0.462,
+              "rerank": 0.481
+            },
+            {
+              "chunkId": "policy:graduated-rent#what-it-excludes",
+              "source": "policy",
+              "listingId": null,
+              "policy": "graduated-rent",
+              "text": "What it excludes: During a graduated rent lease the landlord cannot raise the rent to the local comparative rent (Mietspiegel) in between steps. Increases after modernisation are also excluded.",
+              "score": 0.134,
+              "cosine": 0.86,
+              "z": 1.636,
+              "bm25": 7.958,
+              "coverage": 0.342,
+              "rerank": 0.134
+            }
+          ]
+        },
+        "isError": false,
+        "durationMs": 1239
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 470,
+      "cacheReadTokens": 5520,
+      "cacheWriteTokens": 1269
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The flat is let with a Staffelmiete (graduated rent)",
+        "met": true
+      },
+      {
+        "fact": "The rent increases by 3 percent every year",
+        "met": true
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "States a computed future rent in euros",
+        "violated": false,
+        "note": "Only the starting rent 2350 EUR is given, no computed future figures."
+      }
+    ],
+    "unsupported": [
+      "The starting rent is 2350 EUR/month (the listing only gives the price, not that it is the starting rent; minor inference)"
+    ],
+    "languageMatches": true,
+    "reasoning": "Both must facts are stated and no future rent is computed. The only questionable point is calling 2350 the 'starting rent', which the listing does not say explicitly; it just gives the price of 2350 EUR/month.",
+    "correct": false,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 268,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 1193
+    }
+  }
+}

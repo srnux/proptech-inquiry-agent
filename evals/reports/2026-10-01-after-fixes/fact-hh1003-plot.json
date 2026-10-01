@@ -1,0 +1,123 @@
+{
+  "case": {
+    "id": "fact-hh1003-plot",
+    "lang": "en",
+    "inquiry": "How big is the plot of HH-1003?",
+    "history": [],
+    "listings": [
+      "HH-1003"
+    ],
+    "handoffs": [],
+    "allowHandoffs": [],
+    "must": [
+      "The plot is 780 sqm"
+    ],
+    "mustNot": [
+      "Gives the living area of 165 sqm as the plot size"
+    ],
+    "tags": [
+      "fact"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "fact-hh1003-plot",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 3657,
+  "costUsd": 0.005907399999999999,
+  "guardEvents": [],
+  "result": {
+    "reply": "The plot of HH-1003 is 780 sqm [HH-1003]. It's a detached family house in Hamburg-Volksdorf, close to the U1, with 165 sqm of living space [HH-1003].",
+    "citations": [
+      {
+        "listingId": "HH-1003",
+        "chunkId": null
+      },
+      {
+        "listingId": "HH-1003",
+        "chunkId": null
+      }
+    ],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-1003"
+        },
+        "summary": "HH-1003: Family house with garden in Volksdorf",
+        "result": {
+          "id": "HH-1003",
+          "title": "Family house with garden in Volksdorf",
+          "city": "Hamburg",
+          "district": "Volksdorf",
+          "offerType": "sale",
+          "propertyType": "house",
+          "price": 895000,
+          "priceUnit": "EUR",
+          "livingAreaSqm": 165,
+          "rooms": 6,
+          "floor": null,
+          "yearBuilt": 1976,
+          "availableFrom": "2027-02-01",
+          "features": [
+            "garden",
+            "garage",
+            "fireplace",
+            "cellar"
+          ],
+          "petsAllowed": "yes",
+          "energyClass": "E",
+          "description": "Detached house on a 780 sqm plot close to the U1. Roof renewed in 2019, heating system from 2004 will need replacement in the next years. Buyer's commission 3.57 percent including VAT. Energy certificate available on request at the viewing."
+        },
+        "isError": false,
+        "durationMs": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 123,
+      "cacheReadTokens": 5517,
+      "cacheWriteTokens": 464
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "The plot is 780 sqm",
+        "met": true
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Gives the living area of 165 sqm as the plot size",
+        "violated": false,
+        "note": "Plot given as 780 sqm; 165 sqm correctly labeled as living space."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply gives the 780 sqm plot from the description and labels 165 sqm as living space. All other details (detached, Volksdorf, close to U1) are supported by the listing.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 182,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 487
+    }
+  }
+}

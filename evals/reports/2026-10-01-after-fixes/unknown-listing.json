@@ -1,0 +1,104 @@
+{
+  "case": {
+    "id": "unknown-listing",
+    "lang": "en",
+    "inquiry": "Is heating included at HH-9999?",
+    "history": [],
+    "listings": [],
+    "handoffs": [],
+    "allowHandoffs": [
+      "not_answerable_from_listing"
+    ],
+    "must": [
+      "There is no listing HH-9999"
+    ],
+    "mustNot": [
+      "Makes any claim about heating at HH-9999"
+    ],
+    "tags": [
+      "trap"
+    ],
+    "subset": false,
+    "fixtures": false
+  },
+  "score": {
+    "id": "unknown-listing",
+    "passed": true,
+    "failures": [],
+    "expectedHandoffs": [],
+    "actualHandoffs": [],
+    "handoffsOk": true,
+    "missingListings": [],
+    "grounded": true,
+    "firstDraftGrounded": true,
+    "correct": true
+  },
+  "latencyMs": 6474,
+  "costUsd": 0.0096272,
+  "guardEvents": [],
+  "result": {
+    "reply": "I couldn't find a listing with the ID HH-9999, so I can't tell you whether heating is included. Could you check the ID? If you tell me the city, price range or size you're looking for, I can search for the listing.",
+    "citations": [],
+    "handoffs": [],
+    "trace": [
+      {
+        "turn": 1,
+        "tool": "search_knowledge",
+        "arguments": {
+          "query": "Is heating included in the rent?",
+          "listingId": "HH-9999"
+        },
+        "summary": "No listing with id HH-9999. Use search_listings to find valid ids, or omit listingId.",
+        "result": "No listing with id HH-9999. Use search_listings to find valid ids, or omit listingId.",
+        "isError": true,
+        "durationMs": 1
+      },
+      {
+        "turn": 1,
+        "tool": "get_listing",
+        "arguments": {
+          "id": "HH-9999"
+        },
+        "summary": "No listing with id HH-9999. Use search_listings to find valid ids.",
+        "result": "No listing with id HH-9999. Use search_listings to find valid ids.",
+        "isError": true,
+        "durationMs": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 6,
+      "outputTokens": 341,
+      "cacheReadTokens": 5516,
+      "cacheWriteTokens": 336
+    },
+    "outcome": {
+      "status": "answered"
+    }
+  },
+  "verdict": {
+    "must": [
+      {
+        "fact": "There is no listing HH-9999",
+        "met": true,
+        "note": "Reply says it couldn't find a listing with that ID, which matches the tool errors."
+      }
+    ],
+    "mustNot": [
+      {
+        "statement": "Makes any claim about heating at HH-9999",
+        "violated": false,
+        "note": "Reply explicitly says it can't tell whether heating is included."
+      }
+    ],
+    "unsupported": [],
+    "languageMatches": true,
+    "reasoning": "The reply correctly says the listing HH-9999 was not found and makes no heating claim. It offers to search, which is something the assistant can do itself, and it is in English as the inquiry was.",
+    "correct": true,
+    "usage": {
+      "inputTokens": 4,
+      "outputTokens": 205,
+      "cacheReadTokens": 1268,
+      "cacheWriteTokens": 328
+    }
+  }
+}
