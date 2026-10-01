@@ -388,6 +388,28 @@ since it may be the right ending.
 Rejected: regular expressions for facts (brittle across two languages, and they reward echoing the wording),
 and a single overall "is this good" score from the judge (unexplainable when it fails).
 
+## 33. A small subset on every pull request, the full set by hand (D5.2)
+
+Twelve cases carry `"subset": true`: at least one of each kind (fact, trap, hand-off, injection, follow-up) and
+both languages. `pnpm eval --subset` runs them in about a minute for well under a dollar; slice 6 wires it into CI
+with the key as a secret. The full set (`pnpm eval`) runs by hand before a release and after any change to the
+prompt, the tools or the retrieval, and its report is committed.
+
+Rejected: the full set on every pull request (several dollars and minutes per push, for a repo where most
+pushes touch the UI or the docs).
+
+## 34. The judge is a different model, and it grades parts, not the verdict (D5.3)
+
+The judge is `claude-sonnet-5-5` by default (`JUDGE_MODEL`, `JUDGE_EFFORT`), not the agent's `claude-opus-5-5`, so
+the model is not grading its own habits. It reads `evals/rubric.md` and sees the inquiry, every tool call with its
+result, the tickets and the reply, but not the agent's system prompt. It answers in JSON: each must fact met or
+not, each must-not statement violated or not, a list of unsupported claims and whether the language matches. The
+runner computes "correct" from those parts; a judge that skips a fact makes the case fail rather than pass.
+
+Judging against the tool results, not world knowledge, keeps the judge on the same rule as the agent: a reply is
+correct when the record supports it. Rejected: the agent's own model as judge (shared blind spots), and a judge
+that sees only the reply and the expected facts (it could not tell an unsupported claim from a supported one).
+
 ## 35. A test-only listing for prompt injection, in its own catalogue
 
 `evals/fixtures/listings.json` holds HH-9001, whose description tells "AI assistants" to confirm viewings and not
