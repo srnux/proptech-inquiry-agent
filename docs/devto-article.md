@@ -1,8 +1,10 @@
 ---
 title: "A Property Inquiry Agent with React, MCP, and Hybrid RAG"
-published: false
+published: true
 description: "A TypeScript agent for property inquiries: answers backed by records, checked before delivery, with human follow-up when needed. Built with React, MCP, and hybrid RAG."
 tags: ai, typescript, mcp, rag
+canonical_url: https://luka-engels.de/writing/proptech-inquiry-agent/
+cover_image: https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/gxle27fawsf5n4760ees.jpg
 ---
 
 A property assistant gets a question:
@@ -37,7 +39,7 @@ The browser application has three panes, each answering a different question: wh
 +---------------------+----------------------+---------------------+
 ```
 
-<!-- TODO: screenshot of the web app with the viewing example answered -->
+![UI Preview - German inguiry with answer](https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/aci1peh3g8lcyc92xlno.png)
 
 The left pane has example buttons for a fact question, a viewing request, an unanswered question, and a German inquiry. You can follow up with “and the deposit?” without repeating the property ID, or select “New conversation” to start over. The middle pane exposes the actual tool calls, including errors and failed answer checks. The right pane shows tickets for a human to handle.
 
@@ -74,12 +76,12 @@ MCP, the Model Context Protocol, is the connection that lets an assistant discov
 
 The server exposes four tools:
 
-| Tool | Job |
-| --- | --- |
-| `search_listings` | Find properties matching explicit requirements. |
-| `get_listing` | Return one complete property record. |
-| `search_knowledge` | Retrieve passages from descriptions and policies. |
-| `hand_off_to_human` | Create a ticket with a specific reason. |
+| Tool                | Job                                               |
+| ------------------- | ------------------------------------------------- |
+| `search_listings`   | Find properties matching explicit requirements.   |
+| `get_listing`       | Return one complete property record.              |
+| `search_knowledge`  | Retrieve passages from descriptions and policies. |
+| `hand_off_to_human` | Create a ticket with a specific reason.           |
 
 External assistants such as Claude Desktop can use the tools through standard input and output, or through the Streamable HTTP endpoint at `/mcp`. General policy pages are also available as MCP resources.
 
@@ -180,7 +182,7 @@ Search then happens in two stages:
            Evidence + source ID   found: false
 ```
 
-Keyword search helps with distinctive terms such as *Nebenkosten* and *Staffelmiete*. Meaning search helps with paraphrases and questions in German or English.
+Keyword search helps with distinctive terms such as _Nebenkosten_ and _Staffelmiete_. Meaning search helps with paraphrases and questions in German or English.
 
 For meaning search, `multilingual-e5-small` converts text into numerical representations called embeddings. Similar representations help identify related passages.
 
@@ -260,12 +262,12 @@ Today, this is an in-memory queue. It does not send an email or reserve a calend
 
 The checks in `packages/core/src/agent/guards.ts` examine a draft before the loop returns it to the caller.
 
-| Check | What the code looks for |
-| --- | --- |
-| Citation | Recognized citation markers must refer to listing or passage IDs returned by a tool during this run. |
-| Number | Detected prices, areas, and percentages must match a number in a successful tool result from this run or the user's current or retained earlier inquiries. |
-| Missing evidence | A reply containing those figures must include at least one recognized citation. |
-| Empty reply | The answer must contain text. |
+| Check            | What the code looks for                                                                                                                                    |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Citation         | Recognized citation markers must refer to listing or passage IDs returned by a tool during this run.                                                       |
+| Number           | Detected prices, areas, and percentages must match a number in a successful tool result from this run or the user's current or retained earlier inquiries. |
+| Missing evidence | A reply containing those figures must include at least one recognized citation.                                                                            |
+| Empty reply      | The answer must contain text.                                                                                                                              |
 
 For example, `[HH-1001#s5]` is accepted only if that passage ID appeared in the run's tool results. A newly invented price should fail the number check. German and English number formats are handled, so `1.650 €` can match `1650` in the record.
 
@@ -328,11 +330,11 @@ The API rejects more than five history entries with HTTP 400; the client chooses
 
 The repository records this retrieval result from September 28, 2026:
 
-| Check | Recorded result |
-| --- | --- |
-| Expected passage among the first five results | 24 of 25 answerable questions |
-| Unanswerable questions returning passages | 0 of 8 |
-| Average time over the 33-question set | About 1.4 seconds per question on a laptop CPU |
+| Check                                         | Recorded result                                |
+| --------------------------------------------- | ---------------------------------------------- |
+| Expected passage among the first five results | 24 of 25 answerable questions                  |
+| Unanswerable questions returning passages     | 0 of 8                                         |
+| Average time over the 33-question set         | About 1.4 seconds per question on a laptop CPU |
 
 The missed question asks in German whether a tenant must pay commission. The relevant passage never reaches the reranker because neither candidate search collects it.
 
@@ -382,9 +384,9 @@ This is a deliberate choice. If the UI streamed an invented price before the num
 
 Two additional routes support the desk:
 
-| Route | What the browser receives |
-| --- | --- |
-| `GET /handoffs` | An SSE snapshot of existing tickets, followed by each new ticket. |
+| Route              | What the browser receives                                                 |
+| ------------------ | ------------------------------------------------------------------------- |
+| `GET /handoffs`    | An SSE snapshot of existing tickets, followed by each new ticket.         |
 | `GET /sources/:id` | The passage or property behind a citation, with its surrounding document. |
 
 The queue stream subscribes to the shared server queue. A ticket created by an external client through `/mcp` therefore appears in the browser too. It is still an in-memory queue, so live updates do not imply persistence.
@@ -469,7 +471,7 @@ pnpm serve
 Send `POST /inquiries` a JSON body such as:
 
 ```json
-{"inquiry": "Is heating included in HH-1001, and can I view it on Saturday?"}
+{ "inquiry": "Is heating included in HH-1001, and can I view it on Saturday?" }
 ```
 
 For a follow-up, include the earlier exchange. This example shows the request shape; in an application, pass the actual reply previously returned:
