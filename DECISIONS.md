@@ -446,3 +446,14 @@ reranker score of about 0.8, the eval's wording is in the golden set, and recall
 
 Rejected: lowering the reranker threshold (the page was not a candidate at all, so no threshold would have found
 it) and translating the queries before search (a model call per search, for a gap two words in the corpus close).
+
+## 38. Correct an earlier reply only when the record contradicts it
+
+Found by the eval case `followup-deposit`. Decision 31 tells the model that earlier turns are not a source, so it
+looked up the heating fact from the previous reply again, found it confirmed, and then wrote "I also need to
+correct my last answer" above a restatement of the same fact. The prompt now says to correct an earlier reply only
+where the tool results contradict it, and to say nothing when they confirm it. `followup-wrong-figure-de`, where
+the earlier reply really was wrong (260 EUR instead of 240 EUR), still gets its correction.
+
+Rejected: dropping the instruction to look facts up again (the guards would then reject every repeated figure,
+since history is not evidence), and stripping earlier replies from the history (follow-ups lose their referent).
