@@ -8,10 +8,11 @@ MCP server, so the same tools serve Claude Desktop, the MCP Inspector and the ag
 reject any figure or citation the tools did not return. 49 eval cases measure it: 46 pass on `claude-opus-5-5`,
 and every hand-off goes where it should.
 
-![The inquiry desk answers whether heating is included, citing the listing sentence and the utilities policy, then turns a viewing request into a ticket for a colleague instead of confirming it](docs/assets/demo.gif)
+![The inquiry desk answers whether heating is included, citing the listing sentence and the utilities policy, turns a viewing request into a ticket for a colleague instead of confirming it, then answers a German inquiry in German: pets only on request, heating included, the viewing handed on](docs/assets/demo.gif)
 
-<sub>Recorded on `claude-opus-5-5`, twice the real speed. Left: the conversation, with a chip per source. Middle: every
-tool call. Right: tickets for a colleague.</sub>
+<sub>Recorded on `claude-opus-5-5`, three times the real speed: a fact question, a viewing request, and the same
+kind of inquiry in German. Left: the conversation, with a chip per source. Middle: every tool call. Right: tickets
+for a colleague.</sub>
 
 All listing and policy data is synthetic.
 
@@ -158,7 +159,7 @@ page (`DECISIONS.md` 39).
 
 ```bash
 pnpm eval                 # all cases; needs credentials for the agent and the judge; exits 1 below a threshold
-pnpm eval --subset        # the 12 cases meant for every pull request, about 90 s and $0.25
+pnpm eval --subset        # 12 cases, run locally or through the manual Actions workflow; about 90 s and $0.25
 pnpm eval --case handoff-viewing --case trap-pets-hh1001
 MODEL_PROVIDER=demo EMBEDDER=hashing pnpm eval --no-judge   # offline: demo model, no judge
 ```

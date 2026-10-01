@@ -267,7 +267,7 @@ first screen of the README, some open `ARCHITECTURE.md`, few clone it.
 
 ### Tasks
 
-- [x] `README.md` first screen: GIF of the UI answering one inquiry and handing off another, a three-sentence
+- [x] `README.md` first screen: GIF of the UI answering one inquiry, handing off another and answering in German, a three-sentence
       pitch, quick start in five lines. Recorded on `claude-opus-5-5` by `apps/web/e2e/record-demo.ts`.
 - [x] `ARCHITECTURE.md`: request flow diagram, the escalation boundary, where each guard sits, what runs offline.
 - [x] "What broke" section in the README: the real failures the evals found in slice 5 and how each was fixed,
@@ -277,17 +277,21 @@ first screen of the README, some open `ARCHITECTURE.md`, few clone it.
       secrets. Revises `DECISIONS.md` 33 in a new entry (`DECISIONS.md` 39).
 - [x] Social preview image committed in `docs/assets/social-preview.png`; description and topics below.
 
-### Open
+### GitHub verification and settings
 
-- [ ] First CI run on GitHub after the push: both jobs green, badge shows passing
-- [ ] Add a secret (`ANTHROPIC_API_KEY`, or `AWS_BEARER_TOKEN_BEDROCK` plus the variable `AWS_REGION`) and start
-      the eval subset once from the Actions tab
-- [ ] In the repository settings: upload `docs/assets/social-preview.png` as the social preview, set the description
-      and the topics:
+- [x] CI passed on the slice branch, pull request #4 and `main` after the merge (`65b6e57`), confirmed on
+      October 1, 2026.
+- [x] Repository settings updated: `docs/assets/social-preview.png` uploaded as the social preview, description
+      and topics set (confirmed on October 1, 2026):
   - Description: "An AI agent that answers property-listing questions from the record and hands everything else to a
     human. MCP server, hybrid RAG with a local reranker, citation and number guards, measured by evals."
   - Topics: `mcp`, `model-context-protocol`, `ai-agents`, `llm`, `rag`, `claude`, `anthropic`, `evals`,
     `typescript`, `react`, `proptech`, `real-estate`
+
+### Open
+
+- [ ] Add a secret (`ANTHROPIC_API_KEY`, or `AWS_BEARER_TOKEN_BEDROCK` plus the variable `AWS_REGION`) and start
+      the eval subset once from the Actions tab. A successful manual eval run has not yet been confirmed.
 
 ### Acceptance
 
