@@ -41,7 +41,7 @@ Rejected for now: a hosted embedding API (better quality, but a key and a sign-u
 ## 8. In-memory vector store
 
 Sixty-odd chunks fit in memory, and a cosine loop over them takes microseconds. The `VectorStore` interface
-keeps pgvector a drop-in for slice 6, where it earns its place with Docker Compose and the same tests.
+keeps pgvector a drop-in for slice 7 (optional), where it earns its place with Docker Compose and the same tests.
 
 ## 9. Hybrid search: BM25 plus vectors, merged by reciprocal rank fusion
 
