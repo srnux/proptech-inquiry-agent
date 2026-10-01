@@ -1,7 +1,8 @@
 import { EXAMPLE_INQUIRIES } from "@proptech/core/examples";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { Run } from "./App";
-import { CITATION, citationLabel, FORCED, TOOLS } from "./labels";
+import { citationLabel, FORCED, TOOLS } from "./labels";
+import { replyParts } from "./reply";
 
 interface Props {
   runs: Run[];
@@ -122,16 +123,14 @@ function AgentBubble({ run, onCite }: { run: Run; onCite(id: string): void }) {
   );
 }
 
-/** The reply with each citation marker turned into a button that opens its source. */
+/** The reply with each citation marker turned into a button that opens its source, and **bold** as bold. */
 function withChips(reply: string, onCite: (id: string) => void): ReactNode[] {
-  const out: ReactNode[] = [];
-  let at = 0;
-  for (const m of reply.matchAll(CITATION)) {
-    out.push(reply.slice(at, m.index));
-    const id = m[1]!;
-    out.push(
+  return replyParts(reply).map((part, i) => {
+    if (part.kind === "text") return part.bold ? <strong key={i}>{part.text}</strong> : part.text;
+    const { id } = part;
+    return (
       <button
-        key={`${m.index}-${id}`}
+        key={i}
         type="button"
         className="chip"
         onClick={(e) => {
@@ -141,10 +140,7 @@ function withChips(reply: string, onCite: (id: string) => void): ReactNode[] {
         title={`Open the source ${id}`}
       >
         {citationLabel(id)}
-      </button>,
+      </button>
     );
-    at = m.index + m[0].length;
-  }
-  out.push(reply.slice(at));
-  return out;
+  });
 }

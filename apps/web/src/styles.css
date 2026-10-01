@@ -318,6 +318,10 @@ button:disabled {
 .from-agent > p + p {
   margin-top: var(--space-2);
 }
+/* The loaded Inter weights stop at 600; 700 would be synthesised. */
+.from-agent strong {
+  font-weight: 600;
+}
 .from-agent.is-error {
   border-style: dashed;
 }
