@@ -1,6 +1,6 @@
 # Eval report 2026-10-01-after-fixes
 
-- Date: 2026-10-01, commit `f8a1fca`
+- Date: 2026-10-01, commit `3212e5b`
 - Agent: `eu.anthropic.claude-opus-5-5` (bedrock); judge: `eu.anthropic.claude-sonnet-5-5`
 - Retrieval: Xenova/multilingual-e5-small@q8 + onnx-community/bge-reranker-v2-m3-ONNX@q8
 - Cases: all 49, 3 at a time (latency includes waiting for the shared local reranker)

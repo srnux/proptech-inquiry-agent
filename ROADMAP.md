@@ -279,7 +279,7 @@ first screen of the README, some open `ARCHITECTURE.md`, few clone it.
 
 ### GitHub verification and settings
 
-- [x] CI passed on the slice branch, pull request #4 and `main` after the merge (`65b6e57`), confirmed on
+- [x] CI passed on the slice branch, pull request #4 and `main` after the merge (`a468c50`), confirmed on
       October 1, 2026.
 - [x] Repository settings updated: `docs/assets/social-preview.png` uploaded as the social preview, description
       and topics set (confirmed on October 1, 2026):

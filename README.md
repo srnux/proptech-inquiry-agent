@@ -53,14 +53,14 @@ measured again ([first run](evals/reports/2026-10-01.md), [after the fixes](eval
 - **German questions could not find the commission policy.** "Muss ich als Mieter eine Provision zahlen?" returned
   `found: false`: the page said only "commission", so neither keyword nor vector search collected it. The page now
   names "Provision" and "Maklerprovision", and golden-set recall@5 went from 96% to 100%
-  ([e8c1fb4](https://github.com/srnux/proptech-inquiry-agent/commit/e8c1fb4), `DECISIONS.md` 37).
+  ([495f2e6](https://github.com/srnux/proptech-inquiry-agent/commit/495f2e6), `DECISIONS.md` 37).
 - **Follow-ups "corrected" answers that were right.** Told that earlier turns are not evidence, the agent looked the
   fact up again, found it confirmed, and announced a correction anyway. It now corrects only what the record
   contradicts; a case whose earlier figure really is wrong still gets its correction
-  ([f8a1fca](https://github.com/srnux/proptech-inquiry-agent/commit/f8a1fca), `DECISIONS.md` 38).
+  ([3212e5b](https://github.com/srnux/proptech-inquiry-agent/commit/3212e5b), `DECISIONS.md` 38).
 - **The judge counted hand-off wording as invented claims.** "A colleague will contact you" is fine when a ticket
   exists; "your viewing is confirmed" is not. That fixed the evaluator, not the agent
-  ([d1494b6](https://github.com/srnux/proptech-inquiry-agent/commit/d1494b6)).
+  ([c3c7a39](https://github.com/srnux/proptech-inquiry-agent/commit/c3c7a39)).
 
 Still open: the agent offered to add an email address to an existing ticket, which no tool can do. The guards check
 that every figure and citation is in the record; they cannot check that a promise is one the tools can keep. The
